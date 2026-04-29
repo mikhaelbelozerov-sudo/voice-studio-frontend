@@ -7,6 +7,7 @@ import { VoiceControls } from "../components/features/VoiceGeneration/VoiceContr
 import { VoiceSelector } from "../components/features/VoiceGeneration/VoiceSelector";
 import { generateAudio, getVoices, Voice } from "../services/api";
 import { useVoiceStore } from "../store/voiceStore";
+import { useTelegram } from "../hooks/useTelegram"; // добавляем хук Telegram
 
 export const GeneratePage = () => {
   const [voices, setVoices] = useState<Voice[]>([]);
@@ -25,6 +26,10 @@ export const GeneratePage = () => {
     setSpeed,
     setPitch
   } = useVoiceStore();
+
+  // Получаем данные пользователя из Telegram
+  const { user } = useTelegram();
+  const telegramId = user?.id; // у объекта user из @twa-dev/sdk есть поле id
 
   useEffect(() => {
     const loadVoices = async () => {
@@ -45,12 +50,17 @@ export const GeneratePage = () => {
   }, []);
 
   const canGenerate = useMemo(() => {
-    return Boolean(selectedVoiceId && text.trim().length > 0 && text.length <= 1000 && !isGenerating);
-  }, [isGenerating, selectedVoiceId, text]);
+    return Boolean(telegramId && selectedVoiceId && text.trim().length > 0 && text.length <= 1000 && !isGenerating);
+  }, [telegramId, isGenerating, selectedVoiceId, text]);
 
   const handleGenerate = async () => {
     if (!selectedVoiceId) {
       setError("Сначала выберите голос");
+      return;
+    }
+
+    if (!telegramId) {
+      setError("Не удалось определить пользователя Telegram. Перезапустите приложение.");
       return;
     }
 
@@ -63,7 +73,8 @@ export const GeneratePage = () => {
         text,
         voiceId: selectedVoiceId,
         speed,
-        pitch
+        pitch,
+        telegramId, // передаём ID пользователя на бэкенд
       });
 
       const generatedUrl = response.audioUrl || response.url;
@@ -77,7 +88,13 @@ export const GeneratePage = () => {
 
       setAudioUrl(absoluteUrl);
     } catch (requestError) {
-      setError("Не удалось сгенерировать аудио");
+      // Если бэкенд вернул 403 (лимит исчерпан), покажем понятное сообщение
+      const err = requestError as any;
+      if (err?.response?.status === 403) {
+        setError("Дневной лимит генераций исчерпан. Перейдите на Pro-тариф.");
+      } else {
+        setError("Не удалось сгенерировать аудио");
+      }
     } finally {
       setIsGenerating(false);
     }

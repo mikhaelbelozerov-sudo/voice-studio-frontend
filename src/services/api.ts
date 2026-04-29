@@ -36,7 +36,13 @@ export const getVoices = async () => {
   return data;
 };
 
-export const generateAudio = async (payload: GenerateRequest) => {
-  const { data } = await api.post<GenerateResponse>("/generate", payload);
-  return data;
+export const generateAudio = async (params: {
+  text: string;
+  voiceId: string;
+  speed: number;
+  pitch: number;
+  telegramId: number;
+}) => {
+  const response = await api.post('/generate', params);
+  return response.data;
 };
