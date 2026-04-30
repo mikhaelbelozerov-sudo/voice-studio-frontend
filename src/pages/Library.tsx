@@ -4,7 +4,7 @@ import { useTelegram } from "../hooks/useTelegram";
 import { fetchGenerations, Generation, getVoices, UserTier, Voice } from "../services/api";
 import { Button } from "../components/ui/Button";
 import { Spinner } from "../components/ui/Spinner";
-import { formatRemainingTime, isExpiringSoon } from "../utils/timeUtils";
+import { formatRemainingTime, isExpiringSoon } from "../utils/formatRemainingTime";
 
 const PAGE_SIZE = 20;
 const FALLBACK_TELEGRAM_ID = 123456789;

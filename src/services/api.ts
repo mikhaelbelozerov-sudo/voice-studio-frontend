@@ -47,6 +47,12 @@ export interface GenerationsResponse {
   userTier: UserTier;
 }
 
+export interface UserProfile {
+  subscription_tier: UserTier;
+  subscription_expires_at: string | null;
+  stars_minutes: number;
+}
+
 export const getVoices = async () => {
   const { data } = await api.get<VoicesResponse>("/voices");
   return data;
@@ -72,5 +78,12 @@ export const fetchGenerations = async (telegramId: number, limit = 20, offset = 
     }
   });
 
+  return data;
+};
+
+export const getUserProfile = async (telegramId: number) => {
+  const { data } = await api.get<UserProfile>("/user/profile", {
+    params: { telegramId }
+  });
   return data;
 };

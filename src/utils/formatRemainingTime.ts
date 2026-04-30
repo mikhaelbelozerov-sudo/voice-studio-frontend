@@ -1,20 +1,23 @@
-export type UserTier = "free" | "pro" | "premium";
+import { UserTier } from "../services/api";
 
-const FREE_TTL_MS = 24 * 60 * 60 * 1000;
-const PRO_TTL_MS = 30 * 24 * 60 * 60 * 1000;
+const HOUR_MS = 60 * 60 * 1000;
+const DAY_MS = 24 * HOUR_MS;
 
-export const formatRemainingTime = (createdAt: string, tier: UserTier, fileDeleted = false): string => {
+export const formatRemainingTime = (
+  createdAt: string,
+  tier: UserTier,
+  fileDeleted = false
+): string => {
   if (fileDeleted) {
     return "Файл удалён";
   }
 
   if (tier === "premium") {
-    return "Хранится постоянно";
+    return "Бессрочно";
   }
 
-  const ttlMs = tier === "pro" ? PRO_TTL_MS : FREE_TTL_MS;
-  const expiresAtMs = new Date(createdAt).getTime() + ttlMs;
-  const remainingMs = expiresAtMs - Date.now();
+  const ttlMs = tier === "pro" ? 30 * DAY_MS : DAY_MS;
+  const remainingMs = new Date(createdAt).getTime() + ttlMs - Date.now();
 
   if (remainingMs <= 0) {
     return "Удаляется менее чем через час";
@@ -31,10 +34,26 @@ export const formatRemainingTime = (createdAt: string, tier: UserTier, fileDelet
     return `Будет удалён через ${hours} ч. ${minutes} мин.`;
   }
 
-  const totalHours = Math.floor(remainingMs / (60 * 60 * 1000));
+  const totalHours = Math.floor(remainingMs / HOUR_MS);
   const days = Math.floor(totalHours / 24);
   const hours = totalHours % 24;
   return `Будет удалён через ${days} дн. ${hours} ч.`;
+};
+
+export const formatSubscriptionRemaining = (expiresAt: string | null): string => {
+  if (!expiresAt) {
+    return "Не активна";
+  }
+
+  const remainingMs = new Date(expiresAt).getTime() - Date.now();
+  if (remainingMs <= 0) {
+    return "Истекла";
+  }
+
+  const totalHours = Math.floor(remainingMs / HOUR_MS);
+  const days = Math.floor(totalHours / 24);
+  const hours = totalHours % 24;
+  return `${days} дн. ${hours} ч.`;
 };
 
 export const isExpiringSoon = (createdAt: string, tier: UserTier, fileDeleted = false): boolean => {
@@ -42,9 +61,9 @@ export const isExpiringSoon = (createdAt: string, tier: UserTier, fileDeleted = 
     return false;
   }
 
-  const ttlMs = tier === "pro" ? PRO_TTL_MS : FREE_TTL_MS;
+  const ttlMs = tier === "pro" ? 30 * DAY_MS : DAY_MS;
   const remainingMs = new Date(createdAt).getTime() + ttlMs - Date.now();
-  const thresholdMs = tier === "free" ? 3 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000;
+  const thresholdMs = tier === "free" ? 3 * HOUR_MS : DAY_MS;
 
   return remainingMs > 0 && remainingMs <= thresholdMs;
 };
