@@ -31,6 +31,15 @@ export interface GenerateResponse {
   url?: string;
 }
 
+export interface Generation {
+  id: number | string;
+  text: string | null;
+  voice_id: string | null;
+  audio_url: string | null;
+  created_at: string;
+  file_deleted: boolean | null;
+}
+
 export const getVoices = async () => {
   const { data } = await api.get<VoicesResponse>("/voices");
   return data;
@@ -45,4 +54,16 @@ export const generateAudio = async (params: {
 }) => {
   const response = await api.post('/generate', params);
   return response.data;
+};
+
+export const fetchGenerations = async (telegramId: number, limit = 20, offset = 0) => {
+  const { data } = await api.get<Generation[]>("/generations", {
+    params: {
+      telegramId,
+      limit,
+      offset
+    }
+  });
+
+  return data;
 };

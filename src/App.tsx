@@ -7,7 +7,7 @@ import { ProfilePage } from "./pages/Profile";
 
 const navItems = [
   { to: "/generate", label: "Generate", icon: Home },
-  { to: "/library", label: "Library", icon: Library },
+  { to: "/library", label: "История", icon: Library },
   { to: "/pricing", label: "Pricing", icon: WalletCards },
   { to: "/profile", label: "Profile", icon: UserCircle }
 ];
