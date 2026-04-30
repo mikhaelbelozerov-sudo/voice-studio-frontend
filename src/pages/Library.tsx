@@ -1,12 +1,14 @@
-import { AudioWaveform, CalendarDays } from "lucide-react";
+import { AudioWaveform, CalendarDays, Clock3 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTelegram } from "../hooks/useTelegram";
-import { fetchGenerations, Generation, getVoices, Voice } from "../services/api";
+import { fetchGenerations, Generation, getVoices, UserTier, Voice } from "../services/api";
 import { Button } from "../components/ui/Button";
 import { Spinner } from "../components/ui/Spinner";
+import { formatRemainingTime, isExpiringSoon } from "../utils/timeUtils";
 
 const PAGE_SIZE = 20;
 const FALLBACK_TELEGRAM_ID = 123456789;
+const HOUR_MS = 60 * 60 * 1000;
 
 const truncateText = (value: string | null, maxLength = 100) => {
   if (!value) return "Без текста";
@@ -24,6 +26,21 @@ const formatDateTime = (dateIso: string) =>
 
 const canDownload = (item: Generation) => Boolean(item.audio_url && !item.file_deleted);
 
+const getRefreshIntervalMs = (items: Generation[], tier: UserTier) => {
+  if (tier === "premium" || items.length === 0) {
+    return 60_000;
+  }
+
+  const ttlMs = tier === "pro" ? 30 * 24 * HOUR_MS : 24 * HOUR_MS;
+  const hasLessThanHourLeft = items.some((item) => {
+    if (item.file_deleted) return false;
+    const remainingMs = new Date(item.created_at).getTime() + ttlMs - Date.now();
+    return remainingMs > 0 && remainingMs < HOUR_MS;
+  });
+
+  return hasLessThanHourLeft ? 10_000 : 60_000;
+};
+
 export const LibraryPage = () => {
   const { user } = useTelegram();
   const telegramId = useMemo(() => user?.id ?? FALLBACK_TELEGRAM_ID, [user?.id]);
@@ -31,11 +48,14 @@ export const LibraryPage = () => {
 
   const [items, setItems] = useState<Generation[]>([]);
   const [voices, setVoices] = useState<Voice[]>([]);
+  const [userTier, setUserTier] = useState<UserTier>("free");
   const [offset, setOffset] = useState(0);
   const [isLoadingInitial, setIsLoadingInitial] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [, setTimeTick] = useState(() => Date.now());
+  const [isTabVisible, setIsTabVisible] = useState(() => document.visibilityState === "visible");
 
   const loadGenerations = async (nextOffset = 0, append = false) => {
     if (!telegramId) {
@@ -52,9 +72,10 @@ export const LibraryPage = () => {
 
     try {
       const data = await fetchGenerations(telegramId, PAGE_SIZE, nextOffset);
-      setItems((prev) => (append ? [...prev, ...data] : data));
-      setOffset(nextOffset + data.length);
-      setHasMore(data.length === PAGE_SIZE);
+      setUserTier(data.userTier ?? "free");
+      setItems((prev) => (append ? [...prev, ...data.generations] : data.generations));
+      setOffset(nextOffset + data.generations.length);
+      setHasMore(data.generations.length === PAGE_SIZE);
     } catch (_requestError) {
       setError("Не удалось загрузить историю. Проверьте соединение и попробуйте снова.");
       if (!append) {
@@ -81,6 +102,36 @@ export const LibraryPage = () => {
     };
 
     void loadVoices();
+  }, []);
+
+  useEffect(() => {
+    const refreshMs = getRefreshIntervalMs(items, userTier);
+    if (!isTabVisible) {
+      return;
+    }
+
+    const timerId = window.setInterval(() => {
+      setTimeTick(Date.now());
+    }, refreshMs);
+
+    return () => {
+      window.clearInterval(timerId);
+    };
+  }, [isTabVisible, items, userTier]);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      const visible = document.visibilityState === "visible";
+      setIsTabVisible(visible);
+      if (visible) {
+        setTimeTick(Date.now());
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, []);
 
   const voiceNameById = useMemo(
@@ -158,6 +209,17 @@ export const LibraryPage = () => {
                   <AudioWaveform size={14} />
                   {(item.voice_id && voiceNameById.get(item.voice_id)) || item.voice_id || "Неизвестный голос"}
                 </span>
+              </div>
+
+              <div
+                className={`mt-2 inline-flex items-center gap-1 text-xs ${
+                  isExpiringSoon(item.created_at, userTier, Boolean(item.file_deleted))
+                    ? "text-amber-600"
+                    : "text-slate-500"
+                }`}
+              >
+                <Clock3 size={14} />
+                <span>{formatRemainingTime(item.created_at, userTier, Boolean(item.file_deleted))}</span>
               </div>
 
               <div className="mt-3">

@@ -40,6 +40,13 @@ export interface Generation {
   file_deleted: boolean | null;
 }
 
+export type UserTier = "free" | "pro" | "premium";
+
+export interface GenerationsResponse {
+  generations: Generation[];
+  userTier: UserTier;
+}
+
 export const getVoices = async () => {
   const { data } = await api.get<VoicesResponse>("/voices");
   return data;
@@ -57,7 +64,7 @@ export const generateAudio = async (params: {
 };
 
 export const fetchGenerations = async (telegramId: number, limit = 20, offset = 0) => {
-  const { data } = await api.get<Generation[]>("/generations", {
+  const { data } = await api.get<GenerationsResponse>("/generations", {
     params: {
       telegramId,
       limit,
