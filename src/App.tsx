@@ -47,24 +47,6 @@ function App() {
     }
 
     webApp.expand();
-
-    if (webApp.requestFullscreen) {
-      Promise.resolve(webApp.requestFullscreen()).catch((error: unknown) => {
-        console.error("Failed to request fullscreen:", error);
-      });
-    }
-
-    const backButton = webApp.BackButton;
-    const handleClose = () => {
-      webApp.close();
-    };
-
-    backButton.show();
-    backButton.onClick(handleClose);
-
-    return () => {
-      backButton.offClick(handleClose);
-    };
   }, []);
 
   return (
