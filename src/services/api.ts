@@ -51,6 +51,7 @@ export interface UserProfile {
   subscription_tier: UserTier;
   subscription_expires_at: string | null;
   stars_minutes: number;
+  language: "ru" | "en";
 }
 
 export type InvoiceProductType = "minutes" | "subscription";
@@ -66,6 +67,11 @@ export interface CreateInvoiceResponse {
   payload: string;
   amountStars: number;
   invoiceLink: string;
+}
+
+export interface UpdateUserLanguageRequest {
+  telegramId: number;
+  language: "ru" | "en";
 }
 
 export const getVoices = async () => {
@@ -105,5 +111,10 @@ export const getUserProfile = async (telegramId: number) => {
 
 export const createInvoice = async (payload: CreateInvoiceRequest) => {
   const { data } = await api.post<CreateInvoiceResponse>("/create-invoice", payload);
+  return data;
+};
+
+export const updateUserLanguage = async (payload: UpdateUserLanguageRequest) => {
+  const { data } = await api.post<{ ok: boolean; language: "ru" | "en" }>("/user/language", payload);
   return data;
 };

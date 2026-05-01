@@ -1,5 +1,6 @@
 import { AudioWaveform, CalendarDays, Clock3 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useTelegram } from "../hooks/useTelegram";
 import { fetchGenerations, Generation, getVoices, UserTier, Voice } from "../services/api";
 import { Button } from "../components/ui/Button";
@@ -10,13 +11,13 @@ const PAGE_SIZE = 20;
 const FALLBACK_TELEGRAM_ID = 123456789;
 const HOUR_MS = 60 * 60 * 1000;
 
-const truncateText = (value: string | null, maxLength = 100) => {
-  if (!value) return "Без текста";
+const truncateText = (value: string | null, emptyText: string, maxLength = 100) => {
+  if (!value) return emptyText;
   return value.length > maxLength ? `${value.slice(0, maxLength)}...` : value;
 };
 
-const formatDateTime = (dateIso: string) =>
-  new Date(dateIso).toLocaleString("ru-RU", {
+const formatDateTime = (dateIso: string, locale: string) =>
+  new Date(dateIso).toLocaleString(locale.startsWith("en") ? "en-US" : "ru-RU", {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -42,8 +43,9 @@ const getRefreshIntervalMs = (items: Generation[], tier: UserTier) => {
 };
 
 export const LibraryPage = () => {
-  const { user } = useTelegram();
-  const telegramId = useMemo(() => user?.id ?? FALLBACK_TELEGRAM_ID, [user?.id]);
+  const { t, i18n } = useTranslation();
+  const { telegramId: telegramUserId } = useTelegram();
+  const telegramId = useMemo(() => telegramUserId ?? FALLBACK_TELEGRAM_ID, [telegramUserId]);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   const [items, setItems] = useState<Generation[]>([]);
@@ -57,9 +59,9 @@ export const LibraryPage = () => {
   const [, setTimeTick] = useState(() => Date.now());
   const [isTabVisible, setIsTabVisible] = useState(() => document.visibilityState === "visible");
 
-  const loadGenerations = async (nextOffset = 0, append = false) => {
+  const loadGenerations = useCallback(async (nextOffset = 0, append = false) => {
     if (!telegramId) {
-      setError("Не удалось определить пользователя Telegram.");
+      setError(t("generate.telegramMissing"));
       return;
     }
 
@@ -77,7 +79,7 @@ export const LibraryPage = () => {
       setOffset(nextOffset + data.generations.length);
       setHasMore(data.generations.length === PAGE_SIZE);
     } catch (_requestError) {
-      setError("Не удалось загрузить историю. Проверьте соединение и попробуйте снова.");
+      setError(t("library.loadError"));
       if (!append) {
         setItems([]);
       }
@@ -85,11 +87,11 @@ export const LibraryPage = () => {
       setIsLoadingInitial(false);
       setIsLoadingMore(false);
     }
-  };
+  }, [t, telegramId]);
 
   useEffect(() => {
     void loadGenerations(0, false);
-  }, [telegramId]);
+  }, [loadGenerations]);
 
   useEffect(() => {
     const loadVoices = async () => {
@@ -145,7 +147,7 @@ export const LibraryPage = () => {
     }
 
     void loadGenerations(offset, true);
-  }, [hasMore, isLoadingInitial, isLoadingMore, offset]);
+  }, [hasMore, isLoadingInitial, isLoadingMore, loadGenerations, offset]);
 
   useEffect(() => {
     const sentinel = loadMoreRef.current;
@@ -168,15 +170,15 @@ export const LibraryPage = () => {
   return (
     <div className="space-y-4 pb-24">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">История</h1>
-        <p className="text-sm text-slate-600">Ваши последние сгенерированные аудио</p>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("library.title")}</h1>
+        <p className="text-sm text-slate-600 dark:text-slate-300">{t("library.subtitle")}</p>
       </div>
 
       {error ? (
         <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
           <p>{error}</p>
           <Button className="mt-3" variant="secondary" onClick={() => void loadGenerations(0, false)}>
-            Повторить
+            {t("common.retry")}
           </Button>
         </div>
       ) : null}
@@ -184,13 +186,13 @@ export const LibraryPage = () => {
       {isLoadingInitial ? (
         <div className="flex items-center justify-center gap-2 rounded-2xl bg-white p-6 text-slate-600 shadow-sm">
           <Spinner />
-          <span>Загрузка истории...</span>
+          <span>{t("library.loading")}</span>
         </div>
       ) : null}
 
       {!isLoadingInitial && !error && items.length === 0 ? (
         <div className="rounded-2xl bg-white p-6 text-center text-slate-600 shadow-sm">
-          У вас пока нет генераций
+          {t("library.empty")}
         </div>
       ) : null}
 
@@ -198,16 +200,16 @@ export const LibraryPage = () => {
         <div className="space-y-3">
           {items.map((item) => (
             <article key={item.id} className="rounded-2xl bg-white p-4 shadow-sm">
-              <p className="text-sm text-slate-800">{truncateText(item.text)}</p>
+              <p className="text-sm text-slate-800 dark:text-slate-100">{truncateText(item.text, t("library.noText"))}</p>
 
               <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-slate-500">
                 <span className="inline-flex items-center gap-1">
                   <CalendarDays size={14} />
-                  {formatDateTime(item.created_at)}
+                  {formatDateTime(item.created_at, i18n.language)}
                 </span>
                 <span className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-2 py-1 text-slate-700">
                   <AudioWaveform size={14} />
-                  {(item.voice_id && voiceNameById.get(item.voice_id)) || item.voice_id || "Неизвестный голос"}
+                  {(item.voice_id && voiceNameById.get(item.voice_id)) || item.voice_id || t("library.unknownVoice")}
                 </span>
               </div>
 
@@ -228,10 +230,10 @@ export const LibraryPage = () => {
                     variant="secondary"
                     onClick={() => window.open(item.audio_url as string, "_blank", "noopener,noreferrer")}
                   >
-                    Скачать
+                    {t("library.download")}
                   </Button>
                 ) : (
-                  <span className="text-sm font-medium text-slate-500">Файл удалён</span>
+                  <span className="text-sm font-medium text-slate-500">{t("library.deleted")}</span>
                 )}
               </div>
             </article>
@@ -251,10 +253,10 @@ export const LibraryPage = () => {
             {isLoadingMore ? (
               <>
                 <Spinner />
-                Загрузка...
+                {t("common.loading")}
               </>
             ) : (
-              "Загрузить ещё"
+              t("library.loadMore")
             )}
           </Button>
         </div>

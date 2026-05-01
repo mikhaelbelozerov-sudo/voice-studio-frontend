@@ -1,0 +1,94 @@
+{
+  "common": {
+    "retry": "Retry",
+    "buy": "Buy",
+    "loading": "Loading...",
+    "guest": "Guest",
+    "free": "Free",
+    "light": "Light",
+    "dark": "Dark",
+    "russian": "Russian",
+    "english": "English"
+  },
+  "nav": {
+    "generate": "Generate",
+    "library": "Library",
+    "pricing": "Pricing",
+    "profile": "Profile"
+  },
+  "languageModal": {
+    "title": "Choose interface language",
+    "description": "You can change language later in Profile."
+  },
+  "generate": {
+    "title": "VoiceStudio Pro",
+    "subtitle": "Speech generation for Telegram Mini App",
+    "loadVoicesError": "Failed to load voices",
+    "selectVoiceFirst": "Select a voice first",
+    "telegramMissing": "Cannot detect Telegram user. Please restart the app.",
+    "dailyLimit": "Daily generation limit reached. Upgrade to Pro.",
+    "generateError": "Failed to generate audio",
+    "generate": "Generate",
+    "generating": "Generating..."
+  },
+  "voice": {
+    "selectVoice": "Choose voice",
+    "selected": "Selected",
+    "play": "Play",
+    "pause": "Pause",
+    "noPreview": "No preview",
+    "text": "Text",
+    "textPlaceholder": "Enter text for voice generation...",
+    "voiceParams": "Voice settings",
+    "speed": "Speed",
+    "pitch": "Pitch"
+  },
+  "pricing": {
+    "title": "Pricing & Payment",
+    "subtitle": "Buy minutes and subscriptions directly in the mini app.",
+    "freeDescription": "1 generation minute per day",
+    "proDescription": "Unlimited generation and 30-day file storage",
+    "premiumDescription": "Maximum tier and long-term file storage",
+    "minutes100Title": "100 minutes",
+    "minutes100Description": "Extra generation minutes pack",
+    "subscriptions": "Subscriptions",
+    "minutesPackages": "Minutes packs",
+    "popular": "Popular",
+    "best": "Best",
+    "currentLevel": "Current level",
+    "freeNoPurchase": "Free plan does not require purchase.",
+    "telegramUnavailable": "Telegram payment is unavailable in this environment.",
+    "loadProfileError": "Failed to load profile data",
+    "cancelled": "Payment was cancelled.",
+    "failed": "Failed to complete payment. Please try again later.",
+    "pending": "Payment is being processed. Check balance in a few seconds.",
+    "paid": "Payment successful. Balance updated.",
+    "paidRefresh": "Payment successful. Refresh page to see latest data.",
+    "createInvoiceError": "Failed to create invoice. Please try again later."
+  },
+  "profile": {
+    "title": "Profile",
+    "loadError": "Failed to load profile",
+    "loading": "Loading profile...",
+    "name": "Name",
+    "telegramId": "Telegram ID",
+    "theme": "Theme",
+    "language": "Language",
+    "myPlan": "My plan",
+    "expiresAt": "Expires at",
+    "remaining": "Remaining",
+    "starsMinutes": "Stars minutes"
+  },
+  "library": {
+    "title": "History",
+    "subtitle": "Your latest generated audio",
+    "loadError": "Failed to load history. Check your connection and try again.",
+    "loading": "Loading history...",
+    "empty": "No generations yet",
+    "noText": "No text",
+    "unknownVoice": "Unknown voice",
+    "download": "Download",
+    "deleted": "File deleted",
+    "loadMore": "Load more"
+  }
+}

@@ -1,13 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "../components/ui/Button";
-import { Spinner } from "../components/ui/Spinner";
 import { useTelegram } from "../hooks/useTelegram";
 import {
   createInvoice,
   CreateInvoiceRequest,
-  getUserProfile,
-  InvoiceProductType,
-  UserProfile
+  InvoiceProductType
 } from "../services/api";
 
 const FALLBACK_TELEGRAM_ID = 123456789;
@@ -22,46 +20,6 @@ type PricingItem = {
   badge?: string;
 };
 
-const subscriptionPlans: PricingItem[] = [
-  {
-    id: "free",
-    title: "Free",
-    description: "1 минута генерации в день",
-    amountStars: 0,
-    productType: "subscription",
-    productValue: 0
-  },
-  {
-    id: "pro",
-    title: "Pro",
-    description: "Безлимитная генерация и хранение файлов 30 дней",
-    amountStars: 100,
-    productType: "subscription",
-    productValue: 1,
-    badge: "Популярный"
-  },
-  {
-    id: "premium",
-    title: "Premium",
-    description: "Максимальный тариф и длительное хранение файлов",
-    amountStars: 200,
-    productType: "subscription",
-    productValue: 2,
-    badge: "Лучший"
-  }
-];
-
-const minutePlans: PricingItem[] = [
-  {
-    id: "minutes_100",
-    title: "100 минут",
-    description: "Пакет дополнительных минут генерации",
-    amountStars: 50,
-    productType: "minutes",
-    productValue: 100
-  }
-];
-
 type OpenInvoiceStatus = "paid" | "cancelled" | "failed" | "pending";
 
 declare global {
@@ -75,52 +33,75 @@ declare global {
 }
 
 export const PricingPage = () => {
+  const { t } = useTranslation();
   const { telegramId: telegramUserId } = useTelegram();
   const telegramId = useMemo(() => telegramUserId ?? FALLBACK_TELEGRAM_ID, [telegramUserId]);
 
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [isLoadingProfile, setIsLoadingProfile] = useState(false);
   const [isPurchasingId, setIsPurchasingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  const refreshProfile = useCallback(async () => {
-    setIsLoadingProfile(true);
-    try {
-      const nextProfile = await getUserProfile(telegramId);
-      setProfile(nextProfile);
-    } finally {
-      setIsLoadingProfile(false);
-    }
-  }, [telegramId]);
-
-  useEffect(() => {
-    const load = async () => {
-      try {
-        setError(null);
-        await refreshProfile();
-      } catch (_err) {
-        setError("Не удалось загрузить данные профиля");
+  const subscriptionPlans: PricingItem[] = useMemo(
+    () => [
+      {
+        id: "free",
+        title: "Free",
+        description: t("pricing.freeDescription", { defaultValue: "1 minute per day" }),
+        amountStars: 0,
+        productType: "subscription",
+        productValue: 0
+      },
+      {
+        id: "pro",
+        title: "Pro",
+        description: t("pricing.proDescription", { defaultValue: "Unlimited generation and 30-day file storage" }),
+        amountStars: 100,
+        productType: "subscription",
+        productValue: 1,
+        badge: t("pricing.popular")
+      },
+      {
+        id: "premium",
+        title: "Premium",
+        description: t("pricing.premiumDescription", { defaultValue: "Top tier and long-term file storage" }),
+        amountStars: 200,
+        productType: "subscription",
+        productValue: 2,
+        badge: t("pricing.best")
       }
-    };
-    void load();
-  }, [refreshProfile]);
+    ],
+    [t]
+  );
+
+  const minutePlans: PricingItem[] = useMemo(
+    () => [
+      {
+        id: "minutes_100",
+        title: t("pricing.minutes100Title", { defaultValue: "100 minutes" }),
+        description: t("pricing.minutes100Description", { defaultValue: "Extra generation minutes package" }),
+        amountStars: 50,
+        productType: "minutes",
+        productValue: 100
+      }
+    ],
+    [t]
+  );
 
   const purchase = useCallback(
     async (plan: PricingItem) => {
       if (!telegramId) {
-        setError("Не удалось определить пользователя Telegram.");
+        setError(t("generate.telegramMissing"));
         return;
       }
 
       if (plan.amountStars <= 0) {
-        setError("Тариф Free не требует покупки.");
+        setError(t("pricing.freeNoPurchase"));
         return;
       }
 
       const openInvoice = window.Telegram?.WebApp?.openInvoice;
       if (!openInvoice) {
-        setError("Функция оплаты Telegram недоступна в текущем окружении.");
+        setError(t("pricing.telegramUnavailable"));
         return;
       }
 
@@ -140,26 +121,21 @@ export const PricingPage = () => {
 
         openInvoice(invoice.invoiceLink, async (status) => {
           if (status === "paid") {
-            try {
-              await refreshProfile();
-              setSuccess("Оплата прошла успешно. Баланс обновлён.");
-            } catch (_err) {
-              setSuccess("Оплата прошла успешно. Обновите страницу для актуальных данных.");
-            }
+            setSuccess(t("pricing.paid"));
             return;
           }
 
           if (status === "cancelled") {
-            setError("Оплата была отменена.");
+            setError(t("pricing.cancelled"));
             return;
           }
 
           if (status === "failed") {
-            setError("Не удалось завершить оплату. Попробуйте позже.");
+            setError(t("pricing.failed"));
             return;
           }
 
-          setError("Платёж находится в обработке. Проверьте баланс через несколько секунд.");
+          setError(t("pricing.pending"));
         });
       } catch (err) {
         const message =
@@ -168,20 +144,20 @@ export const PricingPage = () => {
           "response" in err &&
           typeof (err as { response?: { data?: { error?: string } } }).response?.data?.error === "string"
             ? (err as { response: { data: { error: string } } }).response.data.error
-            : "Не удалось создать инвойс. Попробуйте позже.";
+            : t("pricing.createInvoiceError");
         setError(message);
       } finally {
         setIsPurchasingId(null);
       }
     },
-    [refreshProfile, telegramId]
+    [t, telegramId]
   );
 
   return (
     <div className="space-y-5 pb-24">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Оплата и тарифы</h1>
-        <p className="text-sm text-slate-600">Покупайте минуты и подписки прямо в мини-приложении.</p>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("pricing.title")}</h1>
+        <p className="text-sm text-slate-600 dark:text-slate-300">{t("pricing.subtitle")}</p>
       </div>
 
       {error ? <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div> : null}
@@ -191,36 +167,30 @@ export const PricingPage = () => {
 
       <section className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-slate-900">Подписки</h2>
-          {isLoadingProfile ? (
-            <span className="inline-flex items-center gap-2 text-xs text-slate-500">
-              <Spinner />
-              Обновление...
-            </span>
-          ) : null}
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t("pricing.subscriptions")}</h2>
         </div>
 
         {subscriptionPlans.map((plan) => (
-          <div key={plan.id} className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
+          <div key={plan.id} className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100 dark:bg-slate-900 dark:ring-slate-800">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-lg font-semibold text-slate-900">{plan.title}</p>
-                <p className="mt-1 text-sm text-slate-600">{plan.description}</p>
+                <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">{plan.title}</p>
+                <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{plan.description}</p>
               </div>
               {plan.badge ? (
                 <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700">{plan.badge}</span>
               ) : null}
             </div>
             <div className="mt-4 flex items-center justify-between">
-              <p className="text-sm font-medium text-slate-700">
-                {plan.amountStars === 0 ? "Бесплатно" : `${plan.amountStars} ⭐`}
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                {plan.amountStars === 0 ? t("common.free") : `${plan.amountStars} ⭐`}
               </p>
               <Button
                 onClick={() => void purchase(plan)}
                 disabled={plan.amountStars === 0}
                 loading={isPurchasingId === plan.id}
               >
-                {plan.amountStars === 0 ? "Текущий уровень" : "Купить"}
+                {plan.amountStars === 0 ? t("pricing.currentLevel") : t("common.buy")}
               </Button>
             </div>
           </div>
@@ -228,25 +198,20 @@ export const PricingPage = () => {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-lg font-semibold text-slate-900">Пакеты минут</h2>
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t("pricing.minutesPackages")}</h2>
         {minutePlans.map((plan) => (
-          <div key={plan.id} className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
-            <p className="text-lg font-semibold text-slate-900">{plan.title}</p>
-            <p className="mt-1 text-sm text-slate-600">{plan.description}</p>
+          <div key={plan.id} className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100 dark:bg-slate-900 dark:ring-slate-800">
+            <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">{plan.title}</p>
+            <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{plan.description}</p>
             <div className="mt-4 flex items-center justify-between">
-              <p className="text-sm font-medium text-slate-700">{plan.amountStars} ⭐</p>
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{plan.amountStars} ⭐</p>
               <Button onClick={() => void purchase(plan)} loading={isPurchasingId === plan.id}>
-                Купить
+                {t("common.buy")}
               </Button>
             </div>
           </div>
         ))}
       </section>
-
-      <div className="rounded-2xl bg-white p-4 text-sm text-slate-600 shadow-sm ring-1 ring-slate-100">
-        <p>Текущий тариф: <span className="font-semibold capitalize text-slate-900">{profile?.subscription_tier ?? "free"}</span></p>
-        <p className="mt-1">Stars минуты: <span className="font-semibold text-slate-900">{profile?.stars_minutes ?? 0}</span></p>
-      </div>
     </div>
   );
 };

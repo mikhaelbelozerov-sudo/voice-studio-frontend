@@ -1,5 +1,6 @@
 import { Pause, Play } from "lucide-react";
 import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Voice } from "../../../services/api";
 import { Button } from "../../ui/Button";
 
@@ -10,6 +11,7 @@ interface VoiceSelectorProps {
 }
 
 export const VoiceSelector = ({ voices, selectedVoiceId, onSelect }: VoiceSelectorProps) => {
+  const { t } = useTranslation();
   const [playingVoiceId, setPlayingVoiceId] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -39,7 +41,7 @@ export const VoiceSelector = ({ voices, selectedVoiceId, onSelect }: VoiceSelect
 
   return (
     <div className="space-y-3">
-      <h2 className="text-base font-semibold text-slate-900">Выберите голос</h2>
+      <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{t("voice.selectVoice")}</h2>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {voices.map((voice) => {
           const selected = selectedVoiceId === voice.voice_id;
@@ -52,14 +54,14 @@ export const VoiceSelector = ({ voices, selectedVoiceId, onSelect }: VoiceSelect
               onClick={() => onSelect(voice.voice_id)}
               className={`rounded-2xl border p-4 text-left transition ${
                 selected
-                  ? "border-blue-500 bg-blue-50 shadow-sm"
-                  : "border-slate-200 bg-white hover:border-slate-300"
+                  ? "border-blue-500 bg-blue-50 shadow-sm dark:bg-blue-950/40"
+                  : "border-slate-200 bg-white hover:border-slate-300 dark:border-slate-700 dark:bg-slate-900"
               }`}
             >
               <div className="mb-3 flex items-center justify-between">
-                <p className="font-medium text-slate-900">{voice.name}</p>
+                <p className="font-medium text-slate-900 dark:text-slate-100">{voice.name}</p>
                 {selected ? (
-                  <span className="rounded-full bg-blue-600 px-2 py-1 text-xs text-white">Выбран</span>
+                  <span className="rounded-full bg-blue-600 px-2 py-1 text-xs text-white">{t("voice.selected")}</span>
                 ) : null}
               </div>
               <Button
@@ -73,7 +75,7 @@ export const VoiceSelector = ({ voices, selectedVoiceId, onSelect }: VoiceSelect
                 disabled={!voice.preview_url}
               >
                 {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-                {voice.preview_url ? (isPlaying ? "Pause" : "Play") : "Нет превью"}
+                {voice.preview_url ? (isPlaying ? t("voice.pause") : t("voice.play")) : t("voice.noPreview")}
               </Button>
             </button>
           );

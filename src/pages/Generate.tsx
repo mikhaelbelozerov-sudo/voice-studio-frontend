@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { AudioPlayer } from "../components/ui/AudioPlayer";
 import { Button } from "../components/ui/Button";
 import { Spinner } from "../components/ui/Spinner";
@@ -10,6 +11,7 @@ import { useVoiceStore } from "../store/voiceStore";
 import { useTelegram } from "../hooks/useTelegram"; // добавляем хук Telegram
 
 export const GeneratePage = () => {
+  const { t } = useTranslation();
   const [voices, setVoices] = useState<Voice[]>([]);
   const [isLoadingVoices, setIsLoadingVoices] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -28,8 +30,7 @@ export const GeneratePage = () => {
   } = useVoiceStore();
 
   // Получаем данные пользователя из Telegram
-  const { user } = useTelegram();
-  const telegramId = user?.id; // у объекта user из @twa-dev/sdk есть поле id
+  const { telegramId } = useTelegram();
 
   useEffect(() => {
     const loadVoices = async () => {
@@ -39,7 +40,7 @@ export const GeneratePage = () => {
         const data = await getVoices();
         setVoices(data.voices || []);
       } catch (requestError) {
-        setError("Не удалось загрузить список голосов");
+        setError(t("generate.loadVoicesError"));
         setVoices([]);
       } finally {
         setIsLoadingVoices(false);
@@ -47,7 +48,7 @@ export const GeneratePage = () => {
     };
 
     void loadVoices();
-  }, []);
+  }, [t]);
 
   const canGenerate = useMemo(() => {
     return Boolean(telegramId && selectedVoiceId && text.trim().length > 0 && text.length <= 1000 && !isGenerating);
@@ -55,12 +56,12 @@ export const GeneratePage = () => {
 
   const handleGenerate = async () => {
     if (!selectedVoiceId) {
-      setError("Сначала выберите голос");
+      setError(t("generate.selectVoiceFirst"));
       return;
     }
 
     if (!telegramId) {
-      setError("Не удалось определить пользователя Telegram. Перезапустите приложение.");
+      setError(t("generate.telegramMissing"));
       return;
     }
 
@@ -91,9 +92,9 @@ export const GeneratePage = () => {
       // Если бэкенд вернул 403 (лимит исчерпан), покажем понятное сообщение
       const err = requestError as any;
       if (err?.response?.status === 403) {
-        setError("Дневной лимит генераций исчерпан. Перейдите на Pro-тариф.");
+        setError(t("generate.dailyLimit"));
       } else {
-        setError("Не удалось сгенерировать аудио");
+        setError(t("generate.generateError"));
       }
     } finally {
       setIsGenerating(false);
@@ -103,8 +104,8 @@ export const GeneratePage = () => {
   return (
     <div className="space-y-5 pb-24">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">VoiceStudio Pro</h1>
-        <p className="text-sm text-slate-600">Генерация речи для Telegram Mini App</p>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("generate.title")}</h1>
+        <p className="text-sm text-slate-600 dark:text-slate-300">{t("generate.subtitle")}</p>
       </div>
 
       {error ? <div className="rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</div> : null}
@@ -112,7 +113,7 @@ export const GeneratePage = () => {
       {isLoadingVoices ? (
         <div className="flex items-center gap-2 text-sm text-slate-600">
           <Spinner />
-          <span>Загрузка голосов...</span>
+          <span>{t("common.loading")}</span>
         </div>
       ) : (
         <VoiceSelector
@@ -130,10 +131,10 @@ export const GeneratePage = () => {
         {isGenerating ? (
           <>
             <Spinner />
-            Генерация...
+            {t("generate.generating")}
           </>
         ) : (
-          "Сгенерировать"
+          t("generate.generate")
         )}
       </Button>
 
