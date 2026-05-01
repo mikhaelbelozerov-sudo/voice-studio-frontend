@@ -42,13 +42,29 @@ function App() {
 
   useEffect(() => {
     const webApp = (window as any).Telegram?.WebApp;
-    if (!webApp?.requestFullscreen) {
+    if (!webApp) {
       return;
     }
 
-    Promise.resolve(webApp.requestFullscreen()).catch((error) => {
-      console.error("Failed to request fullscreen:", error);
-    });
+    webApp.expand();
+
+    if (webApp.requestFullscreen) {
+      Promise.resolve(webApp.requestFullscreen()).catch((error: unknown) => {
+        console.error("Failed to request fullscreen:", error);
+      });
+    }
+
+    const backButton = webApp.BackButton;
+    const handleClose = () => {
+      webApp.close();
+    };
+
+    backButton.show();
+    backButton.onClick(handleClose);
+
+    return () => {
+      backButton.offClick(handleClose);
+    };
   }, []);
 
   return (
