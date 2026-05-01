@@ -5,7 +5,7 @@ import { useTelegram } from "../hooks/useTelegram";
 import { fetchGenerations, Generation, getVoices, UserTier, Voice } from "../services/api";
 import { Button } from "../components/ui/Button";
 import { Spinner } from "../components/ui/Spinner";
-import { formatRemainingTime, isExpiringSoon } from "../utils/formatRemainingTime";
+import { getRemainingStorageInfo, isExpiringSoon } from "../utils/formatRemainingTime";
 
 const PAGE_SIZE = 20;
 const FALLBACK_TELEGRAM_ID = 123456789;
@@ -47,6 +47,20 @@ export const LibraryPage = () => {
   const { telegramId: telegramUserId } = useTelegram();
   const telegramId = useMemo(() => telegramUserId ?? FALLBACK_TELEGRAM_ID, [telegramUserId]);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
+  const renderStorageLabel = (item: Generation) => {
+    const remaining = getRemainingStorageInfo(item.created_at, userTier, Boolean(item.file_deleted));
+    if (remaining.kind === "file_deleted") {
+      return t("history.file_deleted");
+    }
+    if (remaining.kind === "permanent") {
+      return t("history.permanently_stored");
+    }
+    if (remaining.kind === "less_than_hour") {
+      return t("history.deleted_in_less_than_hour");
+    }
+    return t("history.deleted_in", { hours: remaining.hours, minutes: remaining.minutes });
+  };
 
   const [items, setItems] = useState<Generation[]>([]);
   const [voices, setVoices] = useState<Voice[]>([]);
@@ -168,14 +182,14 @@ export const LibraryPage = () => {
   }, [loadMore]);
 
   return (
-    <div className="space-y-4 pb-24">
+    <div className="space-y-4 pb-24 bg-gray-50 dark:bg-gray-900">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("library.title")}</h1>
-        <p className="text-sm text-slate-600 dark:text-slate-300">{t("library.subtitle")}</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t("library.title")}</h1>
+        <p className="text-sm text-gray-600 dark:text-gray-400">{t("library.subtitle")}</p>
       </div>
 
       {error ? (
-        <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/30 dark:text-red-300">
           <p>{error}</p>
           <Button className="mt-3" variant="secondary" onClick={() => void loadGenerations(0, false)}>
             {t("common.retry")}
@@ -184,14 +198,14 @@ export const LibraryPage = () => {
       ) : null}
 
       {isLoadingInitial ? (
-        <div className="flex items-center justify-center gap-2 rounded-2xl bg-white p-6 text-slate-600 shadow-sm">
+        <div className="flex items-center justify-center gap-2 rounded-2xl bg-white p-6 text-gray-600 shadow-sm dark:bg-gray-800 dark:text-gray-300 dark:shadow-none dark:ring-1 dark:ring-gray-700">
           <Spinner />
           <span>{t("library.loading")}</span>
         </div>
       ) : null}
 
       {!isLoadingInitial && !error && items.length === 0 ? (
-        <div className="rounded-2xl bg-white p-6 text-center text-slate-600 shadow-sm">
+        <div className="rounded-2xl bg-white p-6 text-center text-gray-600 shadow-sm dark:bg-gray-800 dark:text-gray-300 dark:shadow-none dark:ring-1 dark:ring-gray-700">
           {t("library.empty")}
         </div>
       ) : null}
@@ -199,15 +213,15 @@ export const LibraryPage = () => {
       {!isLoadingInitial && items.length > 0 ? (
         <div className="space-y-3">
           {items.map((item) => (
-            <article key={item.id} className="rounded-2xl bg-white p-4 shadow-sm">
-              <p className="text-sm text-slate-800 dark:text-slate-100">{truncateText(item.text, t("library.noText"))}</p>
+            <article key={item.id} className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:shadow-none">
+              <p className="text-sm text-gray-900 dark:text-gray-100">{truncateText(item.text, t("library.noText"))}</p>
 
-              <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-slate-500">
-                <span className="inline-flex items-center gap-1">
+              <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-gray-600 dark:text-gray-400">
+                <span className="inline-flex items-center gap-1 text-current">
                   <CalendarDays size={14} />
                   {formatDateTime(item.created_at, i18n.language)}
                 </span>
-                <span className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-2 py-1 text-slate-700">
+                <span className="inline-flex items-center gap-1 rounded-lg bg-gray-100 px-2 py-1 text-gray-700 dark:bg-gray-700 dark:text-gray-200">
                   <AudioWaveform size={14} />
                   {(item.voice_id && voiceNameById.get(item.voice_id)) || item.voice_id || t("library.unknownVoice")}
                 </span>
@@ -216,12 +230,12 @@ export const LibraryPage = () => {
               <div
                 className={`mt-2 inline-flex items-center gap-1 text-xs ${
                   isExpiringSoon(item.created_at, userTier, Boolean(item.file_deleted))
-                    ? "text-amber-600"
-                    : "text-slate-500"
+                    ? "text-amber-600 dark:text-amber-400"
+                    : "text-gray-600 dark:text-gray-400"
                 }`}
               >
                 <Clock3 size={14} />
-                <span>{formatRemainingTime(item.created_at, userTier, Boolean(item.file_deleted))}</span>
+                <span>{renderStorageLabel(item)}</span>
               </div>
 
               <div className="mt-3">
@@ -233,7 +247,7 @@ export const LibraryPage = () => {
                     {t("library.download")}
                   </Button>
                 ) : (
-                  <span className="text-sm font-medium text-slate-500">{t("library.deleted")}</span>
+                  <span className="text-sm font-medium text-gray-500 dark:text-gray-400">{t("history.file_deleted")}</span>
                 )}
               </div>
             </article>

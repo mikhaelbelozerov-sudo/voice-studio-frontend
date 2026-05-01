@@ -3,57 +3,80 @@ import { UserTier } from "../services/api";
 const HOUR_MS = 60 * 60 * 1000;
 const DAY_MS = 24 * HOUR_MS;
 
-export const formatRemainingTime = (
+export type RemainingStorageInfo =
+  | { kind: "file_deleted" }
+  | { kind: "permanent" }
+  | { kind: "less_than_hour" }
+  | { kind: "time_left"; hours: number; minutes: number };
+
+export type SubscriptionRemainingInfo =
+  | { kind: "inactive" }
+  | { kind: "expired" }
+  | { kind: "active"; days: number; hours: number };
+
+export const getRemainingStorageInfo = (
   createdAt: string,
   tier: UserTier,
   fileDeleted = false
-): string => {
+): RemainingStorageInfo => {
   if (fileDeleted) {
-    return "Файл удалён";
+    return { kind: "file_deleted" };
   }
 
   if (tier === "premium") {
-    return "Бессрочно";
+    return { kind: "permanent" };
   }
 
   const ttlMs = tier === "pro" ? 30 * DAY_MS : DAY_MS;
   const remainingMs = new Date(createdAt).getTime() + ttlMs - Date.now();
 
   if (remainingMs <= 0) {
-    return "Удаляется менее чем через час";
+    return { kind: "less_than_hour" };
   }
 
-  if (tier === "free") {
-    const totalMinutes = Math.floor(remainingMs / (60 * 1000));
-    if (totalMinutes < 60) {
-      return "Удаляется менее чем через час";
-    }
-
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
-    return `Будет удалён через ${hours} ч. ${minutes} мин.`;
+  const totalMinutes = Math.floor(remainingMs / (60 * 1000));
+  if (totalMinutes < 60) {
+    return { kind: "less_than_hour" };
   }
 
-  const totalHours = Math.floor(remainingMs / HOUR_MS);
-  const days = Math.floor(totalHours / 24);
-  const hours = totalHours % 24;
-  return `Будет удалён через ${days} дн. ${hours} ч.`;
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  return { kind: "time_left", hours, minutes };
 };
 
-export const formatSubscriptionRemaining = (expiresAt: string | null): string => {
+export const formatRemainingTime = (
+  createdAt: string,
+  tier: UserTier,
+  fileDeleted = false
+): string => {
+  const info = getRemainingStorageInfo(createdAt, tier, fileDeleted);
+  if (info.kind === "file_deleted") return "Файл удалён";
+  if (info.kind === "permanent") return "Хранится постоянно";
+  if (info.kind === "less_than_hour") return "Будет удалён менее чем через час";
+  return `Будет удалён через ${info.hours} ч ${info.minutes} мин`;
+};
+
+export const getSubscriptionRemainingInfo = (expiresAt: string | null): SubscriptionRemainingInfo => {
   if (!expiresAt) {
-    return "Не активна";
+    return { kind: "inactive" };
   }
 
   const remainingMs = new Date(expiresAt).getTime() - Date.now();
   if (remainingMs <= 0) {
-    return "Истекла";
+    return { kind: "expired" };
   }
 
   const totalHours = Math.floor(remainingMs / HOUR_MS);
   const days = Math.floor(totalHours / 24);
   const hours = totalHours % 24;
-  return `${days} дн. ${hours} ч.`;
+  return { kind: "active", days, hours };
+};
+
+export const formatSubscriptionRemaining = (expiresAt: string | null): string => {
+  const info = getSubscriptionRemainingInfo(expiresAt);
+  if (info.kind === "inactive") return "Не активна";
+  if (info.kind === "expired") return "Истекла";
+  return `${info.days} дн. ${info.hours} ч.`;
 };
 
 export const isExpiringSoon = (createdAt: string, tier: UserTier, fileDeleted = false): boolean => {

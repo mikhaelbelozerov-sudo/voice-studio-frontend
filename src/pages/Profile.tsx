@@ -4,7 +4,7 @@ import { Button } from "../components/ui/Button";
 import { Spinner } from "../components/ui/Spinner";
 import { useTelegram } from "../hooks/useTelegram";
 import { getUserProfile, updateUserLanguage, UserProfile } from "../services/api";
-import { formatSubscriptionRemaining } from "../utils/formatRemainingTime";
+import { getSubscriptionRemainingInfo } from "../utils/formatRemainingTime";
 import { LANGUAGE_STORAGE_KEY } from "../i18n";
 
 const FALLBACK_TELEGRAM_ID = 123456789;
@@ -28,6 +28,13 @@ export const ProfilePage = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const getSubscriptionLabel = () => {
+    const info = getSubscriptionRemainingInfo(profile?.subscription_expires_at ?? null);
+    if (info.kind === "inactive") return t("profile.subscription_inactive");
+    if (info.kind === "expired") return t("profile.subscription_expired");
+    return t("profile.subscription_active", { days: info.days, hours: info.hours });
+  };
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -133,7 +140,7 @@ export const ProfilePage = () => {
           {t("profile.expiresAt")}: {formatDate(profile?.subscription_expires_at ?? null, i18n.language)}
         </p>
         <p className="text-sm text-slate-600 dark:text-slate-300">
-          {t("profile.remaining")}: {formatSubscriptionRemaining(profile?.subscription_expires_at ?? null)}
+          {t("profile.remaining")}: {getSubscriptionLabel()}
         </p>
       </div>
 

@@ -77,7 +77,16 @@
     "myPlan": "My plan",
     "expiresAt": "Expires at",
     "remaining": "Remaining",
-    "starsMinutes": "Stars minutes"
+    "starsMinutes": "Stars minutes",
+    "subscription_inactive": "Inactive",
+    "subscription_expired": "Expired",
+    "subscription_active": "{{days}} d {{hours}} h"
+  },
+  "history": {
+    "deleted_in": "Will be deleted in {{hours}} h {{minutes}} min",
+    "deleted_in_less_than_hour": "Will be deleted in less than an hour",
+    "permanently_stored": "Permanently stored",
+    "file_deleted": "File deleted"
   },
   "library": {
     "title": "History",

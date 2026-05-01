@@ -1,3 +1,12 @@
 {
-  "note": "Source translations are in src/locales/en/translation.json"
+  "history": {
+    "deleted_in": "Will be deleted in {{hours}} h {{minutes}} min",
+    "deleted_in_less_than_hour": "Will be deleted in less than an hour",
+    "permanently_stored": "Permanently stored",
+    "file_deleted": "File deleted"
+  },
+  "profile": {
+    "remaining": "Remaining",
+    "subscription_inactive": "Inactive"
+  }
 }

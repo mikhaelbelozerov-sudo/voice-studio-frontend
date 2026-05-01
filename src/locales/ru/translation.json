@@ -77,7 +77,16 @@
     "myPlan": "Мой тариф",
     "expiresAt": "До",
     "remaining": "Осталось",
-    "starsMinutes": "Stars минуты"
+    "starsMinutes": "Stars минуты",
+    "subscription_inactive": "Не активна",
+    "subscription_expired": "Истекла",
+    "subscription_active": "{{days}} дн. {{hours}} ч."
+  },
+  "history": {
+    "deleted_in": "Будет удалён через {{hours}} ч {{minutes}} мин",
+    "deleted_in_less_than_hour": "Будет удалён менее чем через час",
+    "permanently_stored": "Хранится постоянно",
+    "file_deleted": "Файл удалён"
   },
   "library": {
     "title": "История",

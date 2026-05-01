@@ -1,3 +1,12 @@
 {
-  "note": "Source translations are in src/locales/ru/translation.json"
+  "history": {
+    "deleted_in": "Будет удалён через {{hours}} ч {{minutes}} мин",
+    "deleted_in_less_than_hour": "Будет удалён менее чем через час",
+    "permanently_stored": "Хранится постоянно",
+    "file_deleted": "Файл удалён"
+  },
+  "profile": {
+    "remaining": "Осталось",
+    "subscription_inactive": "Не активна"
+  }
 }
