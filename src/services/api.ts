@@ -65,6 +65,7 @@ export interface CreateInvoiceRequest {
 export interface CreateInvoiceResponse {
   payload: string;
   amountStars: number;
+  invoiceLink: string;
 }
 
 export const getVoices = async () => {

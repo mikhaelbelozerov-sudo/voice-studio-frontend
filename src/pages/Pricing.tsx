@@ -138,7 +138,7 @@ export const PricingPage = () => {
 
         const invoice = await createInvoice(invoicePayload);
 
-        openInvoice(invoice.payload, async (status) => {
+        openInvoice(invoice.invoiceLink, async (status) => {
           if (status === "paid") {
             try {
               await refreshProfile();
@@ -161,8 +161,15 @@ export const PricingPage = () => {
 
           setError("Платёж находится в обработке. Проверьте баланс через несколько секунд.");
         });
-      } catch (_err) {
-        setError("Не удалось создать инвойс. Попробуйте позже.");
+      } catch (err) {
+        const message =
+          typeof err === "object" &&
+          err !== null &&
+          "response" in err &&
+          typeof (err as { response?: { data?: { error?: string } } }).response?.data?.error === "string"
+            ? (err as { response: { data: { error: string } } }).response.data.error
+            : "Не удалось создать инвойс. Попробуйте позже.";
+        setError(message);
       } finally {
         setIsPurchasingId(null);
       }
