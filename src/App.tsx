@@ -8,8 +8,8 @@ import { ProfilePage } from "./pages/Profile";
 const navItems = [
   { to: "/generate", label: "Generate", icon: Home },
   { to: "/library", label: "История", icon: Library },
-  { to: "/pricing", label: "Pricing", icon: WalletCards },
-  { to: "/profile", label: "Profile", icon: UserCircle }
+  { to: "/pricing", label: "Оплата", icon: WalletCards },
+  { to: "/profile", label: "Профиль", icon: UserCircle }
 ];
 
 function App() {

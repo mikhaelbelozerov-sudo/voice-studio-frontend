@@ -53,6 +53,20 @@ export interface UserProfile {
   stars_minutes: number;
 }
 
+export type InvoiceProductType = "minutes" | "subscription";
+
+export interface CreateInvoiceRequest {
+  telegramId: number;
+  productType: InvoiceProductType;
+  productValue: number;
+  amountStars: number;
+}
+
+export interface CreateInvoiceResponse {
+  payload: string;
+  amountStars: number;
+}
+
 export const getVoices = async () => {
   const { data } = await api.get<VoicesResponse>("/voices");
   return data;
@@ -85,5 +99,10 @@ export const getUserProfile = async (telegramId: number) => {
   const { data } = await api.get<UserProfile>("/user/profile", {
     params: { telegramId }
   });
+  return data;
+};
+
+export const createInvoice = async (payload: CreateInvoiceRequest) => {
+  const { data } = await api.post<CreateInvoiceResponse>("/create-invoice", payload);
   return data;
 };

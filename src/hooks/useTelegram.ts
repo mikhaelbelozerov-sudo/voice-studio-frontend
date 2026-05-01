@@ -7,10 +7,12 @@ export const useTelegram = () => {
     WebApp.expand();
 
     const user = WebApp.initDataUnsafe?.user;
+    const telegramId = typeof user?.id === "number" ? user.id : null;
     const colorScheme = WebApp.colorScheme || "light";
 
     return {
       user,
+      telegramId,
       isDark: colorScheme === "dark",
       colorScheme
     };

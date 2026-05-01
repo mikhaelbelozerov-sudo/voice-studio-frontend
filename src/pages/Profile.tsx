@@ -6,7 +6,6 @@ import { getUserProfile, UserProfile } from "../services/api";
 import { formatSubscriptionRemaining } from "../utils/formatRemainingTime";
 
 const FALLBACK_TELEGRAM_ID = 123456789;
-const BOT_BUY_LINK = "https://t.me/VoiceStudioProBot?start=buy";
 
 const formatDate = (iso: string | null) => {
   if (!iso) return "—";
@@ -20,8 +19,8 @@ const formatDate = (iso: string | null) => {
 };
 
 export const ProfilePage = () => {
-  const { user, isDark } = useTelegram();
-  const telegramId = useMemo(() => user?.id ?? FALLBACK_TELEGRAM_ID, [user?.id]);
+  const { user, telegramId: telegramUserId, isDark } = useTelegram();
+  const telegramId = useMemo(() => telegramUserId ?? FALLBACK_TELEGRAM_ID, [telegramUserId]);
 
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -95,9 +94,6 @@ export const ProfilePage = () => {
         <p className="text-base font-semibold text-slate-900">{profile?.stars_minutes ?? 0}</p>
       </div>
 
-      <a href={BOT_BUY_LINK} target="_blank" rel="noreferrer" className="block">
-        <Button className="w-full">Купить минуты / Подписку</Button>
-      </a>
     </div>
   );
 };
