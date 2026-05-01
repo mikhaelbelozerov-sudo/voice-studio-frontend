@@ -70,6 +70,7 @@ export const GeneratePage = () => {
     setAudioUrl(null);
 
     try {
+      console.log("[GeneratePage] sending controls", { speed, pitch, voiceId: selectedVoiceId, telegramId });
       const response = await generateAudio({
         text,
         voiceId: selectedVoiceId,
@@ -91,10 +92,15 @@ export const GeneratePage = () => {
     } catch (requestError) {
       // Если бэкенд вернул 403 (лимит исчерпан), покажем понятное сообщение
       const err = requestError as any;
+      console.error("[GeneratePage] generation failed", {
+        status: err?.response?.status,
+        data: err?.response?.data,
+        message: err?.message
+      });
       if (err?.response?.status === 403) {
         setError(t("generate.dailyLimit"));
       } else {
-        setError(t("generate.generateError"));
+        setError(err?.response?.data?.error ?? t("generate.generateError"));
       }
     } finally {
       setIsGenerating(false);

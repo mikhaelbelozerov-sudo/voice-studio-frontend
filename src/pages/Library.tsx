@@ -51,15 +51,15 @@ export const LibraryPage = () => {
   const renderStorageLabel = (item: Generation) => {
     const remaining = getRemainingStorageInfo(item.created_at, userTier, Boolean(item.file_deleted));
     if (remaining.kind === "file_deleted") {
-      return t("history.file_deleted");
+      return t("generation.fileDeleted");
     }
     if (remaining.kind === "permanent") {
-      return t("history.permanently_stored");
+      return t("generation.permanentlyStored");
     }
     if (remaining.kind === "less_than_hour") {
-      return t("history.deleted_in_less_than_hour");
+      return t("generation.willBeDeletedLessThanHour");
     }
-    return t("history.deleted_in", { hours: remaining.hours, minutes: remaining.minutes });
+    return t("generation.willBeDeleted", { hours: remaining.hours, minutes: remaining.minutes });
   };
 
   const [items, setItems] = useState<Generation[]>([]);
@@ -182,7 +182,7 @@ export const LibraryPage = () => {
   }, [loadMore]);
 
   return (
-    <div className="space-y-4 pb-24 bg-gray-50 dark:bg-gray-900">
+    <div className="space-y-4 pb-24">
       <div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t("library.title")}</h1>
         <p className="text-sm text-gray-600 dark:text-gray-400">{t("library.subtitle")}</p>
@@ -247,7 +247,7 @@ export const LibraryPage = () => {
                     {t("library.download")}
                   </Button>
                 ) : (
-                  <span className="text-sm font-medium text-gray-500 dark:text-gray-400">{t("history.file_deleted")}</span>
+                  <span className="text-sm font-medium text-gray-500 dark:text-gray-400">{t("generation.fileDeleted")}</span>
                 )}
               </div>
             </article>

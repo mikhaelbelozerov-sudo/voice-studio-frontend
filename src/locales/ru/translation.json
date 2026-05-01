@@ -8,7 +8,8 @@
     "light": "Светлая",
     "dark": "Тёмная",
     "russian": "Русский",
-    "english": "English"
+    "english": "English",
+    "remaining": "Осталось"
   },
   "nav": {
     "generate": "Генерация",
@@ -29,7 +30,16 @@
     "dailyLimit": "Дневной лимит генераций исчерпан. Перейдите на Pro-тариф.",
     "generateError": "Не удалось сгенерировать аудио",
     "generate": "Сгенерировать",
-    "generating": "Генерация..."
+    "generating": "Генерация...",
+    "resultTitle": "Результат генерации",
+    "audioNotSupported": "Ваш браузер не поддерживает аудио.",
+    "downloadMp3": "Скачать MP3"
+  },
+  "generation": {
+    "willBeDeleted": "Будет удален через {{hours}} ч. {{minutes}} мин.",
+    "willBeDeletedLessThanHour": "Будет удален менее чем через час",
+    "permanentlyStored": "Хранится постоянно",
+    "fileDeleted": "Файл удалён"
   },
   "voice": {
     "selectVoice": "Выберите голос",
@@ -79,6 +89,7 @@
     "remaining": "Осталось",
     "starsMinutes": "Stars минуты",
     "subscription_inactive": "Не активна",
+    "remainingInactive": "Не активна",
     "subscription_expired": "Истекла",
     "subscription_active": "{{days}} дн. {{hours}} ч."
   },

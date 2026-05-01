@@ -86,7 +86,13 @@ export const generateAudio = async (params: {
   pitch: number;
   telegramId: number;
 }) => {
-  const response = await api.post('/generate', params);
+  const normalizedPayload = {
+    ...params,
+    speed: Number(params.speed),
+    pitch: Number(params.pitch)
+  };
+  console.log("[generateAudio] payload", normalizedPayload);
+  const response = await api.post('/generate', normalizedPayload);
   return response.data;
 };
 

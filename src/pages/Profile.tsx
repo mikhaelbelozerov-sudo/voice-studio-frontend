@@ -31,7 +31,7 @@ export const ProfilePage = () => {
 
   const getSubscriptionLabel = () => {
     const info = getSubscriptionRemainingInfo(profile?.subscription_expires_at ?? null);
-    if (info.kind === "inactive") return t("profile.subscription_inactive");
+    if (info.kind === "inactive") return t("profile.remainingInactive");
     if (info.kind === "expired") return t("profile.subscription_expired");
     return t("profile.subscription_active", { days: info.days, hours: info.hours });
   };
@@ -140,7 +140,7 @@ export const ProfilePage = () => {
           {t("profile.expiresAt")}: {formatDate(profile?.subscription_expires_at ?? null, i18n.language)}
         </p>
         <p className="text-sm text-slate-600 dark:text-slate-300">
-          {t("profile.remaining")}: {getSubscriptionLabel()}
+          {t("common.remaining")}: {getSubscriptionLabel()}
         </p>
       </div>
 
