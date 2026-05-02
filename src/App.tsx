@@ -1,5 +1,5 @@
 import { Home, Library, UserCircle, WalletCards } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 import { Layout } from "./components/layout/Layout";
@@ -39,15 +39,6 @@ function App() {
       }
     }
   };
-
-  useEffect(() => {
-    const webApp = (window as any).Telegram?.WebApp;
-    if (!webApp) {
-      return;
-    }
-
-    webApp.expand();
-  }, []);
 
   return (
     <Layout>
