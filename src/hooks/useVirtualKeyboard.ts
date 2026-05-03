@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-const FORM_SELECTOR = "input:not([type='button']):not([type='submit']):not([type='reset']):not([type='checkbox']):not([type='radio']):not([type='hidden']), textarea, select, [contenteditable='true']";
+const FORM_SELECTOR =
+  "input:not([type='button']):not([type='submit']):not([type='reset']):not([type='checkbox']):not([type='radio']):not([type='hidden']), textarea, select, [contenteditable='true']";
 
 function isFormField(el: EventTarget | null): boolean {
   if (!el || !(el instanceof Element)) {
@@ -9,15 +10,41 @@ function isFormField(el: EventTarget | null): boolean {
   return el.matches(FORM_SELECTOR) || el.closest(FORM_SELECTOR) !== null;
 }
 
+function hideTelegramKeyboard(): void {
+  const wtg = (window as { Telegram?: { WebApp?: { hideKeyboard?: () => void } } }).Telegram?.WebApp;
+  if (typeof wtg?.hideKeyboard !== "function") {
+    return;
+  }
+  try {
+    wtg.hideKeyboard();
+  } catch {
+    /* Bot API < 9.1 или не Mini App */
+  }
+}
+
 /**
- * Скрывает нижнее меню при открытой клавиатуре (фокус в поле ввода), чтобы таббар не висел над клавиатурой.
+ * Скрывает нижний таббар при открытой клавиатуре (класс vs-keyboard-open на html)
+ * и даёт способ программно закрыть клавиатуру.
  */
-export function useHideBottomNavOnKeyboard(): void {
+export function useVirtualKeyboard() {
+  const [isKeyboardOpen, setKeyboardOpen] = useState(false);
+
+  const dismissKeyboard = useCallback(() => {
+    hideTelegramKeyboard();
+    const ae = document.activeElement;
+    if (ae instanceof HTMLElement) {
+      ae.blur();
+    }
+    document.documentElement.classList.remove("vs-keyboard-open");
+    setKeyboardOpen(false);
+  }, []);
+
   useEffect(() => {
     const root = document.documentElement;
     let hideTimer: ReturnType<typeof setTimeout> | undefined;
 
-    const setOpen = (open: boolean) => {
+    const applyOpen = (open: boolean) => {
+      setKeyboardOpen(open);
       root.classList.toggle("vs-keyboard-open", open);
     };
 
@@ -27,7 +54,7 @@ export function useHideBottomNavOnKeyboard(): void {
           clearTimeout(hideTimer);
           hideTimer = undefined;
         }
-        setOpen(true);
+        applyOpen(true);
       }
     };
 
@@ -38,7 +65,7 @@ export function useHideBottomNavOnKeyboard(): void {
       hideTimer = window.setTimeout(() => {
         hideTimer = undefined;
         if (!isFormField(document.activeElement)) {
-          setOpen(false);
+          applyOpen(false);
         }
       }, 250);
     };
@@ -51,9 +78,9 @@ export function useHideBottomNavOnKeyboard(): void {
       const ratio = vv.height / window.innerHeight;
       const keyboardLikely = ratio < 0.72;
       if (keyboardLikely && isFormField(document.activeElement)) {
-        setOpen(true);
+        applyOpen(true);
       } else if (!keyboardLikely && !isFormField(document.activeElement)) {
-        setOpen(false);
+        applyOpen(false);
       }
     };
 
@@ -68,7 +95,9 @@ export function useHideBottomNavOnKeyboard(): void {
       if (hideTimer !== undefined) {
         clearTimeout(hideTimer);
       }
-      setOpen(false);
+      applyOpen(false);
     };
   }, []);
+
+  return { isKeyboardOpen, dismissKeyboard };
 }

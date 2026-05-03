@@ -4,8 +4,9 @@ import { useTranslation } from "react-i18next";
 import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 import { Layout } from "./components/layout/Layout";
 import { Button } from "./components/ui/Button";
-import { useHideBottomNavOnKeyboard } from "./hooks/useHideBottomNavOnKeyboard";
+import { KeyboardAccessoryBar } from "./components/ui/KeyboardAccessoryBar";
 import { useTelegram } from "./hooks/useTelegram";
+import { useVirtualKeyboard } from "./hooks/useVirtualKeyboard";
 import { GeneratePage } from "./pages/Generate";
 import { LibraryPage } from "./pages/Library";
 import { PricingPage } from "./pages/Pricing";
@@ -16,7 +17,7 @@ import { LANGUAGE_STORAGE_KEY } from "./i18n";
 function App() {
   const { t, i18n } = useTranslation();
   const { telegramId } = useTelegram();
-  useHideBottomNavOnKeyboard();
+  const { isKeyboardOpen, dismissKeyboard } = useVirtualKeyboard();
   const [showLanguageModal, setShowLanguageModal] = useState(() => !window.localStorage.getItem(LANGUAGE_STORAGE_KEY));
 
   const navItems = useMemo(
@@ -52,6 +53,8 @@ function App() {
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/profile" element={<ProfilePage />} />
         </Routes>
+
+        <KeyboardAccessoryBar visible={isKeyboardOpen} doneLabel={t("common.keyboardDone")} onDismiss={dismissKeyboard} />
 
         <nav className="app-bottom-nav fixed bottom-0 left-0 right-0 border-t border-slate-200 bg-white/95 backdrop-blur dark:border-slate-800 dark:bg-slate-900/95">
           <div className="mx-auto grid w-full max-w-3xl grid-cols-4 gap-1 px-2 py-2">

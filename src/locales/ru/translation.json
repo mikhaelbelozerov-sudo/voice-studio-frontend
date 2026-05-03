@@ -9,7 +9,8 @@
     "dark": "Тёмная",
     "russian": "Русский",
     "english": "English",
-    "remaining": "Осталось"
+    "remaining": "Осталось",
+    "keyboardDone": "Готово"
   },
   "nav": {
     "generate": "Генерация",

@@ -9,7 +9,8 @@
     "dark": "Dark",
     "russian": "Russian",
     "english": "English",
-    "remaining": "Remaining"
+    "remaining": "Remaining",
+    "keyboardDone": "Done"
   },
   "nav": {
     "generate": "Generate",
