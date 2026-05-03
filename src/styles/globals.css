@@ -3,6 +3,10 @@
  * См. https://core.telegram.org/bots/webapps — CSS vars --tg-content-safe-area-inset-*
  * и env(safe-area-inset-*) для Dynamic Island / жестов.
  */
+html {
+  touch-action: manipulation;
+}
+
 html,
 body,
 #root {
