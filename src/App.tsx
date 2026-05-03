@@ -42,7 +42,7 @@ function App() {
 
   return (
     <Layout>
-      <div className="app-main mx-auto min-h-screen w-full max-w-3xl bg-slate-100 px-4 pt-4 dark:bg-slate-950">
+      <div className="app-main mx-auto min-h-screen w-full max-w-3xl bg-slate-100 px-4 pt-2 dark:bg-slate-950">
         <Routes>
           <Route path="/" element={<Navigate to="/generate" replace />} />
           <Route path="/generate" element={<GeneratePage />} />

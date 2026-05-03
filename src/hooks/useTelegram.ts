@@ -54,6 +54,7 @@ function syncTelegramContentSafeAreaVars(): void {
 
   const root = document.documentElement;
   if (!tg) {
+    root.style.setProperty("--vs-app-top-offset", "0px");
     return;
   }
 
@@ -63,16 +64,17 @@ function syncTelegramContentSafeAreaVars(): void {
   const sTop = Number(safe.top) || 0;
   const cTop = Number(content.top) || 0;
   const isFs = tg.isFullscreen === true;
-  const seemsMissingChromeRow = isFs && cTop < sTop + 40;
-  const effectiveTop = seemsMissingChromeRow ? Math.max(cTop, sTop + 52) : Math.max(cTop, sTop);
+  /** В fullscreen шапка прозрачная — всегда даём запас под строку управления (не только при «заниженном» cTop). */
+  const chromeRowPx = 72;
+  const effectiveTop = isFs ? Math.max(cTop, sTop + chromeRowPx) : Math.max(cTop, sTop);
 
   const sL = Number(safe.left) || 0;
   const cL = Number(content.left) || 0;
-  const effectiveLeft = isFs && Math.max(cL, sL) < 48 ? Math.max(cL, sL, 48) : Math.max(cL, sL);
+  const effectiveLeft = isFs && Math.max(cL, sL) < 56 ? Math.max(cL, sL, 56) : Math.max(cL, sL);
 
   const sR = Number(safe.right) || 0;
   const cR = Number(content.right) || 0;
-  const effectiveRight = isFs && Math.max(cR, sR) < 48 ? Math.max(cR, sR, 48) : Math.max(cR, sR);
+  const effectiveRight = isFs && Math.max(cR, sR) < 56 ? Math.max(cR, sR, 56) : Math.max(cR, sR);
 
   const sB = Number(safe.bottom) || 0;
   const cB = Number(content.bottom) || 0;
@@ -84,6 +86,13 @@ function syncTelegramContentSafeAreaVars(): void {
   root.style.setProperty("--tg-content-safe-area-inset-left", px(effectiveLeft));
   root.style.setProperty("--tg-content-safe-area-inset-right", px(effectiveRight));
   root.style.setProperty("--tg-content-safe-area-inset-bottom", px(effectiveBottom));
+
+  /** Фиксированный дополнительный отступ под пункты меню / заголовок (px). */
+  const platform = String(tg.platform ?? "");
+  const iosBoost = platform === "ios" ? 12 : 0;
+  const extraTop =
+    (isFs ? 32 : 20) + iosBoost + (cTop === 0 && sTop === 0 ? 24 : 0);
+  root.style.setProperty("--vs-app-top-offset", `${extraTop}px`);
 }
 
 export const useTelegram = () => {

@@ -18,9 +18,12 @@ body,
   min-height: 100dvh;
   background: var(--tg-theme-bg-color, #f1f5f9);
 
-  padding-top: max(
-    env(safe-area-inset-top, 0px),
-    var(--tg-content-safe-area-inset-top, 0px)
+  /* Доп. сдвиг вниз под строку Telegram (закрыть / заголовок / меню) — задаётся в useTelegram: --vs-app-top-offset */
+  padding-top: calc(
+    max(
+      env(safe-area-inset-top, 0px),
+      var(--tg-content-safe-area-inset-top, 0px)
+    ) + var(--vs-app-top-offset, 0px)
   );
   padding-right: max(
     env(safe-area-inset-right, 0px),
@@ -39,9 +42,11 @@ body,
 /** Старый iOS: constant() внутри max() не поддерживается — отдельный слой */
 @supports (padding: constant(safe-area-inset-top)) {
   .app-container {
-    padding-top: max(
-      constant(safe-area-inset-top),
-      var(--tg-content-safe-area-inset-top, 0px)
+    padding-top: calc(
+      max(
+        constant(safe-area-inset-top),
+        var(--tg-content-safe-area-inset-top, 0px)
+      ) + var(--vs-app-top-offset, 0px)
     );
     padding-right: max(
       constant(safe-area-inset-right),
