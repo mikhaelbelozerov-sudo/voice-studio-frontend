@@ -35,6 +35,57 @@ function applyTelegramChrome(isDark: boolean) {
   }
 }
 
+type Insets = { top?: number; bottom?: number; left?: number; right?: number };
+
+/**
+ * Bot API 8.0+: safeAreaInset + contentSafeAreaInset.
+ * В fullscreen шапка Telegram прозрачная — content top иногда совпадает только с вырезом,
+ * без строки «Закрыть» + заголовок; тогда добавляем запас по высоте шапки.
+ * Значения пишем в --tg-content-safe-area-inset-*, которые читает globals.css.
+ */
+function syncTelegramContentSafeAreaVars(): void {
+  const tg = getTelegramWebApp() as
+    | (TelegramWebApp & {
+        safeAreaInset?: Insets;
+        contentSafeAreaInset?: Insets;
+        isFullscreen?: boolean;
+      })
+    | undefined;
+
+  const root = document.documentElement;
+  if (!tg) {
+    return;
+  }
+
+  const safe = tg.safeAreaInset ?? {};
+  const content = tg.contentSafeAreaInset ?? {};
+
+  const sTop = Number(safe.top) || 0;
+  const cTop = Number(content.top) || 0;
+  const isFs = tg.isFullscreen === true;
+  const seemsMissingChromeRow = isFs && cTop < sTop + 40;
+  const effectiveTop = seemsMissingChromeRow ? Math.max(cTop, sTop + 52) : Math.max(cTop, sTop);
+
+  const sL = Number(safe.left) || 0;
+  const cL = Number(content.left) || 0;
+  const effectiveLeft = isFs && Math.max(cL, sL) < 48 ? Math.max(cL, sL, 48) : Math.max(cL, sL);
+
+  const sR = Number(safe.right) || 0;
+  const cR = Number(content.right) || 0;
+  const effectiveRight = isFs && Math.max(cR, sR) < 48 ? Math.max(cR, sR, 48) : Math.max(cR, sR);
+
+  const sB = Number(safe.bottom) || 0;
+  const cB = Number(content.bottom) || 0;
+  const effectiveBottom = Math.max(cB, sB);
+
+  const px = (n: number) => `${Math.max(0, Math.round(n))}px`;
+
+  root.style.setProperty("--tg-content-safe-area-inset-top", px(effectiveTop));
+  root.style.setProperty("--tg-content-safe-area-inset-left", px(effectiveLeft));
+  root.style.setProperty("--tg-content-safe-area-inset-right", px(effectiveRight));
+  root.style.setProperty("--tg-content-safe-area-inset-bottom", px(effectiveBottom));
+}
+
 export const useTelegram = () => {
   const [theme, setThemeState] = useState<AppTheme>(() => {
     const fromStorage = window.localStorage.getItem(THEME_STORAGE_KEY);
@@ -54,7 +105,16 @@ export const useTelegram = () => {
   useEffect(() => {
     WebApp.ready();
     getTelegramWebApp()?.expand();
+    queueMicrotask(() => {
+      syncTelegramContentSafeAreaVars();
+    });
+    const insetRetry = window.setTimeout(() => {
+      syncTelegramContentSafeAreaVars();
+    }, 200);
     applyTheme(theme);
+    return () => {
+      window.clearTimeout(insetRetry);
+    };
   }, [applyTheme, theme]);
 
   useEffect(() => {
@@ -63,11 +123,48 @@ export const useTelegram = () => {
       return;
     }
     const onThemeChanged = () => {
+      syncTelegramContentSafeAreaVars();
       applyTelegramChrome(document.documentElement.classList.contains("dark"));
     };
     tg.onEvent("themeChanged", onThemeChanged);
     return () => {
       tg.offEvent("themeChanged", onThemeChanged);
+    };
+  }, []);
+
+  /** Insets и fullscreen: события есть в Bot API 8.0+, в типах @twa-dev могут отсутствовать */
+  useEffect(() => {
+    const tg = (window as { Telegram?: { WebApp: { onEvent?: (n: string, h: () => void) => void; offEvent?: (n: string, h: () => void) => void } } })
+      .Telegram?.WebApp;
+    const onEvent = tg?.onEvent;
+    const offEvent = tg?.offEvent;
+    if (!onEvent || !offEvent) {
+      return;
+    }
+
+    const onLayout = () => {
+      syncTelegramContentSafeAreaVars();
+    };
+
+    const extra = ["contentSafeAreaChanged", "safeAreaChanged", "fullscreenChanged"] as const;
+    for (const name of extra) {
+      try {
+        onEvent(name, onLayout);
+      } catch {
+        /* событие не поддерживается */
+      }
+    }
+    onEvent("viewportChanged", onLayout);
+
+    return () => {
+      offEvent("viewportChanged", onLayout);
+      for (const name of extra) {
+        try {
+          offEvent(name, onLayout);
+        } catch {
+          /* */
+        }
+      }
     };
   }, []);
 
