@@ -79,10 +79,23 @@ body,
 }
 
 .app-bottom-nav {
+  transform: translateY(0);
   padding-bottom: max(
     env(safe-area-inset-bottom, 0px),
     var(--tg-content-safe-area-inset-bottom, 0px)
   );
+  transition:
+    transform 0.2s ease,
+    opacity 0.15s ease,
+    visibility 0.2s ease;
+}
+
+/** Клавиатура открыта — убираем таббар с экрана (не над клавиатурой) */
+.vs-keyboard-open .app-bottom-nav {
+  transform: translateY(100%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 @supports (padding: constant(safe-area-inset-bottom)) {

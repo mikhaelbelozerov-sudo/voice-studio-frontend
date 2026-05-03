@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 import { Layout } from "./components/layout/Layout";
 import { Button } from "./components/ui/Button";
+import { useHideBottomNavOnKeyboard } from "./hooks/useHideBottomNavOnKeyboard";
 import { useTelegram } from "./hooks/useTelegram";
 import { GeneratePage } from "./pages/Generate";
 import { LibraryPage } from "./pages/Library";
@@ -15,6 +16,7 @@ import { LANGUAGE_STORAGE_KEY } from "./i18n";
 function App() {
   const { t, i18n } = useTranslation();
   const { telegramId } = useTelegram();
+  useHideBottomNavOnKeyboard();
   const [showLanguageModal, setShowLanguageModal] = useState(() => !window.localStorage.getItem(LANGUAGE_STORAGE_KEY));
 
   const navItems = useMemo(
