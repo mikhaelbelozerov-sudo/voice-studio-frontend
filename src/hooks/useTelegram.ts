@@ -17,14 +17,41 @@ export const useTelegram = () => {
     const isDark = nextTheme === "dark";
     document.documentElement.classList.toggle("dark", isDark);
     document.body.classList.toggle("dark", isDark);
-    WebApp.setBackgroundColor(isDark ? "#0f172a" : "#f1f5f9");
-    WebApp.setHeaderColor(isDark ? "#0f172a" : "#ffffff");
+
+    const tp = WebApp.themeParams;
+    const tgBg = tp.bg_color;
+
+    if (tgBg) {
+      WebApp.setBackgroundColor(tgBg);
+    } else {
+      WebApp.setBackgroundColor(isDark ? "#0f172a" : "#f1f5f9");
+    }
+
+    if (WebApp.isVersionAtLeast("6.1")) {
+      try {
+        WebApp.setHeaderColor("bg_color");
+      } catch {
+        WebApp.setHeaderColor((tgBg ?? (isDark ? "#1e293b" : "#ffffff")) as `#${string}`);
+      }
+    } else {
+      WebApp.setHeaderColor((tgBg ?? (isDark ? "#1e293b" : "#ffffff")) as `#${string}`);
+    }
   }, []);
 
   useEffect(() => {
     WebApp.ready();
     WebApp.expand();
     applyTheme(theme);
+  }, [applyTheme, theme]);
+
+  useEffect(() => {
+    const onTelegramThemeChanged = () => {
+      applyTheme(theme);
+    };
+    WebApp.onEvent("themeChanged", onTelegramThemeChanged);
+    return () => {
+      WebApp.offEvent("themeChanged", onTelegramThemeChanged);
+    };
   }, [applyTheme, theme]);
 
   const setTheme = useCallback(
