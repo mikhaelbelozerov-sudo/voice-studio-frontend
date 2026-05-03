@@ -1,38 +1,38 @@
 /**
- * Safe area (Dynamic Island и т.д.) — нужен viewport-fit=cover в index.html.
+ * Safe area — нужен viewport-fit=cover в index.html.
  */
 html,
 body,
 #root {
-  height: 100%;
   margin: 0;
   padding: 0;
-}
-
-body {
+  height: 100%;
   background: var(--tg-theme-bg-color);
 }
 
-/**
- * Основной контейнер приложения (Layout): отступы от выреза и жестов.
- * min-height с border-box — высота включает padding.
- */
 .app-container {
-  padding-top: constant(safe-area-inset-top);
   padding-top: env(safe-area-inset-top);
-  padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
-  padding-left: constant(safe-area-inset-left);
   padding-left: env(safe-area-inset-left);
-  padding-right: constant(safe-area-inset-right);
   padding-right: env(safe-area-inset-right);
   min-height: 100vh;
   min-height: 100dvh;
   box-sizing: border-box;
+  background: var(--tg-theme-bg-color);
+}
+
+/** Старые WebKit (iOS) */
+@supports (padding: constant(safe-area-inset-top)) {
+  .app-container {
+    padding-top: constant(safe-area-inset-top);
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-left: constant(safe-area-inset-left);
+    padding-right: constant(safe-area-inset-right);
+  }
 }
 
 /**
- * Колонка контента: запас под фиксированный таббар (высота полосы + зона home indicator).
+ * Колонка контента: запас под фиксированный таббар.
  */
 .app-main {
   box-sizing: border-box;
@@ -41,6 +41,11 @@ body {
 }
 
 .app-bottom-nav {
-  padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
+}
+
+@supports (padding: constant(safe-area-inset-bottom)) {
+  .app-bottom-nav {
+    padding-bottom: constant(safe-area-inset-bottom);
+  }
 }

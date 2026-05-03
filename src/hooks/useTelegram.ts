@@ -4,6 +4,12 @@ import WebApp from "@twa-dev/sdk";
 export type AppTheme = "light" | "dark";
 const THEME_STORAGE_KEY = "voice_studio_theme";
 
+type TelegramWebApp = typeof WebApp;
+
+function getTelegramWebApp(): TelegramWebApp | undefined {
+  return (window as unknown as { Telegram?: { WebApp: TelegramWebApp } }).Telegram?.WebApp;
+}
+
 export const useTelegram = () => {
   const [theme, setThemeState] = useState<AppTheme>(() => {
     const fromStorage = window.localStorage.getItem(THEME_STORAGE_KEY);
@@ -18,41 +24,49 @@ export const useTelegram = () => {
     document.documentElement.classList.toggle("dark", isDark);
     document.body.classList.toggle("dark", isDark);
 
-    const tp = WebApp.themeParams;
-    const tgBg = tp.bg_color;
-
-    if (tgBg) {
-      WebApp.setBackgroundColor(tgBg);
-    } else {
-      WebApp.setBackgroundColor(isDark ? "#0f172a" : "#f1f5f9");
+    const tg = getTelegramWebApp();
+    if (!tg) {
+      return;
     }
 
-    if (WebApp.isVersionAtLeast("6.1")) {
-      try {
-        WebApp.setHeaderColor("bg_color");
-      } catch {
-        WebApp.setHeaderColor((tgBg ?? (isDark ? "#1e293b" : "#ffffff")) as `#${string}`);
+    const bg = tg.themeParams.bg_color;
+    try {
+      if (bg) {
+        tg.setHeaderColor(bg);
+        tg.setBackgroundColor(bg);
+      } else {
+        tg.setHeaderColor((isDark ? "#1e293b" : "#ffffff") as `#${string}`);
+        tg.setBackgroundColor((isDark ? "#0f172a" : "#f1f5f9") as `#${string}`);
       }
-    } else {
-      WebApp.setHeaderColor((tgBg ?? (isDark ? "#1e293b" : "#ffffff")) as `#${string}`);
+    } catch {
+      /* старая версия клиента или не Mini App */
     }
   }, []);
 
   useEffect(() => {
     WebApp.ready();
-    WebApp.expand();
+    const tg = getTelegramWebApp();
+    tg?.expand();
     applyTheme(theme);
   }, [applyTheme, theme]);
 
   useEffect(() => {
-    const onTelegramThemeChanged = () => {
-      applyTheme(theme);
+    const tg = getTelegramWebApp();
+    if (!tg) {
+      return;
+    }
+    const onThemeChanged = () => {
+      const nextBg = tg.themeParams.bg_color;
+      if (nextBg) {
+        tg.setHeaderColor(nextBg);
+        tg.setBackgroundColor(nextBg);
+      }
     };
-    WebApp.onEvent("themeChanged", onTelegramThemeChanged);
+    tg.onEvent("themeChanged", onThemeChanged);
     return () => {
-      WebApp.offEvent("themeChanged", onTelegramThemeChanged);
+      tg.offEvent("themeChanged", onThemeChanged);
     };
-  }, [applyTheme, theme]);
+  }, []);
 
   const setTheme = useCallback(
     (nextTheme: AppTheme) => {
