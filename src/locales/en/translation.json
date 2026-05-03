@@ -22,8 +22,8 @@
     "description": "You can change language later in Profile."
   },
   "generate": {
-    "title": "VoiceStudio Pro",
-    "subtitle": "Speech generation for Telegram Mini App",
+    "title": "Speech generation",
+    "subtitle": "Choose a voice, enter your text, and get ready-to-use audio.",
     "loadVoicesError": "Failed to load voices",
     "selectVoiceFirst": "Select a voice first",
     "telegramMissing": "Cannot detect Telegram user. Please restart the app.",

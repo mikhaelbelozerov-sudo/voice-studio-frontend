@@ -1,5 +1,7 @@
 /**
- * Safe area — нужен viewport-fit=cover в index.html.
+ * Safe area + зона контента Telegram (кнопка «Закрыть», шапка мини-приложения).
+ * См. https://core.telegram.org/bots/webapps — CSS vars --tg-content-safe-area-inset-*
+ * и env(safe-area-inset-*) для Dynamic Island / жестов.
  */
 html,
 body,
@@ -7,45 +9,87 @@ body,
   margin: 0;
   padding: 0;
   height: 100%;
-  background: var(--tg-theme-bg-color);
+  background: var(--tg-theme-bg-color, #f1f5f9);
 }
 
 .app-container {
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
+  box-sizing: border-box;
   min-height: 100vh;
   min-height: 100dvh;
-  box-sizing: border-box;
-  background: var(--tg-theme-bg-color);
+  background: var(--tg-theme-bg-color, #f1f5f9);
+
+  padding-top: max(
+    env(safe-area-inset-top, 0px),
+    var(--tg-content-safe-area-inset-top, 0px)
+  );
+  padding-right: max(
+    env(safe-area-inset-right, 0px),
+    var(--tg-content-safe-area-inset-right, 0px)
+  );
+  padding-bottom: max(
+    env(safe-area-inset-bottom, 0px),
+    var(--tg-content-safe-area-inset-bottom, 0px)
+  );
+  padding-left: max(
+    env(safe-area-inset-left, 0px),
+    var(--tg-content-safe-area-inset-left, 0px)
+  );
 }
 
-/** Старые WebKit (iOS) */
+/** Старый iOS: constant() внутри max() не поддерживается — отдельный слой */
 @supports (padding: constant(safe-area-inset-top)) {
   .app-container {
-    padding-top: constant(safe-area-inset-top);
-    padding-bottom: constant(safe-area-inset-bottom);
-    padding-left: constant(safe-area-inset-left);
-    padding-right: constant(safe-area-inset-right);
+    padding-top: max(
+      constant(safe-area-inset-top),
+      var(--tg-content-safe-area-inset-top, 0px)
+    );
+    padding-right: max(
+      constant(safe-area-inset-right),
+      var(--tg-content-safe-area-inset-right, 0px)
+    );
+    padding-bottom: max(
+      constant(safe-area-inset-bottom),
+      var(--tg-content-safe-area-inset-bottom, 0px)
+    );
+    padding-left: max(
+      constant(safe-area-inset-left),
+      var(--tg-content-safe-area-inset-left, 0px)
+    );
   }
 }
 
-/**
- * Колонка контента: запас под фиксированный таббар.
- */
 .app-main {
   box-sizing: border-box;
   min-height: 100%;
-  padding-bottom: calc(4.75rem + env(safe-area-inset-bottom));
+  padding-bottom: calc(
+    4.75rem + max(
+      env(safe-area-inset-bottom, 0px),
+      var(--tg-content-safe-area-inset-bottom, 0px)
+    )
+  );
 }
 
 .app-bottom-nav {
-  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: max(
+    env(safe-area-inset-bottom, 0px),
+    var(--tg-content-safe-area-inset-bottom, 0px)
+  );
 }
 
 @supports (padding: constant(safe-area-inset-bottom)) {
+  .app-main {
+    padding-bottom: calc(
+      4.75rem + max(
+        constant(safe-area-inset-bottom),
+        var(--tg-content-safe-area-inset-bottom, 0px)
+      )
+    );
+  }
+
   .app-bottom-nav {
-    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: max(
+      constant(safe-area-inset-bottom),
+      var(--tg-content-safe-area-inset-bottom, 0px)
+    );
   }
 }
