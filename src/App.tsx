@@ -1,5 +1,5 @@
 import { Home, Library, UserCircle, WalletCards } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 import { Layout } from "./components/layout/Layout";
@@ -40,9 +40,18 @@ function App() {
     }
   };
 
+  useEffect(() => {
+    const webApp = (window as any).Telegram?.WebApp;
+    if (!webApp) {
+      return;
+    }
+
+    webApp.expand();
+  }, []);
+
   return (
     <Layout>
-      <div className="mx-auto min-h-screen w-full max-w-3xl bg-slate-100 px-4 pt-4 dark:bg-slate-950">
+      <div className="app-main mx-auto min-h-screen w-full max-w-3xl bg-slate-100 px-4 pt-4 dark:bg-slate-950">
         <Routes>
           <Route path="/" element={<Navigate to="/generate" replace />} />
           <Route path="/generate" element={<GeneratePage />} />
@@ -51,7 +60,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
         </Routes>
 
-        <nav className="fixed bottom-0 left-0 right-0 border-t border-slate-200 bg-white/95 backdrop-blur dark:border-slate-800 dark:bg-slate-900/95">
+        <nav className="app-bottom-nav fixed bottom-0 left-0 right-0 border-t border-slate-200 bg-white/95 backdrop-blur dark:border-slate-800 dark:bg-slate-900/95">
           <div className="mx-auto grid w-full max-w-3xl grid-cols-4 gap-1 px-2 py-2">
             {navItems.map(({ to, label, icon: Icon }) => (
               <NavLink

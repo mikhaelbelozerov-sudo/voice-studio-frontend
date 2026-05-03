@@ -1,0 +1,51 @@
+/**
+ * Safe area (Dynamic Island, notch, home indicator).
+ * env(safe-area-inset-*) требует viewport-fit=cover в meta viewport.
+ *
+ * Отступы заданы одним слоем на #root (padding на html+body+#root одновременно
+ * суммировался бы и утроил бы отступы).
+ */
+html {
+  height: 100%;
+  margin: 0;
+}
+
+html,
+body,
+#root {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+#root {
+  min-height: 100%;
+  min-height: 100dvh;
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
+  padding-right: constant(safe-area-inset-right);
+  padding-right: env(safe-area-inset-right);
+  /* Нижний inset только у .app-main и .app-bottom-nav — иначе двойной зазор + fixed nav */
+  padding-left: constant(safe-area-inset-left);
+  padding-left: env(safe-area-inset-left);
+}
+
+/**
+ * Основная колонка со скроллом: запас снизу под фиксированный таббар + home indicator.
+ * Значение подобрано под текущий nav (py-2 + иконка + подпись).
+ */
+.app-main {
+  box-sizing: border-box;
+  min-height: 100%;
+  padding-bottom: calc(4.75rem + env(safe-area-inset-bottom));
+}
+
+/**
+ * Нижняя навигация: fixed к viewport — отдельный inset снизу, чтобы не перекрывалась жестами.
+ */
+.app-bottom-nav {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}

@@ -5,5 +5,9 @@ type LayoutProps = {
 };
 
 export const Layout = ({ children }: LayoutProps) => {
-  return <>{children}</>;
+  return (
+    <div className="app-layout flex min-h-full flex-1 flex-col">
+      {children}
+    </div>
+  );
 };

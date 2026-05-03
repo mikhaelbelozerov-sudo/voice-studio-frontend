@@ -22,6 +22,8 @@ export const useTelegram = () => {
   }, []);
 
   useEffect(() => {
+    WebApp.ready();
+    WebApp.expand();
     applyTheme(theme);
   }, [applyTheme, theme]);
 
