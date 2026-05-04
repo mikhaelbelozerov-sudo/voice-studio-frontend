@@ -49,6 +49,7 @@
     "pause": "Pause",
     "noPreview": "No preview",
     "text": "Text",
+    "clearText": "Clear text",
     "textPlaceholder": "Enter text for voice generation...",
     "voiceParams": "Voice settings",
     "speed": "Speed",

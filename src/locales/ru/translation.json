@@ -49,6 +49,7 @@
     "pause": "Pause",
     "noPreview": "Нет превью",
     "text": "Текст",
+    "clearText": "Очистить текст",
     "textPlaceholder": "Введите текст для озвучки...",
     "voiceParams": "Параметры голоса",
     "speed": "Скорость",
