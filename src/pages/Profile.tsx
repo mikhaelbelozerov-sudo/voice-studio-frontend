@@ -8,6 +8,7 @@ import { getSubscriptionRemainingInfo } from "../utils/formatRemainingTime";
 import { LANGUAGE_STORAGE_KEY } from "../i18n";
 
 const FALLBACK_TELEGRAM_ID = 123456789;
+const SUPPORT_LINK = import.meta.env.VITE_SUPPORT_TELEGRAM_LINK || "";
 
 const formatDate = (iso: string | null, locale: string) => {
   if (!iso) return "—";
@@ -65,6 +66,18 @@ export const ProfilePage = () => {
     } catch (_error) {
       // Локально язык уже переключили.
     }
+  };
+
+  const handleOpenSupport = () => {
+    if (!SUPPORT_LINK) {
+      return;
+    }
+    const tg = (window as { Telegram?: { WebApp?: { openTelegramLink?: (url: string) => void } } }).Telegram?.WebApp;
+    if (typeof tg?.openTelegramLink === "function") {
+      tg.openTelegramLink(SUPPORT_LINK);
+      return;
+    }
+    window.open(SUPPORT_LINK, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -147,6 +160,18 @@ export const ProfilePage = () => {
       <div className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
         <p className="text-sm text-slate-500 dark:text-slate-400">{t("profile.starsMinutes")}</p>
         <p className="text-base font-semibold text-slate-900 dark:text-slate-100">{profile?.stars_minutes ?? 0}</p>
+      </div>
+
+      <div className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
+        <p className="text-sm text-slate-500 dark:text-slate-400">{t("profile.supportTitle")}</p>
+        <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{t("profile.supportSubtitle")}</p>
+        <Button
+          className="mt-3 w-full"
+          onClick={handleOpenSupport}
+          disabled={!SUPPORT_LINK}
+        >
+          {t("profile.supportButton")}
+        </Button>
       </div>
 
     </div>
