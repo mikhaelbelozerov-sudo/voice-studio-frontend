@@ -1,10 +1,10 @@
 import { Home, Library, UserCircle, WalletCards } from "lucide-react";
-import { useMemo, useState } from "react";
+import WebApp from "@twa-dev/sdk";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 import { Layout } from "./components/layout/Layout";
 import { Button } from "./components/ui/Button";
-import { KeyboardAccessoryBar } from "./components/ui/KeyboardAccessoryBar";
 import { useTelegram } from "./hooks/useTelegram";
 import { useVirtualKeyboard } from "./hooks/useVirtualKeyboard";
 import { GeneratePage } from "./pages/Generate";
@@ -43,6 +43,32 @@ function App() {
     }
   };
 
+  useEffect(() => {
+    const mainButton = WebApp.MainButton;
+    const handleDoneClick = () => {
+      dismissKeyboard();
+    };
+
+    if (isKeyboardOpen) {
+      mainButton.setText(t("common.keyboardDone"));
+      mainButton.setParams({
+        is_active: true,
+        is_visible: true,
+        has_shine_effect: false
+      });
+      mainButton.onClick(handleDoneClick);
+      mainButton.show();
+    } else {
+      mainButton.offClick(handleDoneClick);
+      mainButton.hide();
+    }
+
+    return () => {
+      mainButton.offClick(handleDoneClick);
+      mainButton.hide();
+    };
+  }, [dismissKeyboard, isKeyboardOpen, t]);
+
   return (
     <Layout>
       <div className="app-main mx-auto min-h-screen w-full max-w-3xl bg-slate-100 px-4 pt-2 dark:bg-slate-950">
@@ -53,8 +79,6 @@ function App() {
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/profile" element={<ProfilePage />} />
         </Routes>
-
-        <KeyboardAccessoryBar visible={isKeyboardOpen} doneLabel={t("common.keyboardDone")} onDismiss={dismissKeyboard} />
 
         <nav className="app-bottom-nav fixed bottom-0 left-0 right-0 border-t border-slate-200 bg-white/95 backdrop-blur dark:border-slate-800 dark:bg-slate-900/95">
           <div className="mx-auto grid w-full max-w-3xl grid-cols-4 gap-1 px-2 py-2">
