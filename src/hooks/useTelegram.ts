@@ -11,6 +11,10 @@ const APP_SCREEN_BG = {
 } as const;
 
 type TelegramWebApp = typeof WebApp;
+type TelegramWebAppWithFullscreen = TelegramWebApp & {
+  isFullscreen?: boolean;
+  requestFullscreen?: () => void;
+};
 
 function getTelegramWebApp(): TelegramWebApp | undefined {
   return (window as unknown as { Telegram?: { WebApp: TelegramWebApp } }).Telegram?.WebApp;
@@ -113,7 +117,26 @@ export const useTelegram = () => {
 
   useEffect(() => {
     WebApp.ready();
-    getTelegramWebApp()?.expand();
+    const tg = getTelegramWebApp() as TelegramWebAppWithFullscreen | undefined;
+    tg?.expand();
+    // Для случаев, когда Mini App открыт не через кнопку "Открыть",
+    // просим Telegram перевести приложение в fullscreen.
+    try {
+      tg?.requestFullscreen?.();
+    } catch {
+      /* метод может отсутствовать в старом клиенте */
+    }
+    const fullscreenRetry = window.setTimeout(() => {
+      try {
+        const retryTg = getTelegramWebApp() as TelegramWebAppWithFullscreen | undefined;
+        if (retryTg && retryTg.isFullscreen !== true) {
+          retryTg.expand();
+          retryTg.requestFullscreen?.();
+        }
+      } catch {
+        /* ignore */
+      }
+    }, 350);
     queueMicrotask(() => {
       syncTelegramContentSafeAreaVars();
     });
@@ -122,6 +145,7 @@ export const useTelegram = () => {
     }, 200);
     applyTheme(theme);
     return () => {
+      window.clearTimeout(fullscreenRetry);
       window.clearTimeout(insetRetry);
     };
   }, [applyTheme, theme]);
