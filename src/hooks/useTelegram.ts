@@ -13,11 +13,47 @@ const APP_SCREEN_BG = {
 type TelegramWebApp = typeof WebApp;
 type TelegramWebAppWithFullscreen = TelegramWebApp & {
   isFullscreen?: boolean;
+  /** false = мини-окно (свайп вверх); true = развёрнуто по высоте */
+  isExpanded?: boolean;
   requestFullscreen?: () => void;
 };
 
 function getTelegramWebApp(): TelegramWebApp | undefined {
   return (window as unknown as { Telegram?: { WebApp: TelegramWebApp } }).Telegram?.WebApp;
+}
+
+/**
+ * Telegram часто открывает Mini App из Reply Keyboard в «половинном» режиме.
+ * Один вызов expand() ненадёжен — повторяем и дергаем requestFullscreen (Bot API 8.0+).
+ */
+function tryExpandTelegramWebApp(): void {
+  const tg = getTelegramWebApp() as TelegramWebAppWithFullscreen | undefined;
+  if (!tg) {
+    return;
+  }
+  try {
+    tg.expand();
+  } catch {
+    /* */
+  }
+  try {
+    tg.requestFullscreen?.();
+  } catch {
+    /* */
+  }
+}
+
+function scheduleTelegramExpandRetries(): () => void {
+  const delaysMs = [0, 80, 200, 450, 900, 1600, 2800];
+  const ids = delaysMs.map((ms) => window.setTimeout(() => tryExpandTelegramWebApp(), ms));
+
+  const onPageShow = () => tryExpandTelegramWebApp();
+  window.addEventListener("pageshow", onPageShow);
+
+  return () => {
+    ids.forEach((id) => window.clearTimeout(id));
+    window.removeEventListener("pageshow", onPageShow);
+  };
 }
 
 function applyTelegramChrome(isDark: boolean) {
@@ -117,37 +153,22 @@ export const useTelegram = () => {
 
   useEffect(() => {
     WebApp.ready();
-    const tg = getTelegramWebApp() as TelegramWebAppWithFullscreen | undefined;
-    tg?.expand();
-    // Для случаев, когда Mini App открыт не через кнопку "Открыть",
-    // просим Telegram перевести приложение в fullscreen.
-    try {
-      tg?.requestFullscreen?.();
-    } catch {
-      /* метод может отсутствовать в старом клиенте */
-    }
-    const fullscreenRetry = window.setTimeout(() => {
-      try {
-        const retryTg = getTelegramWebApp() as TelegramWebAppWithFullscreen | undefined;
-        if (retryTg && retryTg.isFullscreen !== true) {
-          retryTg.expand();
-          retryTg.requestFullscreen?.();
-        }
-      } catch {
-        /* ignore */
-      }
-    }, 350);
+    const cancelExpandSchedule = scheduleTelegramExpandRetries();
     queueMicrotask(() => {
       syncTelegramContentSafeAreaVars();
     });
     const insetRetry = window.setTimeout(() => {
       syncTelegramContentSafeAreaVars();
     }, 200);
-    applyTheme(theme);
     return () => {
-      window.clearTimeout(fullscreenRetry);
+      cancelExpandSchedule();
       window.clearTimeout(insetRetry);
     };
+  }, []);
+
+  useEffect(() => {
+    applyTheme(theme);
+    queueMicrotask(() => syncTelegramContentSafeAreaVars());
   }, [applyTheme, theme]);
 
   useEffect(() => {
@@ -167,8 +188,14 @@ export const useTelegram = () => {
 
   /** Insets и fullscreen: события есть в Bot API 8.0+, в типах @twa-dev могут отсутствовать */
   useEffect(() => {
-    const tg = (window as { Telegram?: { WebApp: { onEvent?: (n: string, h: () => void) => void; offEvent?: (n: string, h: () => void) => void } } })
-      .Telegram?.WebApp;
+    const tg = (window as {
+      Telegram?: {
+        WebApp: {
+          onEvent?: (n: string, h: (payload?: { isStateStable?: boolean }) => void) => void;
+          offEvent?: (n: string, h: (payload?: { isStateStable?: boolean }) => void) => void;
+        };
+      };
+    }).Telegram?.WebApp;
     const onEvent = tg?.onEvent;
     const offEvent = tg?.offEvent;
     if (!onEvent || !offEvent) {
@@ -179,6 +206,13 @@ export const useTelegram = () => {
       syncTelegramContentSafeAreaVars();
     };
 
+    const onViewportChanged = (payload?: { isStateStable?: boolean }) => {
+      syncTelegramContentSafeAreaVars();
+      if (payload?.isStateStable !== false) {
+        tryExpandTelegramWebApp();
+      }
+    };
+
     const extra = ["contentSafeAreaChanged", "safeAreaChanged", "fullscreenChanged"] as const;
     for (const name of extra) {
       try {
@@ -187,10 +221,10 @@ export const useTelegram = () => {
         /* событие не поддерживается */
       }
     }
-    onEvent("viewportChanged", onLayout);
+    onEvent("viewportChanged", onViewportChanged);
 
     return () => {
-      offEvent("viewportChanged", onLayout);
+      offEvent("viewportChanged", onViewportChanged);
       for (const name of extra) {
         try {
           offEvent(name, onLayout);
