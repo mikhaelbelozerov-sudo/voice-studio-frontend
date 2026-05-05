@@ -166,6 +166,21 @@ export const useTelegram = () => {
     };
   }, []);
 
+  /** iOS: иногда разворот срабатывает надёжнее после первого жеста пользователя. */
+  useEffect(() => {
+    const onFirstPointer = () => {
+      tryExpandTelegramWebApp();
+      document.removeEventListener("touchstart", onFirstPointer);
+      document.removeEventListener("click", onFirstPointer);
+    };
+    document.addEventListener("touchstart", onFirstPointer, { passive: true });
+    document.addEventListener("click", onFirstPointer);
+    return () => {
+      document.removeEventListener("touchstart", onFirstPointer);
+      document.removeEventListener("click", onFirstPointer);
+    };
+  }, []);
+
   useEffect(() => {
     applyTheme(theme);
     queueMicrotask(() => syncTelegramContentSafeAreaVars());
