@@ -5,6 +5,7 @@
  */
 html {
   touch-action: manipulation;
+  overscroll-behavior-y: none;
 }
 
 html,
@@ -14,6 +15,11 @@ body,
   padding: 0;
   height: 100%;
   background: var(--tg-theme-bg-color, #f1f5f9);
+  overflow-x: hidden;
+}
+
+body {
+  overscroll-behavior-y: none;
 }
 
 .app-container {
@@ -70,6 +76,8 @@ body,
 .app-main {
   box-sizing: border-box;
   min-height: 100%;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
   padding-bottom: calc(
     4.75rem + max(
       env(safe-area-inset-bottom, 0px),
