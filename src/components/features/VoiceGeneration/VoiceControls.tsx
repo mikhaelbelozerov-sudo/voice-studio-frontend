@@ -20,8 +20,16 @@ export const VoiceControls = ({
   onPitchChange
 }: VoiceControlsProps) => {
   const { t } = useTranslation();
-  const safeSpeed = Math.min(Math.max(speed || 0.95, 0.7), 1.2);
+  const safeSpeed = Math.min(Math.max(speed || 1, 0.7), 1.2);
   const safePitch = Math.min(Math.max(pitch || 0, -1), 1);
+  const speedToSliderPosition = (value: number) => {
+    const clamped = Math.min(Math.max(value, 0.7), 1.2);
+    return clamped <= 1 ? (clamped - 1) / 0.3 : (clamped - 1) / 0.2;
+  };
+  const sliderPositionToSpeed = (position: number) => {
+    const clamped = Math.min(Math.max(position, -1), 1);
+    return clamped <= 0 ? 1 + 0.3 * clamped : 1 + 0.2 * clamped;
+  };
 
   return (
     <div className="space-y-4 rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
@@ -43,11 +51,11 @@ export const VoiceControls = ({
         </div>
         <input
           type="range"
-          min={0.7}
-          max={1.2}
-          step={0.05}
-          value={safeSpeed}
-          onChange={(event) => onSpeedChange(Math.min(Math.max(Number(event.target.value), 0.7), 1.2))}
+          min={-1}
+          max={1}
+          step={0.02}
+          value={speedToSliderPosition(safeSpeed)}
+          onChange={(event) => onSpeedChange(sliderPositionToSpeed(Number(event.target.value)))}
           className="vs-range w-full"
         />
       </label>

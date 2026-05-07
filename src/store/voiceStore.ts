@@ -17,7 +17,7 @@ interface VoiceState {
 export const useVoiceStore = create<VoiceState>((set) => ({
   selectedVoiceId: null,
   text: "",
-  speed: 0.95,
+  speed: 1.0,
   pitch: 0,
   languageCode: "en",
   setSelectedVoiceId: (selectedVoiceId) => set({ selectedVoiceId }),
