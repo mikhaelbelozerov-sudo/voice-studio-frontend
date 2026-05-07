@@ -48,7 +48,7 @@ export const VoiceControls = ({
           step={0.05}
           value={safeSpeed}
           onChange={(event) => onSpeedChange(Math.min(Math.max(Number(event.target.value), 0.7), 1.2))}
-          className="w-full"
+          className="vs-range w-full"
         />
       </label>
 
@@ -64,7 +64,7 @@ export const VoiceControls = ({
           step={0.1}
           value={safePitch}
           onChange={(event) => onPitchChange(Math.min(Math.max(Number(event.target.value), -1), 1))}
-          className="w-full"
+          className="vs-range w-full"
         />
       </label>
     </div>
