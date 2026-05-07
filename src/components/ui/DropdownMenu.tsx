@@ -59,6 +59,7 @@ export const DropdownMenu = ({ value, options, onChange, className = "" }: Dropd
                 <button
                   key={option.value}
                   type="button"
+                  onMouseDown={(event) => event.preventDefault()}
                   onClick={() => {
                     setIsOpen(false);
                     onChange(option.value);

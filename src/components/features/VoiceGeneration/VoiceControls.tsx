@@ -27,14 +27,14 @@ export const VoiceControls = ({
     <div className="space-y-4 rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
       <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{t("voice.voiceParams")}</h2>
 
-      <label className="block space-y-2">
+      <div className="block space-y-2">
         <span className="text-sm text-slate-700 dark:text-slate-300">{t("profile.language")}</span>
         <DropdownMenu
           value={languageCode}
           options={TTS_LANGUAGE_OPTIONS.map((option) => ({ value: option.code, label: option.label }))}
           onChange={(nextValue) => onLanguageCodeChange(nextValue as TtsLanguageCode)}
         />
-      </label>
+      </div>
 
       <label className="block space-y-2">
         <div className="flex items-center justify-between text-sm text-slate-700 dark:text-slate-300">
