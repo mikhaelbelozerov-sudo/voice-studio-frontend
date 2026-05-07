@@ -13,6 +13,7 @@ import { PricingPage } from "./pages/Pricing";
 import { ProfilePage } from "./pages/Profile";
 import { updateUserLanguage } from "./services/api";
 import { LANGUAGE_STORAGE_KEY } from "./i18n";
+import { AppLanguage } from "./constants/languages";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -30,7 +31,19 @@ function App() {
     [t]
   );
 
-  const handleSelectLanguage = async (language: "ru" | "en") => {
+  const languageOptions = useMemo(
+    () => [
+      { value: "en" as const, label: t("common.english") },
+      { value: "ru" as const, label: t("common.russian") },
+      { value: "es" as const, label: t("common.spanish") },
+      { value: "hi" as const, label: t("common.hindi") },
+      { value: "id" as const, label: t("common.indonesian") },
+      { value: "ar" as const, label: t("common.arabic") }
+    ],
+    [t]
+  );
+
+  const handleSelectLanguage = async (language: AppLanguage) => {
     await i18n.changeLanguage(language);
     window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
     setShowLanguageModal(false);
@@ -42,6 +55,10 @@ function App() {
       }
     }
   };
+
+  useEffect(() => {
+    document.documentElement.dir = i18n.language.startsWith("ar") ? "rtl" : "ltr";
+  }, [i18n.language]);
 
   useEffect(() => {
     const mainButton = WebApp.MainButton;
@@ -105,10 +122,15 @@ function App() {
               <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t("languageModal.title")}</h2>
               <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{t("languageModal.description")}</p>
               <div className="mt-4 grid grid-cols-2 gap-2">
-                <Button variant="secondary" onClick={() => void handleSelectLanguage("ru")}>
-                  {t("common.russian")}
-                </Button>
-                <Button onClick={() => void handleSelectLanguage("en")}>{t("common.english")}</Button>
+                {languageOptions.map((option) => (
+                  <Button
+                    key={option.value}
+                    variant={i18n.language.startsWith(option.value) ? "primary" : "secondary"}
+                    onClick={() => void handleSelectLanguage(option.value)}
+                  >
+                    {option.label}
+                  </Button>
+                ))}
               </div>
             </div>
           </div>

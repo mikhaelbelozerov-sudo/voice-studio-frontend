@@ -1,4 +1,5 @@
 import axios from "axios";
+import { AppLanguage } from "../constants/languages";
 
 const defaultBaseUrl = "http://localhost:3001/api";
 
@@ -51,7 +52,7 @@ export interface UserProfile {
   subscription_tier: UserTier;
   subscription_expires_at: string | null;
   stars_minutes: number;
-  language: "ru" | "en";
+  language: AppLanguage;
 }
 
 export type InvoiceProductType = "minutes" | "subscription";
@@ -71,7 +72,7 @@ export interface CreateInvoiceResponse {
 
 export interface UpdateUserLanguageRequest {
   telegramId: number;
-  language: "ru" | "en";
+  language: AppLanguage;
 }
 
 export const getVoices = async () => {
@@ -121,6 +122,6 @@ export const createInvoice = async (payload: CreateInvoiceRequest) => {
 };
 
 export const updateUserLanguage = async (payload: UpdateUserLanguageRequest) => {
-  const { data } = await api.post<{ ok: boolean; language: "ru" | "en" }>("/user/language", payload);
+  const { data } = await api.post<{ ok: boolean; language: AppLanguage }>("/user/language", payload);
   return data;
 };

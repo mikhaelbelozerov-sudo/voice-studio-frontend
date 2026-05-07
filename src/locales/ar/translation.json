@@ -1,0 +1,125 @@
+{
+  "common": {
+    "retry": "إعادة المحاولة",
+    "buy": "شراء",
+    "loading": "جار التحميل...",
+    "guest": "زائر",
+    "free": "مجاني",
+    "light": "فاتح",
+    "dark": "داكن",
+    "russian": "Russkiy",
+    "english": "English",
+    "spanish": "Espanol",
+    "hindi": "Hindi",
+    "indonesian": "Bahasa Indonesia",
+    "arabic": "العربية",
+    "remaining": "المتبقي",
+    "keyboardDone": "تم"
+  },
+  "nav": {
+    "generate": "إنشاء",
+    "library": "المكتبة",
+    "pricing": "الاسعار",
+    "profile": "الملف الشخصي"
+  },
+  "languageModal": {
+    "title": "مرحبا بك في VoiceStudio",
+    "description": "اختر لغتك. يمكنك تغييرها لاحقا من الملف الشخصي."
+  },
+  "generate": {
+    "title": "توليد الصوت",
+    "subtitle": "اختر صوتا، اكتب النص، واحصل على ملف صوتي جاهز.",
+    "loadVoicesError": "تعذر تحميل قائمة الاصوات",
+    "selectVoiceFirst": "اختر صوتا اولا",
+    "telegramMissing": "تعذر التعرف على مستخدم Telegram. اعد تشغيل التطبيق.",
+    "dailyLimit": "تم الوصول الى الحد اليومي. قم بالترقية الى Pro.",
+    "generateError": "تعذر توليد الصوت",
+    "generate": "إنشاء",
+    "generating": "جار الإنشاء...",
+    "resultTitle": "نتيجة التوليد",
+    "audioNotSupported": "المتصفح لا يدعم الصوت.",
+    "downloadMp3": "تنزيل MP3"
+  },
+  "generation": {
+    "willBeDeleted": "سيتم الحذف خلال {{hours}} س {{minutes}} د",
+    "willBeDeletedLessThanHour": "سيتم الحذف خلال اقل من ساعة",
+    "permanentlyStored": "محفوظ بشكل دائم",
+    "fileDeleted": "تم حذف الملف"
+  },
+  "voice": {
+    "selectVoice": "اختر صوتا",
+    "selected": "تم الاختيار",
+    "play": "تشغيل",
+    "pause": "إيقاف",
+    "noPreview": "لا توجد معاينة",
+    "text": "النص",
+    "clearText": "مسح النص",
+    "textPlaceholder": "ادخل النص لتوليد الصوت...",
+    "voiceParams": "اعدادات الصوت",
+    "speed": "السرعة",
+    "pitch": "النبرة"
+  },
+  "pricing": {
+    "title": "الاسعار والدفع",
+    "subtitle": "اشتر الدقائق والاشتراكات مباشرة من التطبيق المصغر.",
+    "freeDescription": "دقيقة توليد واحدة يوميا",
+    "proDescription": "توليد غير محدود وتخزين الملفات لمدة 30 يوما",
+    "premiumDescription": "اعلى خطة وتخزين طويل المدى",
+    "minutes100Title": "100 دقيقة",
+    "minutes100Description": "حزمة دقائق اضافية",
+    "subscriptions": "الاشتراكات",
+    "minutesPackages": "حزم الدقائق",
+    "popular": "شائع",
+    "best": "الافضل",
+    "currentLevel": "المستوى الحالي",
+    "freeNoPurchase": "خطة Free لا تتطلب شراء.",
+    "telegramUnavailable": "دفع Telegram غير متاح في هذه البيئة.",
+    "loadProfileError": "تعذر تحميل بيانات الملف الشخصي",
+    "cancelled": "تم الغاء الدفع.",
+    "failed": "تعذر اكمال الدفع. حاول لاحقا.",
+    "pending": "الدفع قيد المعالجة. تحقق من الرصيد بعد ثوان.",
+    "paid": "تم الدفع بنجاح. تم تحديث الرصيد.",
+    "paidRefresh": "تم الدفع بنجاح. حدّث الصفحة لعرض البيانات الجديدة.",
+    "createInvoiceError": "تعذر انشاء الفاتورة. حاول لاحقا."
+  },
+  "profile": {
+    "title": "الملف الشخصي",
+    "loadError": "تعذر تحميل الملف الشخصي",
+    "loading": "جار تحميل الملف الشخصي...",
+    "name": "الاسم",
+    "telegramId": "Telegram ID",
+    "theme": "المظهر",
+    "language": "اللغة",
+    "languageDescription": "اختر لغتك المفضلة لكل واجهة التطبيق.",
+    "myPlan": "خطتي",
+    "expiresAt": "ينتهي في",
+    "remaining": "المتبقي",
+    "starsMinutes": "دقائق Stars",
+    "supportTitle": "الدعم",
+    "supportSubtitle": "هل تحتاج مساعدة او لديك سؤال؟ تواصل معنا عبر Telegram.",
+    "supportButton": "💬 تواصل مع الدعم",
+    "subscription_inactive": "غير نشط",
+    "remainingInactive": "غير نشط",
+    "subscription_expired": "منتهي",
+    "subscription_active": "{{days}} ي {{hours}} س"
+  },
+  "history": {
+    "deleted_in": "سيتم الحذف خلال {{hours}} س {{minutes}} د",
+    "deleted_in_less_than_hour": "سيتم الحذف خلال اقل من ساعة",
+    "permanently_stored": "محفوظ بشكل دائم",
+    "file_deleted": "تم حذف الملف"
+  },
+  "library": {
+    "title": "السجل",
+    "subtitle": "احدث الملفات الصوتية التي تم توليدها",
+    "loadError": "تعذر تحميل السجل. تحقق من الاتصال وحاول مرة اخرى.",
+    "loading": "جار تحميل السجل...",
+    "empty": "لا توجد عمليات توليد بعد",
+    "noText": "بدون نص",
+    "unknownVoice": "صوت غير معروف",
+    "download": "تنزيل",
+    "deleted": "تم حذف الملف",
+    "loadMore": "تحميل المزيد"
+  }
+}
+

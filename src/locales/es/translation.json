@@ -1,0 +1,125 @@
+{
+  "common": {
+    "retry": "Reintentar",
+    "buy": "Comprar",
+    "loading": "Cargando...",
+    "guest": "Invitado",
+    "free": "Gratis",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "russian": "Russkiy",
+    "english": "English",
+    "spanish": "Espanol",
+    "hindi": "Hindi",
+    "indonesian": "Bahasa Indonesia",
+    "arabic": "Arabic",
+    "remaining": "Restante",
+    "keyboardDone": "Listo"
+  },
+  "nav": {
+    "generate": "Generar",
+    "library": "Biblioteca",
+    "pricing": "Precios",
+    "profile": "Perfil"
+  },
+  "languageModal": {
+    "title": "Bienvenido a VoiceStudio",
+    "description": "Elige tu idioma. Puedes cambiarlo luego en Perfil."
+  },
+  "generate": {
+    "title": "Generacion de voz",
+    "subtitle": "Elige una voz, escribe tu texto y obtiene audio listo para usar.",
+    "loadVoicesError": "No se pudo cargar la lista de voces",
+    "selectVoiceFirst": "Primero elige una voz",
+    "telegramMissing": "No se pudo detectar el usuario de Telegram. Reinicia la app.",
+    "dailyLimit": "Se alcanzo el limite diario. Cambia a Pro.",
+    "generateError": "No se pudo generar el audio",
+    "generate": "Generar",
+    "generating": "Generando...",
+    "resultTitle": "Resultado",
+    "audioNotSupported": "Tu navegador no soporta audio.",
+    "downloadMp3": "Descargar MP3"
+  },
+  "generation": {
+    "willBeDeleted": "Se eliminara en {{hours}} h {{minutes}} min",
+    "willBeDeletedLessThanHour": "Se eliminara en menos de una hora",
+    "permanentlyStored": "Guardado permanentemente",
+    "fileDeleted": "Archivo eliminado"
+  },
+  "voice": {
+    "selectVoice": "Elegir voz",
+    "selected": "Seleccionado",
+    "play": "Reproducir",
+    "pause": "Pausar",
+    "noPreview": "Sin vista previa",
+    "text": "Texto",
+    "clearText": "Borrar texto",
+    "textPlaceholder": "Introduce texto para generar voz...",
+    "voiceParams": "Ajustes de voz",
+    "speed": "Velocidad",
+    "pitch": "Tono"
+  },
+  "pricing": {
+    "title": "Precios y pago",
+    "subtitle": "Compra minutos y suscripciones directamente en la mini app.",
+    "freeDescription": "1 minuto de generacion al dia",
+    "proDescription": "Generacion ilimitada y almacenamiento de archivos por 30 dias",
+    "premiumDescription": "Plan maximo y almacenamiento prolongado",
+    "minutes100Title": "100 minutos",
+    "minutes100Description": "Paquete extra de minutos",
+    "subscriptions": "Suscripciones",
+    "minutesPackages": "Paquetes de minutos",
+    "popular": "Popular",
+    "best": "Mejor",
+    "currentLevel": "Nivel actual",
+    "freeNoPurchase": "El plan Free no requiere compra.",
+    "telegramUnavailable": "El pago de Telegram no esta disponible en este entorno.",
+    "loadProfileError": "No se pudo cargar el perfil",
+    "cancelled": "El pago fue cancelado.",
+    "failed": "No se pudo completar el pago. Intentalo mas tarde.",
+    "pending": "El pago se esta procesando. Revisa el saldo en unos segundos.",
+    "paid": "Pago exitoso. Saldo actualizado.",
+    "paidRefresh": "Pago exitoso. Actualiza la pagina para ver datos actuales.",
+    "createInvoiceError": "No se pudo crear la factura. Intentalo mas tarde."
+  },
+  "profile": {
+    "title": "Perfil",
+    "loadError": "No se pudo cargar el perfil",
+    "loading": "Cargando perfil...",
+    "name": "Nombre",
+    "telegramId": "ID de Telegram",
+    "theme": "Tema",
+    "language": "Idioma",
+    "languageDescription": "Elige tu idioma preferido para toda la interfaz.",
+    "myPlan": "Mi plan",
+    "expiresAt": "Expira",
+    "remaining": "Restante",
+    "starsMinutes": "Minutos Stars",
+    "supportTitle": "Soporte",
+    "supportSubtitle": "Necesitas ayuda o tienes una pregunta? Contactanos en Telegram.",
+    "supportButton": "💬 Contactar soporte",
+    "subscription_inactive": "Inactivo",
+    "remainingInactive": "No activo",
+    "subscription_expired": "Expirado",
+    "subscription_active": "{{days}} d {{hours}} h"
+  },
+  "history": {
+    "deleted_in": "Se eliminara en {{hours}} h {{minutes}} min",
+    "deleted_in_less_than_hour": "Se eliminara en menos de una hora",
+    "permanently_stored": "Guardado permanentemente",
+    "file_deleted": "Archivo eliminado"
+  },
+  "library": {
+    "title": "Historial",
+    "subtitle": "Tus ultimos audios generados",
+    "loadError": "No se pudo cargar el historial. Revisa la conexion e intentalo de nuevo.",
+    "loading": "Cargando historial...",
+    "empty": "Aun no hay generaciones",
+    "noText": "Sin texto",
+    "unknownVoice": "Voz desconocida",
+    "download": "Descargar",
+    "deleted": "Archivo eliminado",
+    "loadMore": "Cargar mas"
+  }
+}
+

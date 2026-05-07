@@ -1,0 +1,125 @@
+{
+  "common": {
+    "retry": "फिर कोशिश करें",
+    "buy": "खरीदें",
+    "loading": "लोड हो रहा है...",
+    "guest": "अतिथि",
+    "free": "मुफ्त",
+    "light": "लाइट",
+    "dark": "डार्क",
+    "russian": "Russkiy",
+    "english": "English",
+    "spanish": "Espanol",
+    "hindi": "हिंदी",
+    "indonesian": "Bahasa Indonesia",
+    "arabic": "Arabic",
+    "remaining": "शेष",
+    "keyboardDone": "पूर्ण"
+  },
+  "nav": {
+    "generate": "जनरेट",
+    "library": "लाइब्रेरी",
+    "pricing": "कीमतें",
+    "profile": "प्रोफाइल"
+  },
+  "languageModal": {
+    "title": "VoiceStudio में आपका स्वागत है",
+    "description": "अपनी भाषा चुनें। बाद में प्रोफाइल में बदल सकते हैं।"
+  },
+  "generate": {
+    "title": "स्पीच जनरेशन",
+    "subtitle": "वॉइस चुनें, टेक्स्ट डालें और तैयार ऑडियो पाएं।",
+    "loadVoicesError": "वॉइस सूची लोड नहीं हुई",
+    "selectVoiceFirst": "पहले वॉइस चुनें",
+    "telegramMissing": "Telegram उपयोगकर्ता नहीं मिला। ऐप फिर से खोलें।",
+    "dailyLimit": "दैनिक जनरेशन लिमिट पूरी हो गई। Pro पर जाएं।",
+    "generateError": "ऑडियो जनरेट नहीं हुआ",
+    "generate": "जनरेट करें",
+    "generating": "जनरेट हो रहा है...",
+    "resultTitle": "जनरेशन परिणाम",
+    "audioNotSupported": "आपका ब्राउज़र ऑडियो सपोर्ट नहीं करता।",
+    "downloadMp3": "MP3 डाउनलोड करें"
+  },
+  "generation": {
+    "willBeDeleted": "{{hours}} घं {{minutes}} मि में हट जाएगा",
+    "willBeDeletedLessThanHour": "एक घंटे से कम में हट जाएगा",
+    "permanentlyStored": "स्थायी रूप से सहेजा गया",
+    "fileDeleted": "फाइल हटाई गई"
+  },
+  "voice": {
+    "selectVoice": "वॉइस चुनें",
+    "selected": "चयनित",
+    "play": "चलाएं",
+    "pause": "रोकें",
+    "noPreview": "कोई प्रीव्यू नहीं",
+    "text": "टेक्स्ट",
+    "clearText": "टेक्स्ट साफ करें",
+    "textPlaceholder": "वॉइस जनरेशन के लिए टेक्स्ट दर्ज करें...",
+    "voiceParams": "वॉइस सेटिंग्स",
+    "speed": "स्पीड",
+    "pitch": "पिच"
+  },
+  "pricing": {
+    "title": "कीमत और भुगतान",
+    "subtitle": "मिनी ऐप में सीधे मिनट और सब्सक्रिप्शन खरीदें।",
+    "freeDescription": "प्रतिदिन 1 मिनट जनरेशन",
+    "proDescription": "अनलिमिटेड जनरेशन और 30 दिन फाइल स्टोरेज",
+    "premiumDescription": "अधिकतम प्लान और लंबी अवधि स्टोरेज",
+    "minutes100Title": "100 मिनट",
+    "minutes100Description": "अतिरिक्त जनरेशन मिनट पैक",
+    "subscriptions": "सब्सक्रिप्शन",
+    "minutesPackages": "मिनट पैक",
+    "popular": "लोकप्रिय",
+    "best": "सर्वश्रेष्ठ",
+    "currentLevel": "वर्तमान स्तर",
+    "freeNoPurchase": "Free प्लान के लिए खरीद जरूरी नहीं है।",
+    "telegramUnavailable": "इस वातावरण में Telegram भुगतान उपलब्ध नहीं है।",
+    "loadProfileError": "प्रोफाइल डेटा लोड नहीं हुआ",
+    "cancelled": "भुगतान रद्द कर दिया गया।",
+    "failed": "भुगतान पूरा नहीं हुआ। बाद में फिर कोशिश करें।",
+    "pending": "भुगतान प्रोसेस हो रहा है। कुछ सेकंड में बैलेंस जांचें।",
+    "paid": "भुगतान सफल। बैलेंस अपडेट हो गया।",
+    "paidRefresh": "भुगतान सफल। नया डेटा देखने के लिए पेज रिफ्रेश करें।",
+    "createInvoiceError": "इनवॉइस नहीं बन सका। बाद में फिर कोशिश करें।"
+  },
+  "profile": {
+    "title": "प्रोफाइल",
+    "loadError": "प्रोफाइल लोड नहीं हुई",
+    "loading": "प्रोफाइल लोड हो रही है...",
+    "name": "नाम",
+    "telegramId": "Telegram ID",
+    "theme": "थीम",
+    "language": "भाषा",
+    "languageDescription": "पूरे ऐप इंटरफेस के लिए अपनी पसंदीदा भाषा चुनें।",
+    "myPlan": "मेरा प्लान",
+    "expiresAt": "समाप्ति",
+    "remaining": "शेष",
+    "starsMinutes": "Stars मिनट",
+    "supportTitle": "सपोर्ट",
+    "supportSubtitle": "कोई सवाल या मदद चाहिए? Telegram पर हमसे संपर्क करें।",
+    "supportButton": "💬 सपोर्ट से संपर्क करें",
+    "subscription_inactive": "निष्क्रिय",
+    "remainingInactive": "सक्रिय नहीं",
+    "subscription_expired": "समाप्त",
+    "subscription_active": "{{days}} दिन {{hours}} घं"
+  },
+  "history": {
+    "deleted_in": "{{hours}} घं {{minutes}} मि में हट जाएगा",
+    "deleted_in_less_than_hour": "एक घंटे से कम में हट जाएगा",
+    "permanently_stored": "स्थायी रूप से सहेजा गया",
+    "file_deleted": "फाइल हटाई गई"
+  },
+  "library": {
+    "title": "इतिहास",
+    "subtitle": "आपके हाल के जनरेटेड ऑडियो",
+    "loadError": "इतिहास लोड नहीं हुआ। कनेक्शन जांचें और फिर कोशिश करें।",
+    "loading": "इतिहास लोड हो रहा है...",
+    "empty": "अभी तक कोई जनरेशन नहीं",
+    "noText": "कोई टेक्स्ट नहीं",
+    "unknownVoice": "अज्ञात वॉइस",
+    "download": "डाउनलोड",
+    "deleted": "फाइल हटाई गई",
+    "loadMore": "और लोड करें"
+  }
+}
+

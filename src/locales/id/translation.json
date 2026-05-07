@@ -1,0 +1,125 @@
+{
+  "common": {
+    "retry": "Coba lagi",
+    "buy": "Beli",
+    "loading": "Memuat...",
+    "guest": "Tamu",
+    "free": "Gratis",
+    "light": "Terang",
+    "dark": "Gelap",
+    "russian": "Russkiy",
+    "english": "English",
+    "spanish": "Espanol",
+    "hindi": "Hindi",
+    "indonesian": "Bahasa Indonesia",
+    "arabic": "Arabic",
+    "remaining": "Sisa",
+    "keyboardDone": "Selesai"
+  },
+  "nav": {
+    "generate": "Buat",
+    "library": "Riwayat",
+    "pricing": "Harga",
+    "profile": "Profil"
+  },
+  "languageModal": {
+    "title": "Selamat datang di VoiceStudio",
+    "description": "Pilih bahasa Anda. Bisa diubah nanti di Profil."
+  },
+  "generate": {
+    "title": "Pembuatan suara",
+    "subtitle": "Pilih suara, masukkan teks, dan dapatkan audio siap pakai.",
+    "loadVoicesError": "Gagal memuat daftar suara",
+    "selectVoiceFirst": "Pilih suara terlebih dahulu",
+    "telegramMissing": "Pengguna Telegram tidak terdeteksi. Buka ulang aplikasi.",
+    "dailyLimit": "Batas harian tercapai. Upgrade ke Pro.",
+    "generateError": "Gagal membuat audio",
+    "generate": "Buat",
+    "generating": "Membuat...",
+    "resultTitle": "Hasil pembuatan",
+    "audioNotSupported": "Browser Anda tidak mendukung audio.",
+    "downloadMp3": "Unduh MP3"
+  },
+  "generation": {
+    "willBeDeleted": "Akan dihapus dalam {{hours}} j {{minutes}} m",
+    "willBeDeletedLessThanHour": "Akan dihapus kurang dari satu jam",
+    "permanentlyStored": "Disimpan permanen",
+    "fileDeleted": "File dihapus"
+  },
+  "voice": {
+    "selectVoice": "Pilih suara",
+    "selected": "Dipilih",
+    "play": "Putar",
+    "pause": "Jeda",
+    "noPreview": "Tanpa pratinjau",
+    "text": "Teks",
+    "clearText": "Hapus teks",
+    "textPlaceholder": "Masukkan teks untuk pembuatan suara...",
+    "voiceParams": "Pengaturan suara",
+    "speed": "Kecepatan",
+    "pitch": "Nada"
+  },
+  "pricing": {
+    "title": "Harga & pembayaran",
+    "subtitle": "Beli menit dan langganan langsung di mini app.",
+    "freeDescription": "1 menit pembuatan per hari",
+    "proDescription": "Pembuatan tak terbatas dan penyimpanan file 30 hari",
+    "premiumDescription": "Paket tertinggi dan penyimpanan jangka panjang",
+    "minutes100Title": "100 menit",
+    "minutes100Description": "Paket menit tambahan",
+    "subscriptions": "Langganan",
+    "minutesPackages": "Paket menit",
+    "popular": "Populer",
+    "best": "Terbaik",
+    "currentLevel": "Level saat ini",
+    "freeNoPurchase": "Paket Free tidak memerlukan pembelian.",
+    "telegramUnavailable": "Pembayaran Telegram tidak tersedia di lingkungan ini.",
+    "loadProfileError": "Gagal memuat data profil",
+    "cancelled": "Pembayaran dibatalkan.",
+    "failed": "Gagal menyelesaikan pembayaran. Coba lagi nanti.",
+    "pending": "Pembayaran sedang diproses. Cek saldo dalam beberapa detik.",
+    "paid": "Pembayaran berhasil. Saldo diperbarui.",
+    "paidRefresh": "Pembayaran berhasil. Muat ulang halaman untuk data terbaru.",
+    "createInvoiceError": "Gagal membuat invoice. Coba lagi nanti."
+  },
+  "profile": {
+    "title": "Profil",
+    "loadError": "Gagal memuat profil",
+    "loading": "Memuat profil...",
+    "name": "Nama",
+    "telegramId": "Telegram ID",
+    "theme": "Tema",
+    "language": "Bahasa",
+    "languageDescription": "Pilih bahasa pilihan Anda untuk seluruh antarmuka aplikasi.",
+    "myPlan": "Paket saya",
+    "expiresAt": "Berakhir",
+    "remaining": "Sisa",
+    "starsMinutes": "Menit Stars",
+    "supportTitle": "Dukungan",
+    "supportSubtitle": "Butuh bantuan atau ada pertanyaan? Hubungi kami di Telegram.",
+    "supportButton": "💬 Hubungi dukungan",
+    "subscription_inactive": "Tidak aktif",
+    "remainingInactive": "Tidak aktif",
+    "subscription_expired": "Kedaluwarsa",
+    "subscription_active": "{{days}} h {{hours}} j"
+  },
+  "history": {
+    "deleted_in": "Akan dihapus dalam {{hours}} j {{minutes}} m",
+    "deleted_in_less_than_hour": "Akan dihapus kurang dari satu jam",
+    "permanently_stored": "Disimpan permanen",
+    "file_deleted": "File dihapus"
+  },
+  "library": {
+    "title": "Riwayat",
+    "subtitle": "Audio terbaru yang Anda buat",
+    "loadError": "Gagal memuat riwayat. Cek koneksi lalu coba lagi.",
+    "loading": "Memuat riwayat...",
+    "empty": "Belum ada pembuatan",
+    "noText": "Tanpa teks",
+    "unknownVoice": "Suara tidak dikenal",
+    "download": "Unduh",
+    "deleted": "File dihapus",
+    "loadMore": "Muat lebih banyak"
+  }
+}
+

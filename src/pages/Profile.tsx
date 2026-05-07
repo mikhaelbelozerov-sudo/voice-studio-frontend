@@ -6,13 +6,15 @@ import { useTelegram } from "../hooks/useTelegram";
 import { getUserProfile, updateUserLanguage, UserProfile } from "../services/api";
 import { getSubscriptionRemainingInfo } from "../utils/formatRemainingTime";
 import { LANGUAGE_STORAGE_KEY } from "../i18n";
+import { AppLanguage, DATE_LOCALE_BY_LANGUAGE } from "../constants/languages";
 
 const FALLBACK_TELEGRAM_ID = 123456789;
 const SUPPORT_LINK = import.meta.env.VITE_SUPPORT_TELEGRAM_LINK || "";
 
 const formatDate = (iso: string | null, locale: string) => {
   if (!iso) return "—";
-  return new Date(iso).toLocaleString(locale.startsWith("en") ? "en-US" : "ru-RU", {
+  const normalized = (Object.keys(DATE_LOCALE_BY_LANGUAGE).find((lng) => locale.startsWith(lng)) as AppLanguage | undefined) ?? "en";
+  return new Date(iso).toLocaleString(DATE_LOCALE_BY_LANGUAGE[normalized], {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -54,7 +56,19 @@ export const ProfilePage = () => {
     void loadProfile();
   }, [t, telegramId]);
 
-  const handleLanguageChange = async (language: "ru" | "en") => {
+  const languageOptions = useMemo(
+    () => [
+      { value: "en" as const, label: t("common.english") },
+      { value: "ru" as const, label: t("common.russian") },
+      { value: "es" as const, label: t("common.spanish") },
+      { value: "hi" as const, label: t("common.hindi") },
+      { value: "id" as const, label: t("common.indonesian") },
+      { value: "ar" as const, label: t("common.arabic") }
+    ],
+    [t]
+  );
+
+  const handleLanguageChange = async (language: AppLanguage) => {
     await i18n.changeLanguage(language);
     window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
     if (!telegramId) {
@@ -130,20 +144,18 @@ export const ProfilePage = () => {
 
       <div className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
         <p className="text-sm text-slate-500 dark:text-slate-400">{t("profile.language")}</p>
-        <div className="mt-2 grid grid-cols-2 gap-2">
-          <Button
-            variant={i18n.language.startsWith("ru") ? "primary" : "secondary"}
-            onClick={() => void handleLanguageChange("ru")}
-          >
-            {t("common.russian")}
-          </Button>
-          <Button
-            variant={i18n.language.startsWith("en") ? "primary" : "secondary"}
-            onClick={() => void handleLanguageChange("en")}
-          >
-            {t("common.english")}
-          </Button>
-        </div>
+        <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{t("profile.languageDescription")}</p>
+        <select
+          className="mt-3 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:border-blue-400 dark:focus:ring-blue-900"
+          value={languageOptions.find((option) => i18n.language.startsWith(option.value))?.value ?? "en"}
+          onChange={(event) => void handleLanguageChange(event.target.value as AppLanguage)}
+        >
+          {languageOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">

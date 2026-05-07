@@ -9,6 +9,10 @@
     "dark": "Тёмная",
     "russian": "Русский",
     "english": "English",
+    "spanish": "Espanol",
+    "hindi": "Hindi",
+    "indonesian": "Bahasa Indonesia",
+    "arabic": "Arabic",
     "remaining": "Осталось",
     "keyboardDone": "Готово"
   },
@@ -19,8 +23,8 @@
     "profile": "Профиль"
   },
   "languageModal": {
-    "title": "Выберите язык интерфейса",
-    "description": "Вы сможете изменить язык позже в профиле."
+    "title": "Добро пожаловать в VoiceStudio",
+    "description": "Выберите язык интерфейса. Позже его можно изменить в профиле."
   },
   "generate": {
     "title": "Генерация речи",
@@ -86,6 +90,7 @@
     "telegramId": "Telegram ID",
     "theme": "Тема",
     "language": "Язык",
+    "languageDescription": "Выберите язык, на котором будет работать весь интерфейс приложения.",
     "myPlan": "Мой тариф",
     "expiresAt": "До",
     "remaining": "Осталось",

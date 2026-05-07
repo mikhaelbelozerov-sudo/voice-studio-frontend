@@ -6,6 +6,7 @@ import { fetchGenerations, Generation, getVoices, UserTier, Voice } from "../ser
 import { Button } from "../components/ui/Button";
 import { Spinner } from "../components/ui/Spinner";
 import { getRemainingStorageInfo, isExpiringSoon } from "../utils/formatRemainingTime";
+import { AppLanguage, DATE_LOCALE_BY_LANGUAGE } from "../constants/languages";
 
 const PAGE_SIZE = 20;
 const FALLBACK_TELEGRAM_ID = 123456789;
@@ -17,7 +18,11 @@ const truncateText = (value: string | null, emptyText: string, maxLength = 100) 
 };
 
 const formatDateTime = (dateIso: string, locale: string) =>
-  new Date(dateIso).toLocaleString(locale.startsWith("en") ? "en-US" : "ru-RU", {
+  new Date(dateIso).toLocaleString(
+    DATE_LOCALE_BY_LANGUAGE[
+      (Object.keys(DATE_LOCALE_BY_LANGUAGE).find((lng) => locale.startsWith(lng)) as AppLanguage | undefined) ?? "en"
+    ],
+    {
     day: "numeric",
     month: "long",
     year: "numeric",
