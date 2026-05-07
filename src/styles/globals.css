@@ -128,7 +128,7 @@ body {
 .vs-range {
   -webkit-appearance: none;
   appearance: none;
-  height: 1.75rem;
+  height: 2.25rem;
   background: transparent;
 }
 
@@ -149,9 +149,9 @@ body {
 .vs-range::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 1rem;
-  height: 1rem;
-  margin-top: -0.3125rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-top: -0.5625rem;
   border-radius: 9999px;
   border: 2px solid #2563eb;
   background: #ffffff;
@@ -175,8 +175,8 @@ body {
 }
 
 .vs-range::-moz-range-thumb {
-  width: 1rem;
-  height: 1rem;
+  width: 1.5rem;
+  height: 1.5rem;
   border-radius: 9999px;
   border: 2px solid #2563eb;
   background: #ffffff;
