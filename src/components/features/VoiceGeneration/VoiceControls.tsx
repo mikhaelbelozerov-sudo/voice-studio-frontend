@@ -22,13 +22,24 @@ export const VoiceControls = ({
   const { t } = useTranslation();
   const safeSpeed = Math.min(Math.max(speed || 1, 0.7), 1.2);
   const safePitch = Math.min(Math.max(pitch || 0, -1), 1);
-  const speedToSliderPosition = (value: number) => {
-    const clamped = Math.min(Math.max(value, 0.7), 1.2);
-    return clamped <= 1 ? (clamped - 1) / 0.3 : (clamped - 1) / 0.2;
+  const SPEED_SLIDER_MIN = -10;
+  const SPEED_SLIDER_MAX = 10;
+  const sliderStepToSpeed = (step: number) => {
+    const clamped = Math.min(Math.max(step, SPEED_SLIDER_MIN), SPEED_SLIDER_MAX);
+    return clamped <= 0 ? 1 + (0.3 * clamped) / 10 : 1 + (0.2 * clamped) / 10;
   };
-  const sliderPositionToSpeed = (position: number) => {
-    const clamped = Math.min(Math.max(position, -1), 1);
-    return clamped <= 0 ? 1 + 0.3 * clamped : 1 + 0.2 * clamped;
+  const speedToSliderStep = (value: number) => {
+    let nearestStep = 0;
+    let nearestDiff = Number.POSITIVE_INFINITY;
+    for (let step = SPEED_SLIDER_MIN; step <= SPEED_SLIDER_MAX; step += 1) {
+      const candidate = sliderStepToSpeed(step);
+      const diff = Math.abs(candidate - value);
+      if (diff < nearestDiff) {
+        nearestDiff = diff;
+        nearestStep = step;
+      }
+    }
+    return nearestStep;
   };
 
   return (
@@ -47,15 +58,15 @@ export const VoiceControls = ({
       <label className="block space-y-2">
         <div className="flex items-center justify-between text-sm text-slate-700 dark:text-slate-300">
           <span>{t("voice.speed")}</span>
-          <span>{safeSpeed.toFixed(1)}x</span>
+          <span>{safeSpeed.toFixed(2)}x</span>
         </div>
         <input
           type="range"
-          min={-1}
-          max={1}
-          step={0.02}
-          value={speedToSliderPosition(safeSpeed)}
-          onChange={(event) => onSpeedChange(sliderPositionToSpeed(Number(event.target.value)))}
+          min={SPEED_SLIDER_MIN}
+          max={SPEED_SLIDER_MAX}
+          step={1}
+          value={speedToSliderStep(safeSpeed)}
+          onChange={(event) => onSpeedChange(sliderStepToSpeed(Number(event.target.value)))}
           className="vs-range w-full"
         />
       </label>
