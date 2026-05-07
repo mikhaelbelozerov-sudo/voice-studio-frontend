@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "../components/ui/Button";
 import { Spinner } from "../components/ui/Spinner";
+import { DropdownMenu } from "../components/ui/DropdownMenu";
 import { useTelegram } from "../hooks/useTelegram";
 import { getUserProfile, updateUserLanguage, UserProfile } from "../services/api";
 import { getSubscriptionRemainingInfo } from "../utils/formatRemainingTime";
@@ -145,17 +146,12 @@ export const ProfilePage = () => {
       <div className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
         <p className="text-sm text-slate-500 dark:text-slate-400">{t("profile.language")}</p>
         <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{t("profile.languageDescription")}</p>
-        <select
-          className="mt-3 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:border-blue-400 dark:focus:ring-blue-900"
+        <DropdownMenu
+          className="mt-3"
           value={languageOptions.find((option) => i18n.language.startsWith(option.value))?.value ?? "en"}
-          onChange={(event) => void handleLanguageChange(event.target.value as AppLanguage)}
-        >
-          {languageOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+          options={languageOptions.map((option) => ({ value: option.value, label: option.label }))}
+          onChange={(nextValue) => void handleLanguageChange(nextValue as AppLanguage)}
+        />
       </div>
 
       <div className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">

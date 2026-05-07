@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { TTS_LANGUAGE_OPTIONS, TtsLanguageCode } from "../../../constants/ttsLanguages";
+import { DropdownMenu } from "../../ui/DropdownMenu";
 
 interface VoiceControlsProps {
   languageCode: TtsLanguageCode;
@@ -28,17 +29,11 @@ export const VoiceControls = ({
 
       <label className="block space-y-2">
         <span className="text-sm text-slate-700 dark:text-slate-300">{t("profile.language")}</span>
-        <select
+        <DropdownMenu
           value={languageCode}
-          onChange={(event) => onLanguageCodeChange(event.target.value as TtsLanguageCode)}
-          className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:border-blue-400 dark:focus:ring-blue-900"
-        >
-          {TTS_LANGUAGE_OPTIONS.map((option) => (
-            <option key={option.code} value={option.code}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+          options={TTS_LANGUAGE_OPTIONS.map((option) => ({ value: option.code, label: option.label }))}
+          onChange={(nextValue) => onLanguageCodeChange(nextValue as TtsLanguageCode)}
+        />
       </label>
 
       <label className="block space-y-2">

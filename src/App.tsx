@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 import { Layout } from "./components/layout/Layout";
-import { Button } from "./components/ui/Button";
+import { DropdownMenu } from "./components/ui/DropdownMenu";
 import { useTelegram } from "./hooks/useTelegram";
 import { useVirtualKeyboard } from "./hooks/useVirtualKeyboard";
 import { GeneratePage } from "./pages/Generate";
@@ -65,8 +65,10 @@ function App() {
     const handleDoneClick = () => {
       dismissKeyboard();
     };
+    const activeTagName = document.activeElement?.tagName?.toUpperCase();
+    const shouldShowDone = isKeyboardOpen && activeTagName !== "SELECT";
 
-    if (isKeyboardOpen) {
+    if (shouldShowDone) {
       mainButton.setText(t("common.keyboardDone"));
       mainButton.setParams({
         is_active: true,
@@ -121,16 +123,12 @@ function App() {
             <div className="w-full max-w-sm rounded-2xl bg-white p-5 shadow-xl dark:bg-slate-900">
               <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t("languageModal.title")}</h2>
               <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{t("languageModal.description")}</p>
-              <div className="mt-4 grid grid-cols-2 gap-2">
-                {languageOptions.map((option) => (
-                  <Button
-                    key={option.value}
-                    variant={i18n.language.startsWith(option.value) ? "primary" : "secondary"}
-                    onClick={() => void handleSelectLanguage(option.value)}
-                  >
-                    {option.label}
-                  </Button>
-                ))}
+              <div className="mt-4">
+                <DropdownMenu
+                  value={languageOptions.find((option) => i18n.language.startsWith(option.value))?.value ?? "en"}
+                  options={languageOptions.map((option) => ({ value: option.value, label: option.label }))}
+                  onChange={(nextValue) => void handleSelectLanguage(nextValue as AppLanguage)}
+                />
               </div>
             </div>
           </div>
