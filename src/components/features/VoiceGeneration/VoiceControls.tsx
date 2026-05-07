@@ -20,7 +20,7 @@ export const VoiceControls = ({
   onPitchChange
 }: VoiceControlsProps) => {
   const { t } = useTranslation();
-  const safeSpeed = Math.min(Math.max(speed || 1, 0.7), 1.2);
+  const safeSpeed = Math.min(Math.max(speed || 0.95, 0.7), 1.2);
   const safePitch = Math.min(Math.max(pitch || 0, -1), 1);
 
   return (
