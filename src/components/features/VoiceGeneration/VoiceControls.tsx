@@ -51,17 +51,19 @@ export const VoiceControls = ({
   return (
     <div className="space-y-4 rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{t("voice.voiceParams")}</h2>
-        {slidersDirty ? (
-          <Button
-            type="button"
-            variant="secondary"
-            className="shrink-0 px-3 py-1.5 text-xs font-medium dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600"
-            onClick={onResetSliders}
-          >
-            {t("voice.resetSliders")}
-          </Button>
-        ) : null}
+        <h2 className="min-w-0 flex-1 text-base font-semibold text-slate-900 dark:text-slate-100">
+          {t("voice.voiceParams")}
+        </h2>
+        <Button
+          type="button"
+          variant="secondary"
+          className={`shrink-0 px-3 py-1.5 text-xs font-medium dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 ${!slidersDirty ? "invisible pointer-events-none" : ""}`}
+          onClick={onResetSliders}
+          tabIndex={slidersDirty ? undefined : -1}
+          aria-hidden={!slidersDirty}
+        >
+          {t("voice.resetSliders")}
+        </Button>
       </div>
 
       <div className="block space-y-2">
