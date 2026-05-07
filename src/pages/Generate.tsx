@@ -29,7 +29,8 @@ export const GeneratePage = () => {
     setText,
     setSpeed,
     setPitch,
-    setLanguageCode
+    setLanguageCode,
+    resetVoiceSliders
   } = useVoiceStore();
 
   // Получаем данные пользователя из Telegram
@@ -147,6 +148,7 @@ export const GeneratePage = () => {
         onLanguageCodeChange={setLanguageCode}
         onSpeedChange={setSpeed}
         onPitchChange={setPitch}
+        onResetSliders={resetVoiceSliders}
       />
 
       <Button className="w-full gap-2" onClick={handleGenerate} disabled={!canGenerate} loading={isGenerating}>

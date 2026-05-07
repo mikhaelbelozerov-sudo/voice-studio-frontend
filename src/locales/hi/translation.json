@@ -57,7 +57,8 @@
     "textPlaceholder": "वॉइस जनरेशन के लिए टेक्स्ट दर्ज करें...",
     "voiceParams": "वॉइस सेटिंग्स",
     "speed": "स्पीड",
-    "pitch": "पिच"
+    "pitch": "पिच",
+    "resetSliders": "रीसेट"
   },
   "pricing": {
     "title": "कीमत और भुगतान",

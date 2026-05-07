@@ -57,7 +57,8 @@
     "textPlaceholder": "Enter text for voice generation...",
     "voiceParams": "Voice settings",
     "speed": "Speed",
-    "pitch": "Pitch"
+    "pitch": "Pitch",
+    "resetSliders": "Reset"
   },
   "pricing": {
     "title": "Pricing & Payment",

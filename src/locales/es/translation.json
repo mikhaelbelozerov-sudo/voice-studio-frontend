@@ -57,7 +57,8 @@
     "textPlaceholder": "Introduce texto para generar voz...",
     "voiceParams": "Ajustes de voz",
     "speed": "Velocidad",
-    "pitch": "Tono"
+    "pitch": "Tono",
+    "resetSliders": "Restablecer"
   },
   "pricing": {
     "title": "Precios y pago",

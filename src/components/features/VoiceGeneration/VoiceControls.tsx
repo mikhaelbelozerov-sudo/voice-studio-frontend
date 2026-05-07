@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { TTS_LANGUAGE_OPTIONS, TtsLanguageCode } from "../../../constants/ttsLanguages";
+import { Button } from "../../ui/Button";
 import { DropdownMenu } from "../../ui/DropdownMenu";
 
 interface VoiceControlsProps {
@@ -9,6 +10,7 @@ interface VoiceControlsProps {
   onLanguageCodeChange: (languageCode: TtsLanguageCode) => void;
   onSpeedChange: (speed: number) => void;
   onPitchChange: (pitch: number) => void;
+  onResetSliders: () => void;
 }
 
 export const VoiceControls = ({
@@ -17,7 +19,8 @@ export const VoiceControls = ({
   pitch,
   onLanguageCodeChange,
   onSpeedChange,
-  onPitchChange
+  onPitchChange,
+  onResetSliders
 }: VoiceControlsProps) => {
   const { t } = useTranslation();
   const safeSpeed = Math.min(Math.max(speed || 1, 0.7), 1.2);
@@ -42,9 +45,24 @@ export const VoiceControls = ({
     return nearestStep;
   };
 
+  const slidersDirty =
+    Math.abs(safeSpeed - 1) > 0.0001 || Math.abs(safePitch) > 0.0001;
+
   return (
     <div className="space-y-4 rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
-      <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{t("voice.voiceParams")}</h2>
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{t("voice.voiceParams")}</h2>
+        {slidersDirty ? (
+          <Button
+            type="button"
+            variant="secondary"
+            className="shrink-0 px-3 py-1.5 text-xs font-medium dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600"
+            onClick={onResetSliders}
+          >
+            {t("voice.resetSliders")}
+          </Button>
+        ) : null}
+      </div>
 
       <div className="block space-y-2">
         <span className="text-sm text-slate-700 dark:text-slate-300">{t("profile.language")}</span>

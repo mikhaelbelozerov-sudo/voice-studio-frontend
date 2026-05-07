@@ -57,7 +57,8 @@
     "textPlaceholder": "Masukkan teks untuk pembuatan suara...",
     "voiceParams": "Pengaturan suara",
     "speed": "Kecepatan",
-    "pitch": "Nada"
+    "pitch": "Nada",
+    "resetSliders": "Atur ulang"
   },
   "pricing": {
     "title": "Harga & pembayaran",

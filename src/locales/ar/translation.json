@@ -57,7 +57,8 @@
     "textPlaceholder": "ادخل النص لتوليد الصوت...",
     "voiceParams": "اعدادات الصوت",
     "speed": "السرعة",
-    "pitch": "النبرة"
+    "pitch": "النبرة",
+    "resetSliders": "إعادة تعيين"
   },
   "pricing": {
     "title": "الاسعار والدفع",
