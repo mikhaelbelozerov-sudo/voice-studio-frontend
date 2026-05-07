@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "retry": "Retry",
     "buy": "Buy",
@@ -97,7 +97,7 @@
     "starsMinutes": "Stars minutes",
     "supportTitle": "Support",
     "supportSubtitle": "Need help or have a question? Contact us on Telegram.",
-    "supportButton": "💬 Contact support",
+    "supportButton": "рџ’¬ Contact support",
     "subscription_inactive": "Inactive",
     "remainingInactive": "Not active",
     "subscription_expired": "Expired",
@@ -122,3 +122,5 @@
     "loadMore": "Load more"
   }
 }
+
+

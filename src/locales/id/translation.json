@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "retry": "Coba lagi",
     "buy": "Beli",
@@ -97,7 +97,7 @@
     "starsMinutes": "Menit Stars",
     "supportTitle": "Dukungan",
     "supportSubtitle": "Butuh bantuan atau ada pertanyaan? Hubungi kami di Telegram.",
-    "supportButton": "💬 Hubungi dukungan",
+    "supportButton": "рџ’¬ Hubungi dukungan",
     "subscription_inactive": "Tidak aktif",
     "remainingInactive": "Tidak aktif",
     "subscription_expired": "Kedaluwarsa",
@@ -122,4 +122,6 @@
     "loadMore": "Muat lebih banyak"
   }
 }
+
+
 

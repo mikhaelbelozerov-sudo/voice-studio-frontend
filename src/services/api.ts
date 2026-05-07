@@ -1,5 +1,6 @@
 import axios from "axios";
 import { AppLanguage } from "../constants/languages";
+import { TtsLanguageCode } from "../constants/ttsLanguages";
 
 const defaultBaseUrl = "http://localhost:3001/api";
 
@@ -25,6 +26,7 @@ export interface GenerateRequest {
   voiceId: string;
   speed: number;
   pitch: number;
+  languageCode: TtsLanguageCode;
 }
 
 export interface GenerateResponse {
@@ -85,6 +87,7 @@ export const generateAudio = async (params: {
   voiceId: string;
   speed: number;
   pitch: number;
+  languageCode: TtsLanguageCode;
   telegramId: number;
 }) => {
   const normalizedPayload = {

@@ -9,9 +9,10 @@ import { VoiceSelector } from "../components/features/VoiceGeneration/VoiceSelec
 import { generateAudio, getVoices, Voice } from "../services/api";
 import { useVoiceStore } from "../store/voiceStore";
 import { useTelegram } from "../hooks/useTelegram"; // добавляем хук Telegram
+import { mapInterfaceLanguageToTtsCode } from "../constants/ttsLanguages";
 
 export const GeneratePage = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [voices, setVoices] = useState<Voice[]>([]);
   const [isLoadingVoices, setIsLoadingVoices] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -23,10 +24,12 @@ export const GeneratePage = () => {
     text,
     speed,
     pitch,
+    languageCode,
     setSelectedVoiceId,
     setText,
     setSpeed,
-    setPitch
+    setPitch,
+    setLanguageCode
   } = useVoiceStore();
 
   // Получаем данные пользователя из Telegram
@@ -49,6 +52,11 @@ export const GeneratePage = () => {
 
     void loadVoices();
   }, [t]);
+
+  useEffect(() => {
+    // Дефолт языка озвучки привязываем к языку интерфейса (с fallback на en).
+    setLanguageCode(mapInterfaceLanguageToTtsCode(i18n.language));
+  }, [i18n.language, setLanguageCode]);
 
   const canGenerate = useMemo(() => {
     return Boolean(telegramId && selectedVoiceId && text.trim().length > 0 && text.length <= 1000 && !isGenerating);
@@ -76,6 +84,7 @@ export const GeneratePage = () => {
         voiceId: selectedVoiceId,
         speed,
         pitch,
+        languageCode,
         telegramId, // передаём ID пользователя на бэкенд
       });
 
@@ -131,7 +140,14 @@ export const GeneratePage = () => {
 
       <TextEditor value={text} onChange={setText} maxLength={1000} />
 
-      <VoiceControls speed={speed} pitch={pitch} onSpeedChange={setSpeed} onPitchChange={setPitch} />
+      <VoiceControls
+        languageCode={languageCode}
+        speed={speed}
+        pitch={pitch}
+        onLanguageCodeChange={setLanguageCode}
+        onSpeedChange={setSpeed}
+        onPitchChange={setPitch}
+      />
 
       <Button className="w-full gap-2" onClick={handleGenerate} disabled={!canGenerate} loading={isGenerating}>
         {isGenerating ? (
