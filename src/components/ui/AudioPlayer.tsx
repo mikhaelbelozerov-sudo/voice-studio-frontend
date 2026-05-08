@@ -4,9 +4,10 @@ import { Button } from "./Button";
 
 interface AudioPlayerProps {
   audioUrl: string;
+  onDownloadClick?: () => void;
 }
 
-export const AudioPlayer = ({ audioUrl }: AudioPlayerProps) => {
+export const AudioPlayer = ({ audioUrl, onDownloadClick }: AudioPlayerProps) => {
   const { t } = useTranslation();
 
   return (
@@ -15,7 +16,14 @@ export const AudioPlayer = ({ audioUrl }: AudioPlayerProps) => {
       <audio controls src={audioUrl} className="w-full rounded-md border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">
         {t("generate.audioNotSupported", { defaultValue: "Ваш браузер не поддерживает аудио." })}
       </audio>
-      <a href={audioUrl} download target="_blank" rel="noreferrer" className="block">
+      <a
+        href={audioUrl}
+        download
+        target="_blank"
+        rel="noreferrer"
+        className="block"
+        onClick={() => onDownloadClick?.()}
+      >
         <Button className="w-full gap-2" variant="secondary">
           <Download size={16} />
           {t("generate.downloadMp3", { defaultValue: "Скачать MP3" })}

@@ -1,163 +1,114 @@
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "../components/ui/Button";
 import { useTelegram } from "../hooks/useTelegram";
-import {
-  createInvoice,
-  CreateInvoiceRequest,
-  InvoiceProductType
-} from "../services/api";
+import { useTelegramStarsPurchase } from "../hooks/useTelegramStarsPurchase";
+import { CreateInvoiceRequest } from "../services/api";
 
 const FALLBACK_TELEGRAM_ID = 123456789;
 
-type PricingItem = {
+type Pack = {
   id: string;
-  title: string;
-  description: string;
+  titleKey: string;
+  descriptionKey: string;
   amountStars: number;
-  productType: InvoiceProductType;
-  productValue: number;
-  badge?: string;
+  invoice: CreateInvoiceRequest;
 };
-
-type OpenInvoiceStatus = "paid" | "cancelled" | "failed" | "pending";
-
-declare global {
-  interface Window {
-    Telegram?: {
-      WebApp?: {
-        openInvoice?: (url: string, callback?: (status: OpenInvoiceStatus) => void) => void;
-      };
-    };
-  }
-}
 
 export const PricingPage = () => {
   const { t } = useTranslation();
   const { telegramId: telegramUserId } = useTelegram();
-  const telegramId = useMemo(() => telegramUserId ?? FALLBACK_TELEGRAM_ID, [telegramUserId]);
+  const telegramId = telegramUserId ?? FALLBACK_TELEGRAM_ID;
+
+  const topUps: Pack[] = useMemo(
+    () => [
+      {
+        id: "credits10",
+        titleKey: "pricing.pack10Title",
+        descriptionKey: "pricing.pack10Desc",
+        amountStars: 39,
+        invoice: {
+          telegramId,
+          productType: "credits",
+          productValue: 10 * 60,
+          amountStars: 39
+        }
+      },
+      {
+        id: "credits35",
+        titleKey: "pricing.pack35Title",
+        descriptionKey: "pricing.pack35Desc",
+        amountStars: 99,
+        invoice: {
+          telegramId,
+          productType: "credits",
+          productValue: 35 * 60,
+          amountStars: 99
+        }
+      },
+      {
+        id: "credits120",
+        titleKey: "pricing.pack120Title",
+        descriptionKey: "pricing.pack120Desc",
+        amountStars: 249,
+        invoice: {
+          telegramId,
+          productType: "credits",
+          productValue: 120 * 60,
+          amountStars: 249
+        }
+      }
+    ],
+    [telegramId]
+  );
+
+  const creatorPlan: Pack = useMemo(
+    () => ({
+      id: "proCreator",
+      titleKey: "pricing.proCreatorTitle",
+      descriptionKey: "pricing.proCreatorDesc",
+      amountStars: 650,
+      invoice: {
+        telegramId,
+        productType: "subscription",
+        productValue: 3,
+        amountStars: 650
+      }
+    }),
+    [telegramId]
+  );
 
   const [isPurchasingId, setIsPurchasingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  const subscriptionPlans: PricingItem[] = useMemo(
-    () => [
-      {
-        id: "free",
-        title: "Free",
-        description: t("pricing.freeDescription", { defaultValue: "1 minute per day" }),
-        amountStars: 0,
-        productType: "subscription",
-        productValue: 0
-      },
-      {
-        id: "pro",
-        title: "Pro",
-        description: t("pricing.proDescription", { defaultValue: "Unlimited generation and 30-day file storage" }),
-        amountStars: 100,
-        productType: "subscription",
-        productValue: 1,
-        badge: t("pricing.popular")
-      },
-      {
-        id: "premium",
-        title: "Premium",
-        description: t("pricing.premiumDescription", { defaultValue: "Top tier and long-term file storage" }),
-        amountStars: 200,
-        productType: "subscription",
-        productValue: 2,
-        badge: t("pricing.best")
+  const { purchase } = useTelegramStarsPurchase(telegramUserId);
+
+  const buy = async (pack: Pack) => {
+    if (!telegramUserId) {
+      setError(t("generate.telegramMissing"));
+      return;
+    }
+    setIsPurchasingId(pack.id);
+    setError(null);
+    setSuccess(null);
+    await purchase(pack.invoice, (status) => {
+      setIsPurchasingId(null);
+      if (status === "paid") {
+        setSuccess(t("pricing.paid"));
+      } else if (status === "cancelled") {
+        setError(t("pricing.cancelled"));
+      } else {
+        setError(t("pricing.failed"));
       }
-    ],
-    [t]
-  );
-
-  const minutePlans: PricingItem[] = useMemo(
-    () => [
-      {
-        id: "minutes_100",
-        title: t("pricing.minutes100Title", { defaultValue: "100 minutes" }),
-        description: t("pricing.minutes100Description", { defaultValue: "Extra generation minutes package" }),
-        amountStars: 50,
-        productType: "minutes",
-        productValue: 100
-      }
-    ],
-    [t]
-  );
-
-  const purchase = useCallback(
-    async (plan: PricingItem) => {
-      if (!telegramId) {
-        setError(t("generate.telegramMissing"));
-        return;
-      }
-
-      if (plan.amountStars <= 0) {
-        setError(t("pricing.freeNoPurchase"));
-        return;
-      }
-
-      const openInvoice = window.Telegram?.WebApp?.openInvoice;
-      if (!openInvoice) {
-        setError(t("pricing.telegramUnavailable"));
-        return;
-      }
-
-      setIsPurchasingId(plan.id);
-      setError(null);
-      setSuccess(null);
-
-      try {
-        const invoicePayload: CreateInvoiceRequest = {
-          telegramId,
-          productType: plan.productType,
-          productValue: plan.productValue,
-          amountStars: plan.amountStars
-        };
-
-        const invoice = await createInvoice(invoicePayload);
-
-        openInvoice(invoice.invoiceLink, async (status) => {
-          if (status === "paid") {
-            setSuccess(t("pricing.paid"));
-            return;
-          }
-
-          if (status === "cancelled") {
-            setError(t("pricing.cancelled"));
-            return;
-          }
-
-          if (status === "failed") {
-            setError(t("pricing.failed"));
-            return;
-          }
-
-          setError(t("pricing.pending"));
-        });
-      } catch (err) {
-        const message =
-          typeof err === "object" &&
-          err !== null &&
-          "response" in err &&
-          typeof (err as { response?: { data?: { error?: string } } }).response?.data?.error === "string"
-            ? (err as { response: { data: { error: string } } }).response.data.error
-            : t("pricing.createInvoiceError");
-        setError(message);
-      } finally {
-        setIsPurchasingId(null);
-      }
-    },
-    [t, telegramId]
-  );
+    });
+  };
 
   return (
-    <div className="space-y-5 pb-24">
+    <div className="space-y-6 pb-24">
       <div>
         <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("pricing.title")}</h1>
-        <p className="text-sm text-slate-600 dark:text-slate-300">{t("pricing.subtitle")}</p>
+        <p className="text-sm text-slate-600 dark:text-slate-300">{t("pricing.subtitleV2")}</p>
       </div>
 
       {error ? <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div> : null}
@@ -166,31 +117,21 @@ export const PricingPage = () => {
       ) : null}
 
       <section className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t("pricing.subscriptions")}</h2>
-        </div>
-
-        {subscriptionPlans.map((plan) => (
-          <div key={plan.id} className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100 dark:bg-slate-900 dark:ring-slate-800">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">{plan.title}</p>
-                <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{plan.description}</p>
-              </div>
-              {plan.badge ? (
-                <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700">{plan.badge}</span>
-              ) : null}
-            </div>
-            <div className="mt-4 flex items-center justify-between">
-              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                {plan.amountStars === 0 ? t("common.free") : `${plan.amountStars} ⭐`}
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t("pricing.topUpsTitle")}</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400">{t("pricing.topUpsHint")}</p>
+        {topUps.map((pack) => (
+          <div
+            key={pack.id}
+            className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100 dark:bg-slate-900 dark:ring-slate-800"
+          >
+            <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t(pack.titleKey)}</p>
+            <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{t(pack.descriptionKey)}</p>
+            <div className="mt-4 flex items-center justify-between gap-2">
+              <p className="text-sm font-medium text-slate-800 dark:text-slate-200">
+                {pack.amountStars} <span aria-hidden>⭐️</span>
               </p>
-              <Button
-                onClick={() => void purchase(plan)}
-                disabled={plan.amountStars === 0}
-                loading={isPurchasingId === plan.id}
-              >
-                {plan.amountStars === 0 ? t("pricing.currentLevel") : t("common.buy")}
+              <Button onClick={() => void buy(pack)} loading={isPurchasingId === pack.id}>
+                {t("common.buy")}
               </Button>
             </div>
           </div>
@@ -198,19 +139,21 @@ export const PricingPage = () => {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t("pricing.minutesPackages")}</h2>
-        {minutePlans.map((plan) => (
-          <div key={plan.id} className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100 dark:bg-slate-900 dark:ring-slate-800">
-            <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">{plan.title}</p>
-            <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{plan.description}</p>
-            <div className="mt-4 flex items-center justify-between">
-              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{plan.amountStars} ⭐</p>
-              <Button onClick={() => void purchase(plan)} loading={isPurchasingId === plan.id}>
-                {t("common.buy")}
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t("pricing.subscriptionsSecondary")}</h2>
+        <div className="rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 p-[1px] dark:from-blue-900 dark:to-slate-900">
+          <div className="rounded-2xl bg-white p-4 dark:bg-slate-950">
+            <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t(creatorPlan.titleKey)}</p>
+            <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{t(creatorPlan.descriptionKey)}</p>
+            <div className="mt-4 flex items-center justify-between gap-2">
+              <p className="text-sm font-medium text-slate-800 dark:text-slate-200">
+                {creatorPlan.amountStars} <span aria-hidden>⭐️</span>
+              </p>
+              <Button onClick={() => void buy(creatorPlan)} loading={isPurchasingId === creatorPlan.id}>
+                {t("pricing.subscribePro")}
               </Button>
             </div>
           </div>
-        ))}
+        </div>
       </section>
     </div>
   );

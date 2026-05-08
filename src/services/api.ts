@@ -1,4 +1,5 @@
 import axios from "axios";
+import { VoicePresetId } from "../constants/voicePresets";
 import { AppLanguage } from "../constants/languages";
 import { TtsLanguageCode } from "../constants/ttsLanguages";
 
@@ -32,6 +33,10 @@ export interface GenerateRequest {
 export interface GenerateResponse {
   audioUrl?: string;
   url?: string;
+  creditsCharged?: number;
+  estimatedSeconds?: number;
+  presetApplied?: string | null;
+  hints?: { showSoftUpsell?: boolean };
 }
 
 export interface Generation {
@@ -54,10 +59,20 @@ export interface UserProfile {
   subscription_tier: UserTier;
   subscription_expires_at: string | null;
   stars_minutes: number;
+  credit_balance: number;
+  credit_balance_approx_minutes: number;
+  subscription_credit_balance: number;
+  subscription_credit_approx_minutes: number;
+  free_seconds_used: number;
+  free_generation_count: number;
+  free_seconds_cap: number;
+  free_generation_cap: number;
+  daily_gen_cap: number;
+  daily_gen_used: number;
   language: AppLanguage;
 }
 
-export type InvoiceProductType = "minutes" | "subscription";
+export type InvoiceProductType = "credits" | "subscription";
 
 export interface CreateInvoiceRequest {
   telegramId: number;
@@ -89,11 +104,13 @@ export const generateAudio = async (params: {
   pitch: number;
   languageCode: TtsLanguageCode;
   telegramId: number;
+  presetId?: VoicePresetId | null;
 }) => {
   const normalizedPayload = {
     ...params,
     speed: Number(params.speed),
-    pitch: Number(params.pitch)
+    pitch: Number(params.pitch),
+    ...(params.presetId ? { presetId: params.presetId } : {})
   };
   console.log("[generateAudio] payload", normalizedPayload);
   const response = await api.post('/generate', normalizedPayload);

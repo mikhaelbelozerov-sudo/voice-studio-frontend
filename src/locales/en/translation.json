@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "retry": "Retry",
     "buy": "Buy",
@@ -27,8 +27,8 @@
     "description": "Choose your language. You can change it later in Profile."
   },
   "generate": {
-    "title": "Speech generation",
-    "subtitle": "Choose a voice, enter your text, and get ready-to-use audio.",
+    "title": "Creator voiceover studio",
+    "subtitle": "Studio-quality narration for Shorts and Reels in seconds — no complexity, just your script.",
     "loadVoicesError": "Failed to load voices",
     "selectVoiceFirst": "Select a voice first",
     "telegramMissing": "Cannot detect Telegram user. Please restart the app.",
@@ -38,7 +38,39 @@
     "generating": "Generating...",
     "resultTitle": "Generation result",
     "audioNotSupported": "Your browser does not support audio.",
-    "downloadMp3": "Download MP3"
+    "downloadMp3": "Download MP3",
+    "ctaStudio": "Render voiceover",
+    "estimatedCost": "Estimated narration cost",
+    "creditsUnit": "studio credits (~1 credit ≈ 1 sec)"
+  },
+  "usage": {
+    "studioBalance": "Studio balance",
+    "freePool": "Free tier",
+    "renders": "renders",
+    "paidCredits": "Spendable narration time",
+    "proReserve": "Pro pool {{sub}} min · wallet {{wallet}} min",
+    "lifetimeMeter": "Lifetime preview time",
+    "dailyMeter": "Today’s studio tries",
+    "remainingMeter": "Credits remaining (~seconds)",
+    "freePoolShort": "{{seconds}} / {{lifetime}}s · {{gens}} renders"
+  },
+  "presets": {
+    "label": "Creator presets",
+    "hint": "Pick a preset for faster storytelling — we tune pacing and warmth for TikTok/Reels/long-form.",
+    "custom": "Custom mix (your sliders)",
+    "overrideNotice": "Preset active: sliders preview only — we bake the mix server-side.",
+    "tiktokStory": "TikTok story",
+    "youtubeDocumentary": "YouTube documentary",
+    "luxuryAd": "Luxury ad",
+    "podcast": "Podcast",
+    "motivational": "Motivational",
+    "cinematicTrailer": "Cinematic trailer"
+  },
+  "paywall": {
+    "afterGenerationTitle": "This take sounds 🔥 Ready for more?",
+    "afterGenerationBody": "Unlock bigger scripts, impulse top-ups with Stars, or Pro Creator for monthly narration minutes.",
+    "topUp10": "+10 min via Stars",
+    "viewPlans": "Explore packs"
   },
   "generation": {
     "willBeDeleted": "Will be deleted in {{hours}} h {{minutes}} min",
@@ -61,19 +93,21 @@
     "resetSliders": "Reset"
   },
   "pricing": {
-    "title": "Pricing & Payment",
-    "subtitle": "Buy minutes and subscriptions directly in the mini app.",
-    "freeDescription": "1 generation minute per day",
-    "proDescription": "Unlimited generation and 30-day file storage",
-    "premiumDescription": "Maximum tier and long-term file storage",
-    "minutes100Title": "100 minutes",
-    "minutes100Description": "Extra generation minutes pack",
-    "subscriptions": "Subscriptions",
-    "minutesPackages": "Minutes packs",
-    "popular": "Popular",
-    "best": "Best",
-    "currentLevel": "Current level",
-    "freeNoPurchase": "Free plan does not require purchase.",
+    "title": "Top up & Creator plan",
+    "subtitle": "Stars top-ups unlock studio credits instantly.",
+    "subtitleV2": "Impulse bundles for creators · Stars only during MVP.",
+    "topUpsTitle": "Top-ups",
+    "topUpsHint": "Sized for batching Shorts/Reels edits without surprise bills.",
+    "subscriptionsSecondary": "Optional · Pro Creator",
+    "subscribePro": "Unlock Pro Creator",
+    "pack10Title": "+10 minutes studio time · 39 Stars",
+    "pack10Desc": "Perfect for tightening hooks or iterating on captions.",
+    "pack35Title": "+35 minute bundle · 99 Stars",
+    "pack35Desc": "Enough runway for weekly content drops.",
+    "pack120Title": "+120 minute booster · 249 Stars",
+    "pack120Desc": "Heavy creation weeks — batch TikTok/Reels narration.",
+    "proCreatorTitle": "Pro Creator · 30 days · 650⭐️",
+    "proCreatorDesc": "100 narration minutes pooled monthly plus faster pacing for longer drafts.",
     "telegramUnavailable": "Telegram payment is unavailable in this environment.",
     "loadProfileError": "Failed to load profile data",
     "cancelled": "Payment was cancelled.",
