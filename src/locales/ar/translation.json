@@ -1,4 +1,4 @@
-﻿{
+{
   "common": {
     "retry": "إعادة المحاولة",
     "buy": "شراء",
@@ -102,7 +102,9 @@
     "subscription_inactive": "غير نشط",
     "remainingInactive": "غير نشط",
     "subscription_expired": "منتهي",
-    "subscription_active": "{{days}} ي {{hours}} س"
+    "subscription_active": "{{days}} ي {{hours}} س",
+    "greeting": "مرحبا، {{name}}",
+    "greetingSubtitle": "سعداء برؤيتك مجددا."
   },
   "history": {
     "deleted_in": "سيتم الحذف خلال {{hours}} س {{minutes}} د",

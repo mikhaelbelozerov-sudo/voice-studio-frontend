@@ -116,13 +116,12 @@ export const ProfilePage = () => {
       ) : null}
 
       <div className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
-        <p className="text-sm text-slate-500 dark:text-slate-400">{t("profile.name")}</p>
-        <p className="text-base font-semibold text-slate-900 dark:text-slate-100">{user?.first_name || t("common.guest")}</p>
-      </div>
-
-      <div className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
-        <p className="text-sm text-slate-500 dark:text-slate-400">{t("profile.telegramId")}</p>
-        <p className="text-base font-semibold text-slate-900 dark:text-slate-100">{user?.id || "—"}</p>
+        <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+          {t("profile.greeting", { name: user?.first_name || t("common.guest") })}
+        </p>
+        <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
+          {t("profile.greetingSubtitle")}
+        </p>
       </div>
 
       <div className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">

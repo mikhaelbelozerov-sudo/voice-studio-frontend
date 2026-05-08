@@ -1,4 +1,4 @@
-﻿{
+{
   "common": {
     "retry": "Повторить",
     "buy": "Купить",
@@ -102,7 +102,9 @@
     "subscription_inactive": "Не активна",
     "remainingInactive": "Не активна",
     "subscription_expired": "Истекла",
-    "subscription_active": "{{days}} дн. {{hours}} ч."
+    "subscription_active": "{{days}} дн. {{hours}} ч.",
+    "greeting": "Привет, {{name}}",
+    "greetingSubtitle": "Рады видеть вас снова."
   },
   "history": {
     "deleted_in": "Будет удалён через {{hours}} ч {{minutes}} мин",

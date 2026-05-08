@@ -1,4 +1,4 @@
-﻿{
+{
   "common": {
     "retry": "Retry",
     "buy": "Buy",
@@ -102,7 +102,9 @@
     "subscription_inactive": "Inactive",
     "remainingInactive": "Not active",
     "subscription_expired": "Expired",
-    "subscription_active": "{{days}} d {{hours}} h"
+    "subscription_active": "{{days}} d {{hours}} h",
+    "greeting": "Hi, {{name}}",
+    "greetingSubtitle": "Glad to see you again."
   },
   "history": {
     "deleted_in": "Will be deleted in {{hours}} h {{minutes}} min",
@@ -123,5 +125,3 @@
     "loadMore": "Load more"
   }
 }
-
-

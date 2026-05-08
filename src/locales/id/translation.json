@@ -1,4 +1,4 @@
-﻿{
+{
   "common": {
     "retry": "Coba lagi",
     "buy": "Beli",
@@ -102,7 +102,9 @@
     "subscription_inactive": "Tidak aktif",
     "remainingInactive": "Tidak aktif",
     "subscription_expired": "Kedaluwarsa",
-    "subscription_active": "{{days}} h {{hours}} j"
+    "subscription_active": "{{days}} h {{hours}} j",
+    "greeting": "Halo, {{name}}",
+    "greetingSubtitle": "Senang melihatmu lagi."
   },
   "history": {
     "deleted_in": "Akan dihapus dalam {{hours}} j {{minutes}} m",
@@ -123,6 +125,3 @@
     "loadMore": "Muat lebih banyak"
   }
 }
-
-
-

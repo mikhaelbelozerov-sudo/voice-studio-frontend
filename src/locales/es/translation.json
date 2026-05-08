@@ -1,4 +1,4 @@
-﻿{
+{
   "common": {
     "retry": "Reintentar",
     "buy": "Comprar",
@@ -102,7 +102,9 @@
     "subscription_inactive": "Inactivo",
     "remainingInactive": "No activo",
     "subscription_expired": "Expirado",
-    "subscription_active": "{{days}} d {{hours}} h"
+    "subscription_active": "{{days}} d {{hours}} h",
+    "greeting": "Hola, {{name}}",
+    "greetingSubtitle": "Nos alegra verte de nuevo."
   },
   "history": {
     "deleted_in": "Se eliminara en {{hours}} h {{minutes}} min",
@@ -123,6 +125,3 @@
     "loadMore": "Cargar mas"
   }
 }
-
-
-

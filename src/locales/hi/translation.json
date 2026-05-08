@@ -1,4 +1,4 @@
-﻿{
+{
   "common": {
     "retry": "फिर कोशिश करें",
     "buy": "खरीदें",
@@ -102,7 +102,9 @@
     "subscription_inactive": "निष्क्रिय",
     "remainingInactive": "सक्रिय नहीं",
     "subscription_expired": "समाप्त",
-    "subscription_active": "{{days}} दिन {{hours}} घं"
+    "subscription_active": "{{days}} दिन {{hours}} घं",
+    "greeting": "नमस्ते, {{name}}",
+    "greetingSubtitle": "आपको फिर से देखकर खुशी हुई।"
   },
   "history": {
     "deleted_in": "{{hours}} घं {{minutes}} मि में हट जाएगा",
