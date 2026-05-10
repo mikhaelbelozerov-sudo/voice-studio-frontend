@@ -27,8 +27,8 @@
     "description": "Pilih bahasa Anda. Bisa diubah nanti di Profil."
   },
   "generate": {
-    "title": "Studio suara untuk kreator",
-    "subtitle": "Narasi berkualitas studio untuk Shorts dan Reels dalam hitungan detik — cukup skrip Anda.",
+    "title": "VoiceStudioPro untuk kreator",
+    "subtitle": "Kualitas suara studio untuk TikTok, Reels, dan Shorts dalam hitungan detik — hanya teks Anda, tanpa ribet.",
     "loadVoicesError": "Gagal memuat daftar suara",
     "selectVoiceFirst": "Pilih suara terlebih dahulu",
     "telegramMissing": "Pengguna Telegram tidak terdeteksi. Buka ulang aplikasi.",
@@ -126,9 +126,6 @@
     "theme": "Tema",
     "language": "Bahasa",
     "languageDescription": "Pilih bahasa pilihan Anda untuk seluruh antarmuka aplikasi.",
-    "myPlan": "Paket saya",
-    "expiresAt": "Berakhir",
-    "remaining": "Sisa",
     "starsMinutes": "Menit Stars",
     "studioWalletTitle": "Saldo narasi",
     "studioWalletDetail": "~{{total}} dtk kredit studio (dompet {{wallet}} dtk + Pro {{sub}} dtk).",
@@ -142,10 +139,6 @@
     "supportTitle": "Dukungan",
     "supportSubtitle": "Butuh bantuan atau ada pertanyaan? Hubungi kami di Telegram.",
     "supportButton": "💬 Hubungi dukungan",
-    "subscription_inactive": "Tidak aktif",
-    "remainingInactive": "Tidak aktif",
-    "subscription_expired": "Kedaluwarsa",
-    "subscription_active": "{{days}} h {{hours}} j",
     "greeting": "Halo, {{name}}",
     "greetingSubtitle": "Senang melihatmu lagi."
   },

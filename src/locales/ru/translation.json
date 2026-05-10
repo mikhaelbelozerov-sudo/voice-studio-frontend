@@ -27,8 +27,8 @@
     "description": "Выберите язык интерфейса. Позже его можно изменить в профиле."
   },
   "generate": {
-    "title": "Студия озвучки для креаторов",
-    "subtitle": "Качество студии для Shorts и Reels за секунды — только ваш текст, без лишней возни.",
+    "title": "VoiceStudioPro для креаторов",
+    "subtitle": "Студийное качество звука для TikTok, Reels и Shorts за секунды — только ваш текст, без лишних хлопот.",
     "loadVoicesError": "Не удалось загрузить список голосов",
     "selectVoiceFirst": "Сначала выберите голос",
     "telegramMissing": "Не удалось определить пользователя Telegram. Перезапустите приложение.",
@@ -126,9 +126,6 @@
     "theme": "Тема",
     "language": "Язык",
     "languageDescription": "Выберите язык, на котором будет работать весь интерфейс приложения.",
-    "myPlan": "Мой тариф",
-    "expiresAt": "До",
-    "remaining": "Осталось",
     "starsMinutes": "Stars минуты",
     "studioWalletTitle": "Баланс озвучки",
     "studioWalletDetail": "~{{total}} сек студийных кредитов (кошелёк {{wallet}} сек + Pro {{sub}} сек).",
@@ -142,10 +139,6 @@
     "supportTitle": "Поддержка",
     "supportSubtitle": "Есть вопрос или проблема? Напишите нам в Telegram.",
     "supportButton": "💬 Связаться с нами",
-    "subscription_inactive": "Не активна",
-    "remainingInactive": "Не активна",
-    "subscription_expired": "Истекла",
-    "subscription_active": "{{days}} дн. {{hours}} ч.",
     "greeting": "Привет, {{name}}",
     "greetingSubtitle": "Рады видеть вас снова."
   },

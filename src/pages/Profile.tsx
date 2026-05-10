@@ -4,27 +4,13 @@ import { useTranslation } from "react-i18next";
 import { Button } from "../components/ui/Button";
 import { Spinner } from "../components/ui/Spinner";
 import { DropdownMenu } from "../components/ui/DropdownMenu";
-import { AppLanguage, DATE_LOCALE_BY_LANGUAGE } from "../constants/languages";
+import { AppLanguage } from "../constants/languages";
 import { useTelegram } from "../hooks/useTelegram";
 import { getUserProfile, updateUserLanguage, UserProfile } from "../services/api";
 import { LANGUAGE_STORAGE_KEY } from "../i18n";
 import { buildReferralMiniAppUrl } from "../utils/referralLink";
-import { getSubscriptionRemainingInfo } from "../utils/formatRemainingTime";
-
 const FALLBACK_TELEGRAM_ID = 123456789;
 const SUPPORT_LINK = import.meta.env.VITE_SUPPORT_TELEGRAM_LINK || "";
-
-const formatDate = (iso: string | null, locale: string) => {
-  if (!iso) return "—";
-  const normalized = (Object.keys(DATE_LOCALE_BY_LANGUAGE).find((lng) => locale.startsWith(lng)) as AppLanguage | undefined) ?? "en";
-  return new Date(iso).toLocaleString(DATE_LOCALE_BY_LANGUAGE[normalized], {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit"
-  });
-};
 
 export const ProfilePage = () => {
   const { t, i18n } = useTranslation();
@@ -44,13 +30,6 @@ export const ProfilePage = () => {
   const walletSeconds = profile
     ? (profile.credit_balance ?? 0) + (profile.subscription_credit_balance ?? 0)
     : 0;
-
-  const getSubscriptionLabel = () => {
-    const info = getSubscriptionRemainingInfo(profile?.subscription_expires_at ?? null);
-    if (info.kind === "inactive") return t("profile.remainingInactive");
-    if (info.kind === "expired") return t("profile.subscription_expired");
-    return t("profile.subscription_active", { days: info.days, hours: info.hours });
-  };
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -190,17 +169,6 @@ export const ProfilePage = () => {
           options={languageOptions.map((option) => ({ value: option.value, label: option.label }))}
           onChange={(nextValue) => void handleLanguageChange(nextValue as AppLanguage)}
         />
-      </div>
-
-      <div className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
-        <p className="text-sm text-slate-500 dark:text-slate-400">{t("profile.myPlan")}</p>
-        <p className="text-base font-semibold capitalize text-slate-900 dark:text-slate-100">{profile?.subscription_tier ?? "free"}</p>
-        <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-          {t("profile.expiresAt")}: {formatDate(profile?.subscription_expires_at ?? null, i18n.language)}
-        </p>
-        <p className="text-sm text-slate-600 dark:text-slate-300">
-          {t("common.remaining")}: {getSubscriptionLabel()}
-        </p>
       </div>
 
       <div className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">

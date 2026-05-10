@@ -27,8 +27,8 @@
     "description": "Choose your language. You can change it later in Profile."
   },
   "generate": {
-    "title": "Creator voiceover studio",
-    "subtitle": "Studio-quality narration for Shorts and Reels in seconds — no complexity, just your script.",
+    "title": "VoiceStudioPro for creators",
+    "subtitle": "Studio-quality sound for TikTok, Reels, and Shorts in seconds — just your text, no extra hassle.",
     "loadVoicesError": "Failed to load voices",
     "selectVoiceFirst": "Select a voice first",
     "telegramMissing": "Cannot detect Telegram user. Please restart the app.",
@@ -126,9 +126,6 @@
     "theme": "Theme",
     "language": "Language",
     "languageDescription": "Pick your preferred language for the entire app interface.",
-    "myPlan": "My plan",
-    "expiresAt": "Expires at",
-    "remaining": "Remaining",
     "starsMinutes": "Stars minutes",
     "studioWalletTitle": "Narration balance",
     "studioWalletDetail": "~{{total}}s of studio credits (wallet {{wallet}}s + Pro {{sub}}s).",
@@ -142,10 +139,6 @@
     "supportTitle": "Support",
     "supportSubtitle": "Need help or have a question? Contact us on Telegram.",
     "supportButton": "💬 Contact support",
-    "subscription_inactive": "Inactive",
-    "remainingInactive": "Not active",
-    "subscription_expired": "Expired",
-    "subscription_active": "{{days}} d {{hours}} h",
     "greeting": "Hi, {{name}}",
     "greetingSubtitle": "Glad to see you again."
   },

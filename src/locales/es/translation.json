@@ -27,8 +27,8 @@
     "description": "Elige tu idioma. Puedes cambiarlo luego en Perfil."
   },
   "generate": {
-    "title": "Estudio de voz para creadores",
-    "subtitle": "Narracion con calidad de estudio para Shorts y Reels en segundos: solo tu guion.",
+    "title": "VoiceStudioPro para creadores",
+    "subtitle": "Sonido con calidad de estudio para TikTok, Reels y Shorts en segundos: solo tu texto, sin complicaciones.",
     "loadVoicesError": "No se pudo cargar la lista de voces",
     "selectVoiceFirst": "Primero elige una voz",
     "telegramMissing": "No se pudo detectar el usuario de Telegram. Reinicia la app.",
@@ -126,9 +126,6 @@
     "theme": "Tema",
     "language": "Idioma",
     "languageDescription": "Elige tu idioma preferido para toda la interfaz.",
-    "myPlan": "Mi plan",
-    "expiresAt": "Expira",
-    "remaining": "Restante",
     "starsMinutes": "Minutos Stars",
     "studioWalletTitle": "Saldo de narracion",
     "studioWalletDetail": "~{{total}} s de creditos (cartera {{wallet}} s + Pro {{sub}} s).",
@@ -142,10 +139,6 @@
     "supportTitle": "Soporte",
     "supportSubtitle": "Necesitas ayuda o tienes una pregunta? Contactanos en Telegram.",
     "supportButton": "💬 Contactar soporte",
-    "subscription_inactive": "Inactivo",
-    "remainingInactive": "No activo",
-    "subscription_expired": "Expirado",
-    "subscription_active": "{{days}} d {{hours}} h",
     "greeting": "Hola, {{name}}",
     "greetingSubtitle": "Nos alegra verte de nuevo."
   },

@@ -27,8 +27,8 @@
     "description": "اختر لغتك. يمكنك تغييرها لاحقا من الملف الشخصي."
   },
   "generate": {
-    "title": "استوديو صوت للمبدعين",
-    "subtitle": "تعليق صوتي بجودة استوديو لـ Shorts و Reels في ثوانٍ — فقط نصك.",
+    "title": "VoiceStudioPro للمبدعين",
+    "subtitle": "جودة صوت استوديو لـ TikTok و Reels و Shorts في ثوانٍ — نصك فقط، دون عناء إضافي.",
     "loadVoicesError": "تعذر تحميل قائمة الاصوات",
     "selectVoiceFirst": "اختر صوتا اولا",
     "telegramMissing": "تعذر التعرف على مستخدم Telegram. اعد تشغيل التطبيق.",
@@ -126,9 +126,6 @@
     "theme": "المظهر",
     "language": "اللغة",
     "languageDescription": "اختر لغتك المفضلة لكل واجهة التطبيق.",
-    "myPlan": "خطتي",
-    "expiresAt": "ينتهي في",
-    "remaining": "المتبقي",
     "starsMinutes": "دقائق Stars",
     "studioWalletTitle": "رصيد التعليق الصوتي",
     "studioWalletDetail": "~{{total}} ث من رصيد الاستوديو (المحفظة {{wallet}} ث + Pro {{sub}} ث).",
@@ -142,10 +139,6 @@
     "supportTitle": "الدعم",
     "supportSubtitle": "هل تحتاج مساعدة او لديك سؤال؟ تواصل معنا عبر Telegram.",
     "supportButton": "💬 تواصل مع الدعم",
-    "subscription_inactive": "غير نشط",
-    "remainingInactive": "غير نشط",
-    "subscription_expired": "منتهي",
-    "subscription_active": "{{days}} ي {{hours}} س",
     "greeting": "مرحبا، {{name}}",
     "greetingSubtitle": "سعداء برؤيتك مجددا."
   },

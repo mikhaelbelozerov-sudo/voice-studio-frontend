@@ -27,8 +27,8 @@
     "description": "अपनी भाषा चुनें। बाद में प्रोफाइल में बदल सकते हैं।"
   },
   "generate": {
-    "title": "क्रिएटर्स के लिए वॉइसओवर स्टूडियो",
-    "subtitle": "Shorts और Reels के लिए स्टूडियो जैसी क्वालिटी — सेकंडों में, बस आपका स्क्रिप्ट।",
+    "title": "VoiceStudioPro क्रिएटर्स के लिए",
+    "subtitle": "TikTok, Reels और Shorts के लिए सेकंडों में स्टूडियो जैसी ध्वनि गुणवत्ता — सिर्फ आपका टेक्स्ट, बिना अतिरिक्त झंझट।",
     "loadVoicesError": "वॉइस सूची लोड नहीं हुई",
     "selectVoiceFirst": "पहले वॉइस चुनें",
     "telegramMissing": "Telegram उपयोगकर्ता नहीं मिला। ऐप फिर से खोलें।",
@@ -126,9 +126,6 @@
     "theme": "थीम",
     "language": "भाषा",
     "languageDescription": "पूरे ऐप इंटरफेस के लिए अपनी पसंदीदा भाषा चुनें।",
-    "myPlan": "मेरा प्लान",
-    "expiresAt": "समाप्ति",
-    "remaining": "शेष",
     "starsMinutes": "Stars मिनट",
     "studioWalletTitle": "नैरेशन बैलेंस",
     "studioWalletDetail": "~{{total}} सेक स्टूडियो क्रेडिट (वॉलेट {{wallet}} सेक + Pro {{sub}} सेक)।",
@@ -142,10 +139,6 @@
     "supportTitle": "सपोर्ट",
     "supportSubtitle": "कोई सवाल या मदद चाहिए? Telegram पर हमसे संपर्क करें।",
     "supportButton": "💬 सपोर्ट से संपर्क करें",
-    "subscription_inactive": "निष्क्रिय",
-    "remainingInactive": "सक्रिय नहीं",
-    "subscription_expired": "समाप्त",
-    "subscription_active": "{{days}} दिन {{hours}} घं",
     "greeting": "नमस्ते, {{name}}",
     "greetingSubtitle": "आपको फिर से देखकर खुशी हुई।"
   },
