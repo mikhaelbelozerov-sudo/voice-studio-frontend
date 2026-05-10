@@ -1,11 +1,4 @@
-const premiumVoiceSet = new Set(
-  (import.meta.env.VITE_PREMIUM_VOICE_IDS ?? "")
-    .split(",")
-    .map((s: string) => s.trim())
-    .filter(Boolean)
-);
-
-/** Mirrors backend heuristic for MVP cost preview */
+/** Mirrors backend: 1 estimated second ≈ 1 credit (min 5). No premium markup — same quality for everyone. */
 
 export function estimateSpeechSeconds(text: string, speed: number): number {
   const trimmed = text.trim();
@@ -15,12 +8,21 @@ export function estimateSpeechSeconds(text: string, speed: number): number {
   return Math.ceil(rawSeconds / safeSpeed);
 }
 
-export function getVoiceCreditMultiplier(voiceId: string): number {
-  return premiumVoiceSet.has(voiceId) ? 1.35 : 1;
+export function computeGenerationCreditsEstimate(text: string, _voiceId: string, speed: number): number {
+  const seconds = estimateSpeechSeconds(text, speed);
+  return Math.max(5, seconds);
 }
 
-export function computeGenerationCreditsEstimate(text: string, voiceId: string, speed: number): number {
-  const seconds = estimateSpeechSeconds(text, speed);
-  const mult = getVoiceCreditMultiplier(voiceId);
-  return Math.max(5, Math.ceil(seconds * mult));
+/** Human-friendly narration time for UI (no raw “credits”). */
+export function formatNarrationSeconds(totalSeconds: number): { seconds: number; minutes: number; label: string } {
+  const s = Math.max(0, Math.floor(totalSeconds));
+  const minutes = Math.floor(s / 60);
+  const seconds = s % 60;
+  if (minutes <= 0) {
+    return { seconds: s, minutes: 0, label: `${s} sec` };
+  }
+  if (seconds === 0) {
+    return { seconds: 0, minutes, label: `${minutes} min` };
+  }
+  return { seconds, minutes, label: `${minutes} min ${seconds} sec` };
 }

@@ -12,16 +12,23 @@ import { VoiceSelector } from "../components/features/VoiceGeneration/VoiceSelec
 import { VoicePresetId, VOICE_PRESET_OPTIONS } from "../constants/voicePresets";
 import { mapInterfaceLanguageToTtsCode } from "../constants/ttsLanguages";
 import { useTelegram } from "../hooks/useTelegram";
+import { PRO_CREATOR_STARS_PRICE } from "../constants/catalog";
 import { useTelegramStarsPurchase } from "../hooks/useTelegramStarsPurchase";
 import { trackAnalytics } from "../lib/analytics";
 import { generateAudio, getUserProfile, getVoices, UserProfile, Voice } from "../services/api";
 import { useVoiceStore } from "../store/voiceStore";
-import { computeGenerationCreditsEstimate, estimateSpeechSeconds } from "../utils/credits";
+import { estimateSpeechSeconds, formatNarrationSeconds } from "../utils/credits";
 
-const TOPUP_CREDITS_PACK = {
+const TOPUP_STARTER_PACK = {
   productType: "credits" as const,
-  productValue: 10 * 60,
+  productValue: 5 * 60,
   amountStars: 39
+};
+
+const PRO_CREATOR_BETA_INVOICE = {
+  productType: "subscription" as const,
+  productValue: 3,
+  amountStars: PRO_CREATOR_STARS_PRICE
 };
 
 export const GeneratePage = () => {
@@ -33,7 +40,7 @@ export const GeneratePage = () => {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [successPaywallVisible, setSuccessPaywallVisible] = useState(false);
-  const [limitPaywallVisible, setLimitPaywallVisible] = useState(false);
+  const [studioGate, setStudioGate] = useState<{ shortfallSec: number; code: string } | null>(null);
   const [lastCost, setLastCost] = useState<number | null>(null);
 
   const {
@@ -101,13 +108,6 @@ export const GeneratePage = () => {
     [t]
   );
 
-  const estimatedCredits = useMemo(() => {
-    if (!selectedVoiceId) {
-      return 0;
-    }
-    return computeGenerationCreditsEstimate(text, selectedVoiceId, speed);
-  }, [selectedVoiceId, speed, text]);
-
   const etaSeconds = useMemo(() => {
     if (!text.trim()) {
       return 0;
@@ -134,15 +134,17 @@ export const GeneratePage = () => {
     )
   );
 
+  const maxScriptLen = isPaidTrack ? 2500 : 420;
+
   const canGenerate = useMemo(() => {
     return Boolean(
       telegramId &&
         selectedVoiceId &&
         text.trim().length > 0 &&
-        text.length <= 2500 &&
+        text.length <= maxScriptLen &&
         !isGenerating
     );
-  }, [telegramId, isGenerating, selectedVoiceId, text]);
+  }, [telegramId, isGenerating, selectedVoiceId, text, maxScriptLen]);
 
   const handleGenerate = async () => {
     if (!selectedVoiceId) {
@@ -164,7 +166,7 @@ export const GeneratePage = () => {
     setError(null);
     setAudioUrl(null);
     setSuccessPaywallVisible(false);
-    setLimitPaywallVisible(false);
+    setStudioGate(null);
 
     try {
       const response = await generateAudio({
@@ -196,6 +198,7 @@ export const GeneratePage = () => {
 
       if (response.hints?.showSoftUpsell) {
         setSuccessPaywallVisible(true);
+        trackAnalytics("paywall_shown", { variant: "post_success" });
         trackAnalytics("paywall_soft_shown", { variant: "post_success" });
       }
 
@@ -211,13 +214,25 @@ export const GeneratePage = () => {
 
       trackAnalytics("generation_failed", { status: status ?? null, code: backendCode ?? null });
 
-      const shortfall = err?.response?.data?.creditsShortfall ?? err?.response?.data?.secondsShortfall;
+      const shortfall = Number(err?.response?.data?.creditsShortfall ?? err?.response?.data?.secondsShortfall ?? 0) || 0;
 
       if (status === 402) {
         setError(null);
-        setLimitPaywallVisible(true);
-        trackAnalytics("paywall_soft_shown", { reason: backendCode ?? "insufficient_credits", shortfall });
+        setStudioGate({ shortfallSec: shortfall, code: String(backendCode ?? "insufficient_credits") });
+        trackAnalytics("paywall_shown", { reason: backendCode ?? "limit", shortfall });
+        if (backendCode === "free_exhausted" || backendCode === "daily_cap") {
+          trackAnalytics("free_limit_reached", { code: backendCode });
+        }
       } else if (status === 429) {
+        if (backendCode === "duplicate") {
+          trackAnalytics("duplicate_request_blocked", {});
+        }
+        if (backendCode === "cooldown") {
+          trackAnalytics("cooldown_blocked", {});
+        }
+        if (backendCode === "queue_busy") {
+          trackAnalytics("queue_busy_blocked", {});
+        }
         setError(err?.response?.data?.error ?? "Slow down creator — try again in a moment.");
       } else {
         setError(err?.response?.data?.error ?? t("generate.generateError"));
@@ -229,21 +244,36 @@ export const GeneratePage = () => {
 
   const handleQuickTopUp = async () => {
     if (!telegramId) return;
-    trackAnalytics("topup_clicked", { pack: TOPUP_CREDITS_PACK.productValue });
-    await purchaseStars({ telegramId, ...TOPUP_CREDITS_PACK }, (result) => {
+    trackAnalytics("topup_clicked", { pack: TOPUP_STARTER_PACK.productValue });
+    await purchaseStars({ telegramId, ...TOPUP_STARTER_PACK }, (result) => {
       if (result === "paid") {
         void getUserProfile(telegramId).then(setProfile);
+        setStudioGate(null);
+      }
+    });
+  };
+
+  const handleUpgradeProBeta = async () => {
+    if (!telegramId) return;
+    trackAnalytics("topup_clicked", { pack: "pro_creator_beta" });
+    await purchaseStars({ telegramId, ...PRO_CREATOR_BETA_INVOICE }, (result) => {
+      if (result === "paid") {
+        void getUserProfile(telegramId).then(setProfile);
+        setStudioGate(null);
       }
     });
   };
 
   const paywallCard = (
-    <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950 shadow-sm dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-100">
+    <div className="rounded-2xl border border-amber-200/80 bg-amber-50/90 p-4 text-sm text-amber-950 shadow-sm dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-100">
       <p className="font-semibold">{t("paywall.afterGenerationTitle")}</p>
       <p className="mt-2 text-xs leading-relaxed text-amber-900/90 dark:text-amber-100/85">{t("paywall.afterGenerationBody")}</p>
       <div className="mt-3 flex flex-col gap-2 sm:flex-row">
         <Button className="w-full sm:flex-1" onClick={() => void handleQuickTopUp()}>
-          {t("paywall.topUp10")}
+          {t("paywall.topUpStarter")}
+        </Button>
+        <Button variant="secondary" className="w-full sm:flex-1" onClick={() => void handleUpgradeProBeta()}>
+          {t("paywall.upgradeProBeta")}
         </Button>
         <Link to="/pricing" className="w-full sm:flex-1" onClick={() => trackAnalytics("paywall_explore_clicked", {})}>
           <Button variant="secondary" className="w-full">
@@ -253,6 +283,11 @@ export const GeneratePage = () => {
       </div>
     </div>
   );
+
+  const gateShortfallLabel =
+    studioGate && studioGate.shortfallSec > 0
+      ? formatNarrationSeconds(studioGate.shortfallSec).label
+      : t("generate.gateShortfallFallback");
 
   return (
     <div className="space-y-5 pb-24">
@@ -270,7 +305,7 @@ export const GeneratePage = () => {
           <div className="flex flex-wrap items-baseline gap-2 text-xs text-slate-600 dark:text-slate-300">
             {!isPaidTrack ? (
               <>
-                <span>{t("usage.freePool")}</span>
+                <span>{t("usage.betaPreview")}</span>
                 <span className="font-semibold tabular-nums text-slate-900 dark:text-slate-50">
                   {profile?.free_seconds_used ?? 0}s / {profile?.free_seconds_cap ?? 60}s
                 </span>
@@ -343,7 +378,31 @@ export const GeneratePage = () => {
 
       {error ? <div className="rounded-xl bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950/60 dark:text-red-300">{error}</div> : null}
 
-      {limitPaywallVisible ? paywallCard : null}
+      {studioGate ? (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 sm:items-center">
+          <div
+            className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-5 shadow-xl dark:border-slate-700 dark:bg-slate-900"
+            role="dialog"
+            aria-modal="true"
+          >
+            <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t("generate.gateTitle")}</p>
+            <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+              {t("generate.gateBody", { time: gateShortfallLabel })}
+            </p>
+            <div className="mt-4 flex flex-col gap-2">
+              <Button className="w-full" onClick={() => void handleQuickTopUp()}>
+                {t("paywall.topUpStarter")}
+              </Button>
+              <Button variant="secondary" className="w-full" onClick={() => void handleUpgradeProBeta()}>
+                {t("paywall.upgradeProBeta")}
+              </Button>
+              <Button variant="secondary" className="w-full" onClick={() => setStudioGate(null)}>
+                {t("generate.gateDismiss")}
+              </Button>
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       {isLoadingVoices ? (
         <div className="flex items-center gap-2 text-sm text-slate-600">
@@ -377,12 +436,12 @@ export const GeneratePage = () => {
         ) : null}
       </div>
 
-      <TextEditor value={text} onChange={setText} maxLength={2500} />
+      <TextEditor value={text} onChange={setText} maxLength={maxScriptLen} />
 
       <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-slate-50 px-3 py-2 text-xs text-slate-600 dark:bg-slate-800 dark:text-slate-300">
-        <span>{t("generate.estimatedCost")}</span>
+        <span>{t("generate.estimatedNarration")}</span>
         <span className="font-semibold tabular-nums text-slate-900 dark:text-slate-50">
-          ~{estimatedCredits} {t("generate.creditsUnit")} · ~{Math.max(1, etaSeconds)}s
+          ~{Math.max(1, etaSeconds)}s {t("generate.audioForScript")}
         </span>
       </div>
 
@@ -410,11 +469,13 @@ export const GeneratePage = () => {
       {audioUrl ? (
         <AudioPlayer
           audioUrl={audioUrl}
-          onDownloadClick={() =>
-            trackAnalytics("audio_download", {
-              credits: lastCost
-            })
-          }
+          onDownloadClick={() => {
+            trackAnalytics("audio_downloaded", { credits: lastCost });
+            trackAnalytics("audio_download", { credits: lastCost });
+            if (successPaywallVisible) {
+              trackAnalytics("paywall_shown", { variant: "after_download" });
+            }
+          }}
         />
       ) : null}
 
