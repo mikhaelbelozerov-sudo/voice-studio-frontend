@@ -153,13 +153,18 @@
     "starsMinutes": "Stars minutes",
     "studioWalletTitle": "Narration balance",
     "studioWalletDetail": "~{{total}}s of studio credits (wallet {{wallet}}s + Pro {{sub}}s).",
-    "inviteTitle": "Invite creators",
-    "inviteSubtitle": "Friends who join via your link unlock bonus time for you once they open the app.",
+    "inviteTitle": "Creator invite rewards",
+    "inviteSubtitle": "Invite creators and unlock bonus voice time. Rewards apply after real use — friends get bonus seconds after their first successful voiceover; you earn more after they download.",
     "copyInviteLink": "Copy invite link",
     "shareInvite": "Share in Telegram",
     "copied": "Copied!",
     "inviteLinkMissing": "Set VITE_TELEGRAM_BOT_USERNAME in the app env to enable invite links.",
-    "inviteShareText": "Try VoiceStudio Pro — studio voiceovers for Shorts in seconds.",
+    "inviteShareCaption": "Create studio-quality AI voiceovers in seconds with VoiceStudio Pro 🔥\n\nI use it for content creation and narration.",
+    "referralLimitReached": "You've reached this month's creator invite limit.",
+    "referralSlotsLine": "{{remaining}} of {{cap}} rewarded invites left this month",
+    "referralEarnedLine": "{{seconds}}s bonus studio time from invited creators",
+    "referralPendingLine": "{{count}} invite(s) still activating",
+    "referralAwaitingLine": "{{count}} bonus(es) processing — short delay after friends download",
     "supportTitle": "Support",
     "supportSubtitle": "Need help or have a question? Contact us on Telegram.",
     "supportButton": "💬 Contact support",
@@ -183,5 +188,11 @@
     "download": "Download",
     "deleted": "File deleted",
     "loadMore": "Load more"
+  },
+  "referral": {
+    "ctaTitle": "Invite creator friends",
+    "ctaBody": "Enjoying your voiceover? Invite creator friends and unlock bonus voice time.",
+    "copyLink": "Copy invite link",
+    "shareTelegram": "Share in Telegram"
   }
 }

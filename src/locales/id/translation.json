@@ -153,13 +153,18 @@
     "starsMinutes": "Menit Stars",
     "studioWalletTitle": "Saldo narasi",
     "studioWalletDetail": "~{{total}} dtk kredit studio (dompet {{wallet}} dtk + Pro {{sub}} dtk).",
-    "inviteTitle": "Undang kreator",
-    "inviteSubtitle": "Teman yang membuka app lewat tautan Anda memberi Anda kredit bonus (sekali).",
+    "inviteTitle": "Hadiah undangan kreator",
+    "inviteSubtitle": "Bagikan VoiceStudio Pro ke kreator dan buka bonus waktu suara. Hadiah setelah pemakaian nyata: teman dapat bonus setelah voiceover pertama berhasil; Anda setelah mereka mengunduh.",
     "copyInviteLink": "Salin tautan undangan",
     "shareInvite": "Bagikan di Telegram",
     "copied": "Disalin!",
     "inviteLinkMissing": "Setel VITE_TELEGRAM_BOT_USERNAME di env agar tautan undangan aktif.",
-    "inviteShareText": "Coba VoiceStudio Pro — suara studio untuk Shorts dalam hitungan detik.",
+    "inviteShareCaption": "Buat voiceover AI kualitas studio dalam hitungan detik dengan VoiceStudio Pro 🔥\n\nSaya pakai untuk konten dan narasi.",
+    "referralLimitReached": "Anda mencapai batas undangan kreator bulan ini.",
+    "referralSlotsLine": "{{remaining}} dari {{cap}} undangan berhadiah tersisa bulan ini",
+    "referralEarnedLine": "{{seconds}} dtk bonus studio dari kreator yang diundang",
+    "referralPendingLine": "{{count}} undangan masih mengaktivasi",
+    "referralAwaitingLine": "{{count}} bonus diproses — jeda singkat setelah teman mengunduh",
     "supportTitle": "Dukungan",
     "supportSubtitle": "Butuh bantuan atau ada pertanyaan? Hubungi kami di Telegram.",
     "supportButton": "💬 Hubungi dukungan",
@@ -183,5 +188,11 @@
     "download": "Unduh",
     "deleted": "File dihapus",
     "loadMore": "Muat lebih banyak"
+  },
+  "referral": {
+    "ctaTitle": "Undang teman kreator",
+    "ctaBody": "Suka voiceover-nya? Undang kreator dan buka bonus waktu suara.",
+    "copyLink": "Salin tautan",
+    "shareTelegram": "Bagikan di Telegram"
   }
 }

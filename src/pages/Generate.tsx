@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import WebApp from "@twa-dev/sdk";
 import { Link } from "react-router-dom";
 import { Sparkles } from "lucide-react";
 import { AudioPlayer } from "../components/ui/AudioPlayer";
@@ -15,9 +16,10 @@ import { useTelegram } from "../hooks/useTelegram";
 import { PRO_CREATOR_STARS_PRICE } from "../constants/catalog";
 import { useTelegramStarsPurchase } from "../hooks/useTelegramStarsPurchase";
 import { trackAnalytics } from "../lib/analytics";
-import { generateAudio, getUserProfile, getVoices, UserProfile, Voice } from "../services/api";
+import { ackReferralDownload, generateAudio, getUserProfile, getVoices, UserProfile, Voice } from "../services/api";
 import { useVoiceStore } from "../store/voiceStore";
 import { estimateSpeechSeconds, formatNarrationSeconds } from "../utils/credits";
+import { buildReferralMiniAppUrl } from "../utils/referralLink";
 
 const TOPUP_STARTER_PACK = {
   productType: "credits" as const,
@@ -42,6 +44,7 @@ export const GeneratePage = () => {
   const [successPaywallVisible, setSuccessPaywallVisible] = useState(false);
   const [studioGate, setStudioGate] = useState<{ shortfallSec: number; code: string } | null>(null);
   const [lastCost, setLastCost] = useState<number | null>(null);
+  const [referralLinkCopied, setReferralLinkCopied] = useState(false);
 
   const {
     selectedVoiceId,
@@ -114,6 +117,40 @@ export const GeneratePage = () => {
     }
     return estimateSpeechSeconds(text, speed);
   }, [text, speed]);
+
+  const inviteUrl = useMemo(
+    () => (telegramId ? buildReferralMiniAppUrl(telegramId) : null),
+    [telegramId]
+  );
+
+  const handlePostGenReferralShare = () => {
+    if (!inviteUrl) {
+      return;
+    }
+    const textEnc = encodeURIComponent(t("profile.inviteShareCaption"));
+    const urlEnc = encodeURIComponent(inviteUrl);
+    const share = `https://t.me/share/url?url=${urlEnc}&text=${textEnc}`;
+    trackAnalytics("referral_link_shared", { source: "post_generation" });
+    try {
+      WebApp.openTelegramLink?.(share);
+    } catch {
+      window.open(share, "_blank", "noopener,noreferrer");
+    }
+  };
+
+  const handlePostGenReferralCopy = async () => {
+    if (!inviteUrl) {
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(inviteUrl);
+      trackAnalytics("referral_link_copied", { source: "post_generation" });
+      setReferralLinkCopied(true);
+      window.setTimeout(() => setReferralLinkCopied(false), 2000);
+    } catch {
+      /* */
+    }
+  };
 
   const walletTotal = profile ? (profile.credit_balance ?? 0) + (profile.subscription_credit_balance ?? 0) : 0;
 
@@ -472,11 +509,29 @@ export const GeneratePage = () => {
           onDownloadClick={() => {
             trackAnalytics("audio_downloaded", { credits: lastCost });
             trackAnalytics("audio_download", { credits: lastCost });
+            if (telegramId) {
+              void ackReferralDownload(telegramId);
+            }
             if (successPaywallVisible) {
               trackAnalytics("paywall_shown", { variant: "after_download" });
             }
           }}
         />
+      ) : null}
+
+      {audioUrl && inviteUrl ? (
+        <div className="rounded-2xl border border-slate-200 bg-gradient-to-b from-slate-50 to-white p-4 shadow-sm dark:border-slate-700 dark:from-slate-900 dark:to-slate-900">
+          <p className="text-sm font-medium text-slate-900 dark:text-slate-100">{t("referral.ctaTitle")}</p>
+          <p className="mt-1 text-xs leading-relaxed text-slate-600 dark:text-slate-400">{t("referral.ctaBody")}</p>
+          <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <Button variant="secondary" className="w-full" onClick={() => void handlePostGenReferralCopy()}>
+              {referralLinkCopied ? t("profile.copied") : t("referral.copyLink")}
+            </Button>
+            <Button className="w-full" onClick={handlePostGenReferralShare}>
+              {t("referral.shareTelegram")}
+            </Button>
+          </div>
+        </div>
       ) : null}
 
       {successPaywallVisible ? paywallCard : null}

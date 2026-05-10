@@ -1,11 +1,12 @@
 import WebApp from "@twa-dev/sdk";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "../components/ui/Button";
 import { Spinner } from "../components/ui/Spinner";
 import { DropdownMenu } from "../components/ui/DropdownMenu";
 import { AppLanguage } from "../constants/languages";
 import { useTelegram } from "../hooks/useTelegram";
+import { trackAnalytics } from "../lib/analytics";
 import { getUserProfile, updateUserLanguage, UserProfile } from "../services/api";
 import { LANGUAGE_STORAGE_KEY } from "../i18n";
 import { buildReferralMiniAppUrl } from "../utils/referralLink";
@@ -21,11 +22,27 @@ export const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [inviteCopied, setInviteCopied] = useState(false);
+  const monthlyLimitAnalyticsSent = useRef(false);
 
   const inviteUrl = useMemo(
     () => (telegramUserId ? buildReferralMiniAppUrl(telegramUserId) : null),
     [telegramUserId]
   );
+
+  useEffect(() => {
+    if (!inviteUrl) {
+      return;
+    }
+    trackAnalytics("referral_link_created", { source: "profile" });
+  }, [inviteUrl]);
+
+  useEffect(() => {
+    if (!profile?.referral?.referralAtMonthlyLimit || monthlyLimitAnalyticsSent.current) {
+      return;
+    }
+    monthlyLimitAnalyticsSent.current = true;
+    trackAnalytics("referral_limit_reached", { source: "profile_ui" });
+  }, [profile?.referral?.referralAtMonthlyLimit]);
 
   const walletSeconds = profile
     ? (profile.credit_balance ?? 0) + (profile.subscription_credit_balance ?? 0)
@@ -80,6 +97,7 @@ export const ProfilePage = () => {
     }
     try {
       await navigator.clipboard.writeText(inviteUrl);
+      trackAnalytics("referral_link_copied", { source: "profile" });
       setInviteCopied(true);
       window.setTimeout(() => setInviteCopied(false), 2000);
     } catch {
@@ -91,9 +109,10 @@ export const ProfilePage = () => {
     if (!inviteUrl) {
       return;
     }
-    const text = encodeURIComponent(t("profile.inviteShareText"));
+    const text = encodeURIComponent(t("profile.inviteShareCaption"));
     const url = encodeURIComponent(inviteUrl);
     const share = `https://t.me/share/url?url=${url}&text=${text}`;
+    trackAnalytics("referral_link_shared", { source: "profile" });
     try {
       WebApp.openTelegramLink?.(share);
     } catch {
@@ -185,6 +204,36 @@ export const ProfilePage = () => {
       <div className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
         <p className="text-sm font-medium text-slate-800 dark:text-slate-100">{t("profile.inviteTitle")}</p>
         <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{t("profile.inviteSubtitle")}</p>
+        {profile?.referral ? (
+          <div className="mt-3 space-y-2 rounded-xl border border-slate-100 bg-slate-50 p-3 text-xs text-slate-600 dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-300">
+            {profile.referral.referralAtMonthlyLimit ? (
+              <p className="font-medium text-amber-800 dark:text-amber-200">{t("profile.referralLimitReached")}</p>
+            ) : null}
+            <p>
+              {t("profile.referralSlotsLine", {
+                remaining: profile.referral.referralSlotsRemaining,
+                cap: profile.referral.referralMonthlyCap
+              })}
+            </p>
+            <p>
+              {t("profile.referralEarnedLine", {
+                seconds: profile.referral.referralInviterBonusSecondsEarned
+              })}
+            </p>
+            {profile.referral.referralPendingCount > 0 ? (
+              <p>
+                {t("profile.referralPendingLine", { count: profile.referral.referralPendingCount })}
+              </p>
+            ) : null}
+            {profile.referral.referralActivatedAwaitingPayout > 0 ? (
+              <p>
+                {t("profile.referralAwaitingLine", {
+                  count: profile.referral.referralActivatedAwaitingPayout
+                })}
+              </p>
+            ) : null}
+          </div>
+        ) : null}
         {!inviteUrl ? (
           <p className="mt-2 text-xs text-amber-700 dark:text-amber-300">{t("profile.inviteLinkMissing")}</p>
         ) : (

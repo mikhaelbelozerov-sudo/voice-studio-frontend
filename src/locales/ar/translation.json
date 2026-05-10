@@ -153,13 +153,18 @@
     "starsMinutes": "دقائق Stars",
     "studioWalletTitle": "رصيد التعليق الصوتي",
     "studioWalletDetail": "~{{total}} ث من رصيد الاستوديو (المحفظة {{wallet}} ث + Pro {{sub}} ث).",
-    "inviteTitle": "دعوة المبدعين",
-    "inviteSubtitle": "عند فتح التطبيق عبر رابطك يحصل صديقك على التجربة وتحصل انت على رصيد مكافأة مرة واحدة.",
+    "inviteTitle": "مكافآت دعوة المبدعين",
+    "inviteSubtitle": "شارك VoiceStudio Pro مع مبدعين وافتح وقت صوت إضافي. المكافآت بعد استخدام حقيقي: صديقك بعد أول توليد ناجح؛ أنت بعد تنزيله للصوت.",
     "copyInviteLink": "نسخ رابط الدعوة",
     "shareInvite": "مشاركة في Telegram",
     "copied": "تم النسخ!",
     "inviteLinkMissing": "عيّن VITE_TELEGRAM_BOT_USERNAME في بيئة التطبيق لتفعيل روابط الدعوة.",
-    "inviteShareText": "جرّب VoiceStudio Pro — تعليق صوتي احترافي لـ Shorts في ثوانٍ.",
+    "inviteShareCaption": "أنشئ تعليقات صوتية بالذكاء الاصطناعي بجودة الاستوديو في ثوانٍ مع VoiceStudio Pro 🔥\n\nأستخدمه للمحتوى والسرد.",
+    "referralLimitReached": "لقد وصلت إلى حد دعوات المبدعين لهذا الشهر.",
+    "referralSlotsLine": "{{remaining}} من {{cap}} دعوات مكافأة متبقية هذا الشهر",
+    "referralEarnedLine": "{{seconds}} ث من وقت استوديو إضافي من المبدعين المدعوين",
+    "referralPendingLine": "{{count}} دعوة لا تزال قيد التفعيل",
+    "referralAwaitingLine": "{{count}} مكافأة قيد المعالجة — تأخير قصير بعد تنزيل الأصدقاء",
     "supportTitle": "الدعم",
     "supportSubtitle": "هل تحتاج مساعدة او لديك سؤال؟ تواصل معنا عبر Telegram.",
     "supportButton": "💬 تواصل مع الدعم",
@@ -183,5 +188,11 @@
     "download": "تنزيل",
     "deleted": "تم حذف الملف",
     "loadMore": "تحميل المزيد"
+  },
+  "referral": {
+    "ctaTitle": "ادعُ مبدعين",
+    "ctaBody": "تستمتع بالتعليق الصوتي؟ ادعُ مبدعين وافتح وقت صوت إضافي.",
+    "copyLink": "نسخ رابط الدعوة",
+    "shareTelegram": "مشاركة في Telegram"
   }
 }

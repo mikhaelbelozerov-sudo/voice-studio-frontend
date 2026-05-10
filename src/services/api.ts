@@ -55,6 +55,16 @@ export interface GenerationsResponse {
   userTier: UserTier;
 }
 
+export interface ReferralProfileSnapshot {
+  referralMonthlyCap: number;
+  referralRewardsUsedThisMonth: number;
+  referralSlotsRemaining: number;
+  referralInviterBonusSecondsEarned: number;
+  referralPendingCount: number;
+  referralActivatedAwaitingPayout: number;
+  referralAtMonthlyLimit: boolean;
+}
+
 export interface UserProfile {
   subscription_tier: UserTier;
   subscription_expires_at: string | null;
@@ -70,6 +80,7 @@ export interface UserProfile {
   daily_gen_cap: number;
   daily_gen_used: number;
   language: AppLanguage;
+  referral?: ReferralProfileSnapshot;
 }
 
 export type InvoiceProductType = "credits" | "subscription";
@@ -149,15 +160,19 @@ export const updateUserLanguage = async (payload: UpdateUserLanguageRequest) => 
 export type ClaimReferralRequest = {
   inviteeTelegramId: number;
   referrerTelegramId: number;
+  clientFingerprint: string;
 };
 
 export type ClaimReferralResponse = {
   ok: boolean;
   alreadyClaimed?: boolean;
-  bonusCredits?: number;
 };
 
 export const claimReferral = async (payload: ClaimReferralRequest) => {
   const { data } = await api.post<ClaimReferralResponse>("/referrals/claim", payload);
   return data;
+};
+
+export const ackReferralDownload = async (telegramId: number) => {
+  await api.post("/referrals/download-ack", { telegramId });
 };

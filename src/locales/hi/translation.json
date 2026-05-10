@@ -153,13 +153,18 @@
     "starsMinutes": "Stars मिनट",
     "studioWalletTitle": "नैरेशन बैलेंस",
     "studioWalletDetail": "~{{total}} सेक स्टूडियो क्रेडिट (वॉलेट {{wallet}} सेक + Pro {{sub}} सेक)।",
-    "inviteTitle": "दोस्तों को बुलाएं",
-    "inviteSubtitle": "जब कोई आपके लिंक से ऐप खोले, आपको बोनस क्रेडिट मिलते हैं (एक बार)।",
+    "inviteTitle": "क्रिएटर आमंत्रण रिवॉर्ड",
+    "inviteSubtitle": "VoiceStudio Pro क्रिएटर दोस्तों के साथ शेयर करें और बोनस वॉइस टाइम पाएं। रिवॉर्ड असली इस्तेमाल के बाद: दोस्त को पहली सफल जनरेशन के बाद; आपको डाउनलोड के बाद।",
     "copyInviteLink": "लिंक कॉपी करें",
     "shareInvite": "Telegram में शेयर",
     "copied": "कॉपी हो गया!",
     "inviteLinkMissing": "लिंक के लिए VITE_TELEGRAM_BOT_USERNAME सेट करें।",
-    "inviteShareText": "VoiceStudio Pro आज़माएं — Shorts के लिए प्रो वॉइस, सेकंडों में।",
+    "inviteShareCaption": "VoiceStudio Pro से सेकंडों में स्टूडियो-क्वालिटी AI वॉइसओवर बनाएं 🔥\n\nमैं इसे कंटेंट और नैरेशन के लिए इस्तेमाल करता हूँ।",
+    "referralLimitReached": "इस महीने का क्रिएटर आमंत्रण लिमिट पूरा हो गया।",
+    "referralSlotsLine": "इस महीने {{cap}} में से {{remaining}} रिवॉर्ड वाले आमंत्रण बाकी",
+    "referralEarnedLine": "आमंत्रित क्रिएटर्स से {{seconds}} सेक बोनस स्टूडियो टाइम",
+    "referralPendingLine": "{{count}} आमंत्रण अभी सक्रिय हो रहे हैं",
+    "referralAwaitingLine": "{{count}} बोनस प्रोसेस में — दोस्तों के डाउनलोड के बाद छोटा विलंब",
     "supportTitle": "सपोर्ट",
     "supportSubtitle": "कोई सवाल या मदद चाहिए? Telegram पर हमसे संपर्क करें।",
     "supportButton": "💬 सपोर्ट से संपर्क करें",
@@ -183,5 +188,11 @@
     "download": "डाउनलोड",
     "deleted": "फाइल हटाई गई",
     "loadMore": "और लोड करें"
+  },
+  "referral": {
+    "ctaTitle": "क्रिएटर दोस्तों को बुलाएं",
+    "ctaBody": "वॉइसओवर पसंद आया? क्रिएटर दोस्तों को आमंत्रित करें और बोनस वॉइस टाइम पाएं।",
+    "copyLink": "लिंक कॉपी करें",
+    "shareTelegram": "Telegram में शेयर"
   }
 }

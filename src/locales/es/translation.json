@@ -153,13 +153,18 @@
     "starsMinutes": "Minutos Stars",
     "studioWalletTitle": "Saldo de narracion",
     "studioWalletDetail": "~{{total}} s de creditos (cartera {{wallet}} s + Pro {{sub}} s).",
-    "inviteTitle": "Invitar creadores",
-    "inviteSubtitle": "Si un amigo abre la app con tu enlace, recibes creditos bonus (una vez).",
+    "inviteTitle": "Recompensas por invitar creadores",
+    "inviteSubtitle": "Comparte VoiceStudio Pro con creadores y desbloquea tiempo extra de voz. Las recompensas llegan con uso real: tu amigo tras su primera voz generada con éxito; tú, tras descargar el audio.",
     "copyInviteLink": "Copiar enlace",
     "shareInvite": "Compartir en Telegram",
     "copied": "Copiado!",
     "inviteLinkMissing": "Configura VITE_TELEGRAM_BOT_USERNAME para generar enlaces.",
-    "inviteShareText": "Prueba VoiceStudio Pro: voz profesional para Shorts en segundos.",
+    "inviteShareCaption": "Crea locuciones con IA de calidad de estudio en segundos con VoiceStudio Pro 🔥\n\nYo lo uso para contenido y narración.",
+    "referralLimitReached": "Has alcanzado el límite de invitaciones de este mes.",
+    "referralSlotsLine": "{{remaining}} de {{cap}} invitaciones recompensadas restantes este mes",
+    "referralEarnedLine": "{{seconds}}s de tiempo bonus de estudio por creadores invitados",
+    "referralPendingLine": "{{count}} invitación(es) aún activándose",
+    "referralAwaitingLine": "{{count}} bono(s) en proceso — breve retraso tras la descarga",
     "supportTitle": "Soporte",
     "supportSubtitle": "Necesitas ayuda o tienes una pregunta? Contactanos en Telegram.",
     "supportButton": "💬 Contactar soporte",
@@ -183,5 +188,11 @@
     "download": "Descargar",
     "deleted": "Archivo eliminado",
     "loadMore": "Cargar mas"
+  },
+  "referral": {
+    "ctaTitle": "Invita a creadores",
+    "ctaBody": "¿Te gusta la locución? Invita a creadores y desbloquea tiempo extra de voz.",
+    "copyLink": "Copiar enlace",
+    "shareTelegram": "Compartir en Telegram"
   }
 }

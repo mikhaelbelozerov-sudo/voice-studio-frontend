@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import WebApp from "@twa-dev/sdk";
 import { trackAnalytics } from "../lib/analytics";
 import { claimReferral } from "../services/api";
+import { buildReferralClientFingerprint } from "../utils/referralFingerprint";
 import { parseReferrerFromStartParam } from "../utils/referralLink";
 
 const SESSION_KEY = "vs_referral_claim_attempted";
@@ -38,7 +39,11 @@ export const useReferralDeepLink = (inviteeTelegramId: number | null) => {
 
     void (async () => {
       try {
-        const res = await claimReferral({ inviteeTelegramId, referrerTelegramId: referrerId });
+        const res = await claimReferral({
+          inviteeTelegramId,
+          referrerTelegramId: referrerId,
+          clientFingerprint: buildReferralClientFingerprint()
+        });
         trackAnalytics("referral_deep_link_claim", {
           referrerId,
           alreadyClaimed: res.alreadyClaimed === true

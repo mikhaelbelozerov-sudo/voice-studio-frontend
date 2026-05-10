@@ -153,13 +153,18 @@
     "starsMinutes": "Stars минуты",
     "studioWalletTitle": "Баланс озвучки",
     "studioWalletDetail": "~{{total}} сек студийных кредитов (кошелёк {{wallet}} сек + Pro {{sub}} сек).",
-    "inviteTitle": "Пригласить креаторов",
-    "inviteSubtitle": "Когда друг откроет приложение по вашей ссылке, вы получите бонусные кредиты (один раз).",
+    "inviteTitle": "Награды за приглашение креаторов",
+    "inviteSubtitle": "Делитесь VoiceStudio Pro с креаторами и получайте бонусное время озвучки. Бонусы начисляются после реального использования: другу — после первой успешной генерации; вам — после того, как он скачает аудио.",
     "copyInviteLink": "Скопировать ссылку",
     "shareInvite": "Поделиться в Telegram",
     "copied": "Скопировано!",
     "inviteLinkMissing": "Укажите VITE_TELEGRAM_BOT_USERNAME в настройках, чтобы работали приглашения.",
-    "inviteShareText": "Попробуй VoiceStudio Pro — студийная озвучка для Shorts за секунды.",
+    "inviteShareCaption": "Создавай студийные AI-озвучки за секунды в VoiceStudio Pro 🔥\n\nЯ использую для контента и закадрового голоса.",
+    "referralLimitReached": "Вы достигли лимита приглашений на этот месяц.",
+    "referralSlotsLine": "Осталось {{remaining}} из {{cap}} вознаграждаемых приглашений в этом месяце",
+    "referralEarnedLine": "{{seconds}} сек бонусного студийного времени от приглашённых креаторов",
+    "referralPendingLine": "{{count}} приглашение(й) ещё активируется",
+    "referralAwaitingLine": "{{count}} бонус(ов) в обработке — короткая задержка после скачивания друзьями",
     "supportTitle": "Поддержка",
     "supportSubtitle": "Есть вопрос или проблема? Напишите нам в Telegram.",
     "supportButton": "💬 Связаться с нами",
@@ -183,5 +188,11 @@
     "download": "Скачать",
     "deleted": "Файл удалён",
     "loadMore": "Загрузить ещё"
+  },
+  "referral": {
+    "ctaTitle": "Пригласить креаторов",
+    "ctaBody": "Нравится озвучка? Пригласите креаторов и получите бонусное время.",
+    "copyLink": "Скопировать ссылку",
+    "shareTelegram": "Поделиться в Telegram"
   }
 }
