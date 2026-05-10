@@ -143,6 +143,28 @@ export const ProfilePage = () => {
       </div>
 
       <div className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
+        <p className="text-sm text-slate-500 dark:text-slate-400">{t("profile.studioWalletTitle")}</p>
+        <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
+          {t("profile.studioWalletDetail", {
+            total: walletSeconds,
+            wallet: profile?.credit_balance ?? 0,
+            sub: profile?.subscription_credit_balance ?? 0
+          })}
+        </p>
+      </div>
+
+      <div className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
+        <p className="text-sm text-slate-500 dark:text-slate-400">{t("profile.language")}</p>
+        <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{t("profile.languageDescription")}</p>
+        <DropdownMenu
+          className="mt-3"
+          value={languageOptions.find((option) => i18n.language.startsWith(option.value))?.value ?? "en"}
+          options={languageOptions.map((option) => ({ value: option.value, label: option.label }))}
+          onChange={(nextValue) => void handleLanguageChange(nextValue as AppLanguage)}
+        />
+      </div>
+
+      <div className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
         <p className="text-sm text-slate-500 dark:text-slate-400">{t("profile.theme")}</p>
         <div className="mt-2 grid grid-cols-2 gap-2">
           <Button
@@ -158,28 +180,6 @@ export const ProfilePage = () => {
             {t("common.dark")}
           </Button>
         </div>
-      </div>
-
-      <div className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
-        <p className="text-sm text-slate-500 dark:text-slate-400">{t("profile.language")}</p>
-        <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{t("profile.languageDescription")}</p>
-        <DropdownMenu
-          className="mt-3"
-          value={languageOptions.find((option) => i18n.language.startsWith(option.value))?.value ?? "en"}
-          options={languageOptions.map((option) => ({ value: option.value, label: option.label }))}
-          onChange={(nextValue) => void handleLanguageChange(nextValue as AppLanguage)}
-        />
-      </div>
-
-      <div className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
-        <p className="text-sm text-slate-500 dark:text-slate-400">{t("profile.studioWalletTitle")}</p>
-        <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-          {t("profile.studioWalletDetail", {
-            total: walletSeconds,
-            wallet: profile?.credit_balance ?? 0,
-            sub: profile?.subscription_credit_balance ?? 0
-          })}
-        </p>
       </div>
 
       <div className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
