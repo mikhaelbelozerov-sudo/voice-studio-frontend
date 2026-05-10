@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "../components/ui/Button";
+import { PRO_CREATOR_STARS_PRICE } from "../constants/catalog";
 import { useTelegram } from "../hooks/useTelegram";
 import { useTelegramStarsPurchase } from "../hooks/useTelegramStarsPurchase";
 import { CreateInvoiceRequest } from "../services/api";
@@ -11,6 +12,7 @@ type Pack = {
   id: string;
   titleKey: string;
   descriptionKey: string;
+  titleParams?: Record<string, string | number>;
   amountStars: number;
   invoice: CreateInvoiceRequest;
 };
@@ -19,6 +21,7 @@ export const PricingPage = () => {
   const { t } = useTranslation();
   const { telegramId: telegramUserId } = useTelegram();
   const telegramId = telegramUserId ?? FALLBACK_TELEGRAM_ID;
+  const proStars = PRO_CREATOR_STARS_PRICE;
 
   const topUps: Pack[] = useMemo(
     () => [
@@ -67,15 +70,16 @@ export const PricingPage = () => {
       id: "proCreator",
       titleKey: "pricing.proCreatorTitle",
       descriptionKey: "pricing.proCreatorDesc",
-      amountStars: 650,
+      titleParams: { stars: proStars },
+      amountStars: proStars,
       invoice: {
         telegramId,
         productType: "subscription",
         productValue: 3,
-        amountStars: 650
+        amountStars: proStars
       }
     }),
-    [telegramId]
+    [telegramId, proStars]
   );
 
   const [isPurchasingId, setIsPurchasingId] = useState<string | null>(null);
@@ -124,7 +128,9 @@ export const PricingPage = () => {
             key={pack.id}
             className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100 dark:bg-slate-900 dark:ring-slate-800"
           >
-            <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t(pack.titleKey)}</p>
+            <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+              {t(pack.titleKey, pack.titleParams)}
+            </p>
             <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{t(pack.descriptionKey)}</p>
             <div className="mt-4 flex items-center justify-between gap-2">
               <p className="text-sm font-medium text-slate-800 dark:text-slate-200">
@@ -142,7 +148,9 @@ export const PricingPage = () => {
         <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t("pricing.subscriptionsSecondary")}</h2>
         <div className="rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 p-[1px] dark:from-blue-900 dark:to-slate-900">
           <div className="rounded-2xl bg-white p-4 dark:bg-slate-950">
-            <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t(creatorPlan.titleKey)}</p>
+            <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+              {t(creatorPlan.titleKey, creatorPlan.titleParams)}
+            </p>
             <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{t(creatorPlan.descriptionKey)}</p>
             <div className="mt-4 flex items-center justify-between gap-2">
               <p className="text-sm font-medium text-slate-800 dark:text-slate-200">

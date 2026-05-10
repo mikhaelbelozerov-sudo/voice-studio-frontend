@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 import { Layout } from "./components/layout/Layout";
 import { DropdownMenu } from "./components/ui/DropdownMenu";
+import { useReferralDeepLink } from "./hooks/useReferralDeepLink";
 import { useTelegram } from "./hooks/useTelegram";
 import { useVirtualKeyboard } from "./hooks/useVirtualKeyboard";
 import { GeneratePage } from "./pages/Generate";
@@ -18,6 +19,7 @@ import { AppLanguage } from "./constants/languages";
 function App() {
   const { t, i18n } = useTranslation();
   const { telegramId } = useTelegram();
+  useReferralDeepLink(telegramId);
   const { isKeyboardOpen, dismissKeyboard } = useVirtualKeyboard();
   const [showLanguageModal, setShowLanguageModal] = useState(() => !window.localStorage.getItem(LANGUAGE_STORAGE_KEY));
 

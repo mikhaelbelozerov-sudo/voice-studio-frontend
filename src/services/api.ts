@@ -145,3 +145,19 @@ export const updateUserLanguage = async (payload: UpdateUserLanguageRequest) => 
   const { data } = await api.post<{ ok: boolean; language: AppLanguage }>("/user/language", payload);
   return data;
 };
+
+export type ClaimReferralRequest = {
+  inviteeTelegramId: number;
+  referrerTelegramId: number;
+};
+
+export type ClaimReferralResponse = {
+  ok: boolean;
+  alreadyClaimed?: boolean;
+  bonusCredits?: number;
+};
+
+export const claimReferral = async (payload: ClaimReferralRequest) => {
+  const { data } = await api.post<ClaimReferralResponse>("/referrals/claim", payload);
+  return data;
+};

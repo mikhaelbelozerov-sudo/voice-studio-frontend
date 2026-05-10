@@ -23,7 +23,7 @@
     "profile": "Profile"
   },
   "languageModal": {
-    "title": "Welcome to VoiceStudio",
+    "title": "Welcome to VoiceStudio Pro",
     "description": "Choose your language. You can change it later in Profile."
   },
   "generate": {
@@ -106,7 +106,7 @@
     "pack35Desc": "Enough runway for weekly content drops.",
     "pack120Title": "+120 minute booster · 249 Stars",
     "pack120Desc": "Heavy creation weeks — batch TikTok/Reels narration.",
-    "proCreatorTitle": "Pro Creator · 30 days · 650⭐️",
+    "proCreatorTitle": "Pro Creator · 30 days · {{stars}}⭐️",
     "proCreatorDesc": "100 narration minutes pooled monthly plus faster pacing for longer drafts.",
     "telegramUnavailable": "Telegram payment is unavailable in this environment.",
     "loadProfileError": "Failed to load profile data",
@@ -130,6 +130,15 @@
     "expiresAt": "Expires at",
     "remaining": "Remaining",
     "starsMinutes": "Stars minutes",
+    "studioWalletTitle": "Narration balance",
+    "studioWalletDetail": "~{{total}}s of studio credits (wallet {{wallet}}s + Pro {{sub}}s).",
+    "inviteTitle": "Invite creators",
+    "inviteSubtitle": "Friends who join via your link unlock bonus time for you once they open the app.",
+    "copyInviteLink": "Copy invite link",
+    "shareInvite": "Share in Telegram",
+    "copied": "Copied!",
+    "inviteLinkMissing": "Set VITE_TELEGRAM_BOT_USERNAME in the app env to enable invite links.",
+    "inviteShareText": "Try VoiceStudio Pro — studio voiceovers for Shorts in seconds.",
     "supportTitle": "Support",
     "supportSubtitle": "Need help or have a question? Contact us on Telegram.",
     "supportButton": "💬 Contact support",

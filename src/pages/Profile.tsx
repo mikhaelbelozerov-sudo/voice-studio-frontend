@@ -1,13 +1,15 @@
+import WebApp from "@twa-dev/sdk";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "../components/ui/Button";
 import { Spinner } from "../components/ui/Spinner";
 import { DropdownMenu } from "../components/ui/DropdownMenu";
+import { AppLanguage, DATE_LOCALE_BY_LANGUAGE } from "../constants/languages";
 import { useTelegram } from "../hooks/useTelegram";
 import { getUserProfile, updateUserLanguage, UserProfile } from "../services/api";
-import { getSubscriptionRemainingInfo } from "../utils/formatRemainingTime";
 import { LANGUAGE_STORAGE_KEY } from "../i18n";
-import { AppLanguage, DATE_LOCALE_BY_LANGUAGE } from "../constants/languages";
+import { buildReferralMiniAppUrl } from "../utils/referralLink";
+import { getSubscriptionRemainingInfo } from "../utils/formatRemainingTime";
 
 const FALLBACK_TELEGRAM_ID = 123456789;
 const SUPPORT_LINK = import.meta.env.VITE_SUPPORT_TELEGRAM_LINK || "";
@@ -32,6 +34,16 @@ export const ProfilePage = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [inviteCopied, setInviteCopied] = useState(false);
+
+  const inviteUrl = useMemo(
+    () => (telegramUserId ? buildReferralMiniAppUrl(telegramUserId) : null),
+    [telegramUserId]
+  );
+
+  const walletSeconds = profile
+    ? (profile.credit_balance ?? 0) + (profile.subscription_credit_balance ?? 0)
+    : 0;
 
   const getSubscriptionLabel = () => {
     const info = getSubscriptionRemainingInfo(profile?.subscription_expires_at ?? null);
@@ -80,6 +92,33 @@ export const ProfilePage = () => {
       setProfile((prev) => (prev ? { ...prev, language } : prev));
     } catch (_error) {
       // Локально язык уже переключили.
+    }
+  };
+
+  const handleCopyInvite = async () => {
+    if (!inviteUrl) {
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(inviteUrl);
+      setInviteCopied(true);
+      window.setTimeout(() => setInviteCopied(false), 2000);
+    } catch {
+      /* */
+    }
+  };
+
+  const handleShareInvite = () => {
+    if (!inviteUrl) {
+      return;
+    }
+    const text = encodeURIComponent(t("profile.inviteShareText"));
+    const url = encodeURIComponent(inviteUrl);
+    const share = `https://t.me/share/url?url=${url}&text=${text}`;
+    try {
+      WebApp.openTelegramLink?.(share);
+    } catch {
+      window.open(share, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -165,8 +204,36 @@ export const ProfilePage = () => {
       </div>
 
       <div className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
-        <p className="text-sm text-slate-500 dark:text-slate-400">{t("profile.starsMinutes")}</p>
-        <p className="text-base font-semibold text-slate-900 dark:text-slate-100">{profile?.stars_minutes ?? 0}</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">{t("profile.studioWalletTitle")}</p>
+        <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
+          {t("profile.studioWalletDetail", {
+            total: walletSeconds,
+            wallet: profile?.credit_balance ?? 0,
+            sub: profile?.subscription_credit_balance ?? 0
+          })}
+        </p>
+      </div>
+
+      <div className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
+        <p className="text-sm font-medium text-slate-800 dark:text-slate-100">{t("profile.inviteTitle")}</p>
+        <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{t("profile.inviteSubtitle")}</p>
+        {!inviteUrl ? (
+          <p className="mt-2 text-xs text-amber-700 dark:text-amber-300">{t("profile.inviteLinkMissing")}</p>
+        ) : (
+          <div className="mt-3 space-y-2">
+            <p className="break-all rounded-lg bg-slate-50 p-2 text-xs text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+              {inviteUrl}
+            </p>
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              <Button variant="secondary" className="w-full" onClick={() => void handleCopyInvite()}>
+                {inviteCopied ? t("profile.copied") : t("profile.copyInviteLink")}
+              </Button>
+              <Button className="w-full" onClick={handleShareInvite}>
+                {t("profile.shareInvite")}
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
