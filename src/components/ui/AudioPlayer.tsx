@@ -13,9 +13,19 @@ export const AudioPlayer = ({ audioUrl, onDownloadClick }: AudioPlayerProps) => 
   return (
     <div className="space-y-3 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white">
       <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">{t("generate.resultTitle", { defaultValue: "Результат генерации" })}</h3>
-      <audio controls src={audioUrl} className="w-full rounded-md border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">
-        {t("generate.audioNotSupported", { defaultValue: "Ваш браузер не поддерживает аудио." })}
-      </audio>
+      {/*
+        Native audio controls paint rounded chrome, but the element box stays square.
+        A light clipping shell + overflow-hidden removes dark corner artifacts in dark UI.
+      */}
+      <div className="overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-sm dark:border-slate-600 dark:bg-slate-100">
+        <audio
+          controls
+          src={audioUrl}
+          className="block w-full bg-transparent [color-scheme:light] dark:[color-scheme:light]"
+        >
+          {t("generate.audioNotSupported", { defaultValue: "Ваш браузер не поддерживает аудио." })}
+        </audio>
+      </div>
       <a
         href={audioUrl}
         download
