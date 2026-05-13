@@ -1,4 +1,33 @@
 /**
+ * BotFather «Direct link» short name only (e.g. `app`). Not the hosted https URL.
+ * @see https://core.telegram.org/bots/webapps#direct-link-mini-apps
+ */
+const MINI_APP_SLUG_MAX_LEN = 64;
+
+function normalizeMiniAppSlug(raw: string | undefined): string {
+  const trimmed = (raw ?? "app").trim().replace(/^\//, "");
+  if (!trimmed || trimmed.length > MINI_APP_SLUG_MAX_LEN) {
+    return "app";
+  }
+  const looksLikeUrl =
+    /:\/\//.test(trimmed) ||
+    /^https?:/i.test(trimmed) ||
+    /[?#&]/.test(trimmed) ||
+    /\s/.test(trimmed) ||
+    trimmed.includes("t.me/");
+  const tokenOk = /^[a-zA-Z0-9_-]+$/.test(trimmed);
+  if (looksLikeUrl || !tokenOk) {
+    if (import.meta.env.DEV) {
+      console.warn(
+        "[referralLink] VITE_TELEGRAM_MINI_APP_SLUG must be the Mini App short name from BotFather (e.g. app), not a website URL. Falling back to \"app\"."
+      );
+    }
+    return "app";
+  }
+  return trimmed;
+}
+
+/**
  * Mini App deep link: friend opens app with startapp payload ref_<telegramId>
  * @see https://core.telegram.org/bots/webapps#direct-link-mini-apps
  */
@@ -7,12 +36,9 @@ export function buildReferralMiniAppUrl(inviterTelegramId: number): string | nul
   if (!bot) {
     return null;
   }
-  const slug = (import.meta.env.VITE_TELEGRAM_MINI_APP_SLUG ?? "app").trim().replace(/^\//, "");
+  const slug = normalizeMiniAppSlug(import.meta.env.VITE_TELEGRAM_MINI_APP_SLUG);
   const payload = `ref_${inviterTelegramId}`;
-  if (slug) {
-    return `https://t.me/${bot}/${slug}?startapp=${encodeURIComponent(payload)}`;
-  }
-  return `https://t.me/${bot}?startapp=${encodeURIComponent(payload)}`;
+  return `https://t.me/${bot}/${slug}?startapp=${encodeURIComponent(payload)}`;
 }
 
 export function parseReferrerFromStartParam(raw: string | undefined | null): number | null {
