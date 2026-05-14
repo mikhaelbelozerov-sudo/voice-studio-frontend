@@ -27,8 +27,24 @@ function normalizeMiniAppSlug(raw: string | undefined): string {
   return trimmed;
 }
 
+type ReferralLinkMode = "named" | "main" | "https";
+
+function getReferralLinkMode(): ReferralLinkMode {
+  const raw = (import.meta.env.VITE_REFERRAL_LINK_MODE ?? "named").trim().toLowerCase();
+  if (raw === "main" || raw === "https" || raw === "web") {
+    return raw === "web" ? "https" : (raw as ReferralLinkMode);
+  }
+  return "named";
+}
+
 /**
  * Mini App deep link: friend opens app with startapp payload ref_<telegramId>
+ *
+ * Modes (VITE_REFERRAL_LINK_MODE):
+ * - named (default): https://t.me/BOT/SLUG?startapp=ref_ID — Direct link из BotFather
+ * - main: https://t.me/BOT?startapp=ref_ID — «главный» Mini App без short name в пути (иногда ведёт себя иначе на iOS)
+ * - https: https://YOUR_VERCEL/?tgWebAppStartParam=ref_ID — тот же домен, что в BotFather; параметр как в доке Web Apps
+ *
  * @see https://core.telegram.org/bots/webapps#direct-link-mini-apps
  */
 export function buildReferralMiniAppUrl(inviterTelegramId: number): string | null {
@@ -38,7 +54,27 @@ export function buildReferralMiniAppUrl(inviterTelegramId: number): string | nul
   }
   const slug = normalizeMiniAppSlug(import.meta.env.VITE_TELEGRAM_MINI_APP_SLUG);
   const payload = `ref_${inviterTelegramId}`;
-  return `https://t.me/${bot}/${slug}?startapp=${encodeURIComponent(payload)}`;
+  const enc = encodeURIComponent(payload);
+  const mode = getReferralLinkMode();
+
+  if (mode === "https") {
+    const origin = import.meta.env.VITE_PUBLIC_MINI_APP_ORIGIN?.trim().replace(/\/$/, "");
+    if (!origin) {
+      if (import.meta.env.DEV) {
+        console.warn(
+          "[referralLink] VITE_REFERRAL_LINK_MODE=https requires VITE_PUBLIC_MINI_APP_ORIGIN (e.g. https://your-app.vercel.app)"
+        );
+      }
+      return null;
+    }
+    return `${origin}/?tgWebAppStartParam=${enc}`;
+  }
+
+  if (mode === "main") {
+    return `https://t.me/${bot}?startapp=${enc}`;
+  }
+
+  return `https://t.me/${bot}/${slug}?startapp=${enc}`;
 }
 
 type TelegramWebAppStart = {
