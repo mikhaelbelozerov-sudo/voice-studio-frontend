@@ -27,6 +27,11 @@ function isTelegramIos(): boolean {
   return String(getTelegramWebApp()?.platform ?? "").toLowerCase() === "ios";
 }
 
+/** iOS: programmatic expand reliably retriggers WebView reload; referral: same on some builds. */
+function allowProgrammaticTelegramExpand(): boolean {
+  return !isTelegramIos() && !isReferralMiniAppLaunch();
+}
+
 type ExpandMode = "expandOnly" | "expandAndFullscreen";
 
 /**
@@ -37,10 +42,12 @@ type ExpandMode = "expandOnly" | "expandAndFullscreen";
  * (в т.ч. при открытии по startapp / реферальной ссылке) это приводит к зацикливанию
  * перезапуска WebView. Полноэкран — только в начальных ретраях и по первому жесту.
  *
- * iOS Telegram (в т.ч. 12.x): requestFullscreen и частые expand при pageshow/viewport
- * дают бесконечное переоткрытие Mini App с deep link — на iOS используем только expand().
+ * iOS: не вызываем WebApp.expand/requestFullscreen из JS — клиент уходит в цикл перезапуска WebView.
  */
 function tryExpandTelegramWebApp(mode: ExpandMode = "expandAndFullscreen"): void {
+  if (!allowProgrammaticTelegramExpand()) {
+    return;
+  }
   const tg = getTelegramWebApp() as TelegramWebAppWithFullscreen | undefined;
   if (!tg) {
     return;
@@ -53,9 +60,6 @@ function tryExpandTelegramWebApp(mode: ExpandMode = "expandAndFullscreen"): void
   if (mode === "expandOnly") {
     return;
   }
-  if (isTelegramIos()) {
-    return;
-  }
   try {
     tg.requestFullscreen?.();
   } catch {
@@ -64,26 +68,18 @@ function tryExpandTelegramWebApp(mode: ExpandMode = "expandAndFullscreen"): void
 }
 
 function scheduleTelegramExpandRetries(): () => void {
-  /** Referral startapp + expand на iOS (и иногда Android) даёт бесконечное переоткрытие WebView. */
-  if (isReferralMiniAppLaunch()) {
+  if (!allowProgrammaticTelegramExpand()) {
     return () => {};
   }
-  const ios = isTelegramIos();
-  const delaysMs = ios ? [0, 200, 500] : [0, 80, 200, 450, 900, 1600, 2800];
-  const bootMode = ios ? "expandOnly" : "expandAndFullscreen";
-  const ids = delaysMs.map((ms) => window.setTimeout(() => tryExpandTelegramWebApp(bootMode), ms));
+  const delaysMs = [0, 80, 200, 450, 900, 1600, 2800];
+  const ids = delaysMs.map((ms) => window.setTimeout(() => tryExpandTelegramWebApp("expandAndFullscreen"), ms));
 
-  /** На iOS pageshow при переоткрытии WebView часто дублируется и вместе с expand провоцирует цикл. */
-  const onPageShow = ios ? null : () => tryExpandTelegramWebApp("expandAndFullscreen");
-  if (onPageShow) {
-    window.addEventListener("pageshow", onPageShow);
-  }
+  const onPageShow = () => tryExpandTelegramWebApp("expandAndFullscreen");
+  window.addEventListener("pageshow", onPageShow);
 
   return () => {
     ids.forEach((id) => window.clearTimeout(id));
-    if (onPageShow) {
-      window.removeEventListener("pageshow", onPageShow);
-    }
+    window.removeEventListener("pageshow", onPageShow);
   };
 }
 
@@ -202,15 +198,13 @@ export const useTelegram = () => {
     };
   }, []);
 
-  /** После первого жеста — повторный expand; на iOS без requestFullscreen (см. tryExpand). */
+  /** После первого жеста — повторный expand (только Android / не реферальный старт). */
   useEffect(() => {
+    if (!allowProgrammaticTelegramExpand()) {
+      return;
+    }
     const onFirstPointer = () => {
-      if (isReferralMiniAppLaunch()) {
-        document.removeEventListener("touchstart", onFirstPointer);
-        document.removeEventListener("click", onFirstPointer);
-        return;
-      }
-      tryExpandTelegramWebApp(isTelegramIos() ? "expandOnly" : "expandAndFullscreen");
+      tryExpandTelegramWebApp("expandAndFullscreen");
       document.removeEventListener("touchstart", onFirstPointer);
       document.removeEventListener("click", onFirstPointer);
     };
@@ -264,7 +258,7 @@ export const useTelegram = () => {
 
     const onViewportChanged = (payload?: { isStateStable?: boolean }) => {
       syncTelegramContentSafeAreaVars();
-      if (payload?.isStateStable !== false && !isTelegramIos() && !isReferralMiniAppLaunch()) {
+      if (payload?.isStateStable !== false && allowProgrammaticTelegramExpand()) {
         tryExpandTelegramWebApp("expandOnly");
       }
     };

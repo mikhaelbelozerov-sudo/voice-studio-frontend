@@ -41,21 +41,68 @@ export function buildReferralMiniAppUrl(inviterTelegramId: number): string | nul
   return `https://t.me/${bot}/${slug}?startapp=${encodeURIComponent(payload)}`;
 }
 
-function readTelegramStartParamRaw(): string | undefined {
+type TelegramWebAppStart = {
+  startParam?: string;
+  initData?: string;
+  initDataUnsafe?: { start_param?: string };
+};
+
+/**
+ * Telegram passes startapp as start_param and as GET tgWebAppStartParam (see Web Apps docs).
+ * On iOS the GET param is often available before initDataUnsafe is filled — read URL first.
+ */
+export function readTelegramStartParamRaw(): string | undefined {
   if (typeof window === "undefined") {
     return undefined;
   }
-  const twa = (window as {
-    Telegram?: { WebApp?: { startParam?: string; initDataUnsafe?: { start_param?: string } } };
-  }).Telegram?.WebApp;
-  if (!twa) {
-    return undefined;
+
+  try {
+    const u = new URL(window.location.href);
+    const fromQuery = u.searchParams.get("tgWebAppStartParam");
+    if (fromQuery && fromQuery.length > 0) {
+      return fromQuery;
+    }
+  } catch {
+    /* */
   }
-  if (typeof twa.startParam === "string" && twa.startParam.length > 0) {
-    return twa.startParam;
+
+  const hash = window.location.hash;
+  if (hash.length > 1) {
+    try {
+      const h = hash.startsWith("#") ? hash.slice(1) : hash;
+      const hp = new URLSearchParams(h);
+      const fromHash = hp.get("tgWebAppStartParam");
+      if (fromHash && fromHash.length > 0) {
+        return fromHash;
+      }
+    } catch {
+      /* */
+    }
   }
-  const sp = twa.initDataUnsafe?.start_param;
-  return typeof sp === "string" && sp.length > 0 ? sp : undefined;
+
+  const twa = (window as { Telegram?: { WebApp?: TelegramWebAppStart } }).Telegram?.WebApp;
+  if (twa) {
+    if (typeof twa.startParam === "string" && twa.startParam.length > 0) {
+      return twa.startParam;
+    }
+    const unsafeSp = twa.initDataUnsafe?.start_param;
+    if (typeof unsafeSp === "string" && unsafeSp.length > 0) {
+      return unsafeSp;
+    }
+    if (typeof twa.initData === "string" && twa.initData.length > 0) {
+      try {
+        const parsed = new URLSearchParams(twa.initData);
+        const fromInit = parsed.get("start_param");
+        if (fromInit && fromInit.length > 0) {
+          return fromInit;
+        }
+      } catch {
+        /* */
+      }
+    }
+  }
+
+  return undefined;
 }
 
 /**

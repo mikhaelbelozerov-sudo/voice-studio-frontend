@@ -1,19 +1,10 @@
 import { useEffect, useRef } from "react";
-import WebApp from "@twa-dev/sdk";
 import { trackAnalytics } from "../lib/analytics";
 import { claimReferral } from "../services/api";
 import { buildReferralClientFingerprint } from "../utils/referralFingerprint";
-import { parseReferrerFromStartParam } from "../utils/referralLink";
+import { parseReferrerFromStartParam, readTelegramStartParamRaw } from "../utils/referralLink";
 
 const SESSION_KEY = "vs_referral_claim_attempted";
-
-type TelegramWebAppWithStart = typeof WebApp & { startParam?: string };
-
-const readStartParam = (): string | undefined => {
-  const tg = WebApp as TelegramWebAppWithStart;
-  const unsafe = tg.initDataUnsafe as { start_param?: string } | undefined;
-  return tg.startParam ?? unsafe?.start_param;
-};
 
 /**
  * On first launch with ?startapp=ref_<id>, credits inviter via backend (idempotent).
@@ -29,7 +20,7 @@ export const useReferralDeepLink = (inviteeTelegramId: number | null) => {
       return;
     }
 
-    const referrerId = parseReferrerFromStartParam(readStartParam());
+    const referrerId = parseReferrerFromStartParam(readTelegramStartParamRaw());
     if (!referrerId || referrerId === inviteeTelegramId) {
       sessionStorage.setItem(SESSION_KEY, "1");
       return;
