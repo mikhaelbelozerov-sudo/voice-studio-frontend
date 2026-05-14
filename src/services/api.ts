@@ -176,3 +176,20 @@ export const claimReferral = async (payload: ClaimReferralRequest) => {
 export const ackReferralDownload = async (telegramId: number) => {
   await api.post("/referrals/download-ack", { telegramId });
 };
+
+export type PrepareReferralShareRequest = {
+  telegramId: number;
+  messageText: string;
+  title?: string;
+};
+
+export type PrepareReferralShareResponse = {
+  preparedMessageId: string;
+  expirationDate?: number;
+};
+
+/** Bot API savePreparedInlineMessage → id для Telegram.WebApp.shareMessage */
+export const prepareReferralShare = async (payload: PrepareReferralShareRequest) => {
+  const { data } = await api.post<PrepareReferralShareResponse>("/referrals/prepared-share", payload);
+  return data;
+};

@@ -244,3 +244,42 @@ export function parseReferrerFromStartParam(raw: string | undefined | null): num
   const id = Number(m[1]);
   return Number.isFinite(id) && id > 0 ? id : null;
 }
+
+/** 0 = не вызывать backend savePreparedInlineMessage + WebApp.shareMessage */
+export function isReferralPreparedShareEnabled(): boolean {
+  return import.meta.env.VITE_REFERRAL_PREPARED_SHARE?.trim() !== "0";
+}
+
+/**
+ * Текст сообщения для {@link https://core.telegram.org/bots/api#savepreparedinlinemessage savePreparedInlineMessage}:
+ * всегда named `t.me/.../app?startapp=ref_…`, чтобы в чате было превью Mini App.
+ */
+export function buildReferralPreparedShareMessageText(inviterTelegramId: number, caption?: string): string | null {
+  const url = buildReferralNamedMiniAppUrl(inviterTelegramId);
+  if (!url) {
+    return null;
+  }
+  const cap = caption?.trim();
+  if (cap) {
+    return `${url}\n\n${cap}`;
+  }
+  return url;
+}
+
+type TelegramWebAppShare = {
+  shareMessage?: (msgId: string, callback?: (sent: boolean) => void) => void;
+};
+
+/** Bot API 8.0+ Mini App: открыть диалог «поделиться» с превью подготовленного сообщения. */
+export function sharePreparedInlineMessage(preparedMessageId: string, callback?: (sent: boolean) => void): boolean {
+  const wtg = (window as { Telegram?: { WebApp?: TelegramWebAppShare } }).Telegram?.WebApp;
+  if (typeof wtg?.shareMessage !== "function") {
+    return false;
+  }
+  try {
+    wtg.shareMessage(preparedMessageId, callback);
+    return true;
+  } catch {
+    return false;
+  }
+}

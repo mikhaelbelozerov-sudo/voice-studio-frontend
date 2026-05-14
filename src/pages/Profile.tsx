@@ -6,9 +6,17 @@ import { DropdownMenu } from "../components/ui/DropdownMenu";
 import { AppLanguage } from "../constants/languages";
 import { useTelegram } from "../hooks/useTelegram";
 import { trackAnalytics } from "../lib/analytics";
-import { getUserProfile, updateUserLanguage, UserProfile } from "../services/api";
+import { getUserProfile, prepareReferralShare, updateUserLanguage, UserProfile } from "../services/api";
 import { LANGUAGE_STORAGE_KEY } from "../i18n";
-import { buildReferralMiniAppUrl, buildReferralShareUrl, buildTelegramMiniAppShareDialogUrl, openTelegramMiniAppShareDialog } from "../utils/referralLink";
+import {
+  buildReferralMiniAppUrl,
+  buildReferralPreparedShareMessageText,
+  buildReferralShareUrl,
+  buildTelegramMiniAppShareDialogUrl,
+  isReferralPreparedShareEnabled,
+  openTelegramMiniAppShareDialog,
+  sharePreparedInlineMessage
+} from "../utils/referralLink";
 const FALLBACK_TELEGRAM_ID = 123456789;
 const SUPPORT_LINK = import.meta.env.VITE_SUPPORT_TELEGRAM_LINK || "";
 
@@ -109,13 +117,31 @@ export const ProfilePage = () => {
     }
   };
 
-  const handleShareInvite = () => {
+  const handleShareInvite = async () => {
     const urlToShare = inviteShareUrl ?? inviteUrl;
-    if (!urlToShare) {
+    if (!urlToShare || !telegramUserId) {
       return;
     }
+    if (isReferralPreparedShareEnabled()) {
+      const messageText = buildReferralPreparedShareMessageText(telegramUserId, t("profile.inviteShareCaption"));
+      if (messageText) {
+        try {
+          const { preparedMessageId } = await prepareReferralShare({
+            telegramId: telegramUserId,
+            messageText,
+            title: t("profile.sharePreparedInviteTitle")
+          });
+          if (sharePreparedInlineMessage(preparedMessageId)) {
+            trackAnalytics("referral_link_shared", { source: "profile", channel: "prepared" });
+            return;
+          }
+        } catch {
+          /* fallback below */
+        }
+      }
+    }
     const share = buildTelegramMiniAppShareDialogUrl(urlToShare, t("profile.inviteShareCaption"));
-    trackAnalytics("referral_link_shared", { source: "profile" });
+    trackAnalytics("referral_link_shared", { source: "profile", channel: "link" });
     openTelegramMiniAppShareDialog(share);
   };
 

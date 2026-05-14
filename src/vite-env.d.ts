@@ -18,6 +18,8 @@ interface ImportMetaEnv {
   readonly VITE_REFERRAL_SHARE_INCLUDE_CAPTION?: string;
   /** https | tme = использовать https://t.me/share/url вместо tg://msg_url */
   readonly VITE_REFERRAL_SHARE_LINK_FORMAT?: string;
+  /** 0 = не использовать savePreparedInlineMessage + WebApp.shareMessage (только старый шаринг ссылкой) */
+  readonly VITE_REFERRAL_PREPARED_SHARE?: string;
   readonly VITE_PREMIUM_VOICE_IDS?: string;
 }
 
