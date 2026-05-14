@@ -9,7 +9,7 @@ import { useTelegram } from "../hooks/useTelegram";
 import { trackAnalytics } from "../lib/analytics";
 import { getUserProfile, updateUserLanguage, UserProfile } from "../services/api";
 import { LANGUAGE_STORAGE_KEY } from "../i18n";
-import { buildReferralMiniAppUrl } from "../utils/referralLink";
+import { buildReferralMiniAppUrl, buildReferralShareUrl } from "../utils/referralLink";
 const FALLBACK_TELEGRAM_ID = 123456789;
 const SUPPORT_LINK = import.meta.env.VITE_SUPPORT_TELEGRAM_LINK || "";
 
@@ -26,6 +26,11 @@ export const ProfilePage = () => {
 
   const inviteUrl = useMemo(
     () => (telegramUserId ? buildReferralMiniAppUrl(telegramUserId) : null),
+    [telegramUserId]
+  );
+
+  const inviteShareUrl = useMemo(
+    () => (telegramUserId ? buildReferralShareUrl(telegramUserId) : null),
     [telegramUserId]
   );
 
@@ -106,11 +111,12 @@ export const ProfilePage = () => {
   };
 
   const handleShareInvite = () => {
-    if (!inviteUrl) {
+    const urlToShare = inviteShareUrl ?? inviteUrl;
+    if (!urlToShare) {
       return;
     }
     const text = encodeURIComponent(t("profile.inviteShareCaption"));
-    const url = encodeURIComponent(inviteUrl);
+    const url = encodeURIComponent(urlToShare);
     const share = `https://t.me/share/url?url=${url}&text=${text}`;
     trackAnalytics("referral_link_shared", { source: "profile" });
     try {

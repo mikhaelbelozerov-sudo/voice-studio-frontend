@@ -20,7 +20,7 @@ import { trackAnalytics } from "../lib/analytics";
 import { ackReferralDownload, generateAudio, getUserProfile, getVoices, UserProfile, Voice } from "../services/api";
 import { useVoiceStore } from "../store/voiceStore";
 import { estimateSpeechSeconds, formatNarrationSeconds } from "../utils/credits";
-import { buildReferralMiniAppUrl } from "../utils/referralLink";
+import { buildReferralMiniAppUrl, buildReferralShareUrl } from "../utils/referralLink";
 
 const TOPUP_STARTER_PACK = {
   productType: "credits" as const,
@@ -125,12 +125,18 @@ export const GeneratePage = () => {
     [telegramId]
   );
 
+  const inviteShareUrl = useMemo(
+    () => (telegramId ? buildReferralShareUrl(telegramId) : null),
+    [telegramId]
+  );
+
   const handlePostGenReferralShare = () => {
-    if (!inviteUrl) {
+    const urlToShare = inviteShareUrl ?? inviteUrl;
+    if (!urlToShare) {
       return;
     }
     const textEnc = encodeURIComponent(t("profile.inviteShareCaption"));
-    const urlEnc = encodeURIComponent(inviteUrl);
+    const urlEnc = encodeURIComponent(urlToShare);
     const share = `https://t.me/share/url?url=${urlEnc}&text=${textEnc}`;
     trackAnalytics("referral_link_shared", { source: "post_generation" });
     try {

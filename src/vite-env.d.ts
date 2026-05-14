@@ -12,6 +12,8 @@ interface ImportMetaEnv {
   readonly VITE_REFERRAL_LINK_MODE?: string;
   /** HTTPS origin of Mini App (BotFather URL), e.g. https://xxx.vercel.app — for REFERRAL_LINK_MODE=https */
   readonly VITE_PUBLIC_MINI_APP_ORIGIN?: string;
+  /** 0 = «Поделиться» использует ту же ссылку, что и копирование; иначе при main/https в шаринг идёт t.me/бот/app для превью с кнопкой «Открыть» */
+  readonly VITE_REFERRAL_SHARE_TELEGRAM_CARD?: string;
   readonly VITE_PREMIUM_VOICE_IDS?: string;
 }
 

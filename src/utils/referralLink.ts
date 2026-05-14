@@ -77,6 +77,31 @@ export function buildReferralMiniAppUrl(inviterTelegramId: number): string | nul
   return `https://t.me/${bot}/${slug}?startapp=${enc}`;
 }
 
+/** Direct link `t.me/bot/slug?startapp=…` — в чатах Telegram даёт превью Mini App с кнопкой «Открыть». */
+export function buildReferralNamedMiniAppUrl(inviterTelegramId: number): string | null {
+  const bot = import.meta.env.VITE_TELEGRAM_BOT_USERNAME?.trim().replace(/^@/, "");
+  if (!bot) {
+    return null;
+  }
+  const slug = normalizeMiniAppSlug(import.meta.env.VITE_TELEGRAM_MINI_APP_SLUG);
+  const payload = `ref_${inviterTelegramId}`;
+  return `https://t.me/${bot}/${slug}?startapp=${encodeURIComponent(payload)}`;
+}
+
+/**
+ * Ссылка для `t.me/share/url`: при режиме main/https по умолчанию подставляется named direct link,
+ * чтобы в чате было превью с кнопкой запуска; копирование по-прежнему через {@link buildReferralMiniAppUrl}.
+ * Отключить: VITE_REFERRAL_SHARE_TELEGRAM_CARD=0
+ */
+export function buildReferralShareUrl(inviterTelegramId: number): string | null {
+  const mode = getReferralLinkMode();
+  const cardOff = import.meta.env.VITE_REFERRAL_SHARE_TELEGRAM_CARD?.trim() === "0";
+  if (!cardOff && (mode === "main" || mode === "https")) {
+    return buildReferralNamedMiniAppUrl(inviterTelegramId);
+  }
+  return buildReferralMiniAppUrl(inviterTelegramId);
+}
+
 type TelegramWebAppStart = {
   startParam?: string;
   initData?: string;
