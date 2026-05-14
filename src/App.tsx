@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Layout } from "./components/layout/Layout";
 import { DropdownMenu } from "./components/ui/DropdownMenu";
+import { usePreserveTelegramMiniAppBootstrap } from "./hooks/usePreserveTelegramMiniAppBootstrap";
 import { useReferralDeepLink } from "./hooks/useReferralDeepLink";
 import { useTelegram } from "./hooks/useTelegram";
 import { useVirtualKeyboard } from "./hooks/useVirtualKeyboard";
@@ -25,18 +26,19 @@ function RedirectToGenerate() {
 function App() {
   const { t, i18n } = useTranslation();
   const { telegramId } = useTelegram();
+  const { suffix: tgBootstrapSuffix } = usePreserveTelegramMiniAppBootstrap();
   useReferralDeepLink(telegramId);
   const { isKeyboardOpen, dismissKeyboard } = useVirtualKeyboard();
   const [showLanguageModal, setShowLanguageModal] = useState(() => !window.localStorage.getItem(LANGUAGE_STORAGE_KEY));
 
   const navItems = useMemo(
     () => [
-      { to: "/generate", label: t("nav.generate"), icon: Home },
-      { to: "/library", label: t("nav.library"), icon: Library },
-      { to: "/pricing", label: t("nav.pricing"), icon: WalletCards },
-      { to: "/profile", label: t("nav.profile"), icon: UserCircle }
+      { to: `/generate${tgBootstrapSuffix}`, label: t("nav.generate"), icon: Home },
+      { to: `/library${tgBootstrapSuffix}`, label: t("nav.library"), icon: Library },
+      { to: `/pricing${tgBootstrapSuffix}`, label: t("nav.pricing"), icon: WalletCards },
+      { to: `/profile${tgBootstrapSuffix}`, label: t("nav.profile"), icon: UserCircle }
     ],
-    [t]
+    [t, tgBootstrapSuffix]
   );
 
   const languageOptions = useMemo(
@@ -111,7 +113,7 @@ function App() {
           <div className="mx-auto grid w-full max-w-3xl grid-cols-4 gap-1 px-2 py-2">
             {navItems.map(({ to, label, icon: Icon }) => (
               <NavLink
-                key={to}
+                key={label}
                 to={to}
                 className={({ isActive }) =>
                   `flex flex-col items-center rounded-lg py-2 text-xs transition ${

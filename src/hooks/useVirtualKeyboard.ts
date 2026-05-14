@@ -75,11 +75,15 @@ export function useVirtualKeyboard() {
       if (!vv) {
         return;
       }
+      /** Без фокуса в поле не доверяем ratio: при открытии Mini App на iOS viewport «прыгает» и даёт ложные срабатывания → мигание MainButton и перезапуск WebView. */
+      if (!isFormField(document.activeElement)) {
+        return;
+      }
       const ratio = vv.height / window.innerHeight;
       const keyboardLikely = ratio < 0.72;
-      if (keyboardLikely && isFormField(document.activeElement)) {
+      if (keyboardLikely) {
         applyOpen(true);
-      } else if (!keyboardLikely && !isFormField(document.activeElement)) {
+      } else {
         applyOpen(false);
       }
     };

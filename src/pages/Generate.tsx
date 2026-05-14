@@ -12,6 +12,7 @@ import { VoiceControls } from "../components/features/VoiceGeneration/VoiceContr
 import { VoiceSelector } from "../components/features/VoiceGeneration/VoiceSelector";
 import { VoicePresetId, VOICE_PRESET_OPTIONS } from "../constants/voicePresets";
 import { mapInterfaceLanguageToTtsCode } from "../constants/ttsLanguages";
+import { usePreserveTelegramMiniAppBootstrap } from "../hooks/usePreserveTelegramMiniAppBootstrap";
 import { useTelegram } from "../hooks/useTelegram";
 import { PRO_CREATOR_STARS_PRICE } from "../constants/catalog";
 import { useTelegramStarsPurchase } from "../hooks/useTelegramStarsPurchase";
@@ -63,6 +64,7 @@ export const GeneratePage = () => {
   } = useVoiceStore();
 
   const { telegramId } = useTelegram();
+  const { suffix: tgBootstrapSuffix } = usePreserveTelegramMiniAppBootstrap();
   const { purchase: purchaseStars } = useTelegramStarsPurchase(telegramId);
 
   useEffect(() => {
@@ -312,7 +314,7 @@ export const GeneratePage = () => {
         <Button variant="secondary" className="w-full sm:flex-1" onClick={() => void handleUpgradeProBeta()}>
           {t("paywall.upgradeProBeta")}
         </Button>
-        <Link to="/pricing" className="w-full sm:flex-1" onClick={() => trackAnalytics("paywall_explore_clicked", {})}>
+        <Link to={`/pricing${tgBootstrapSuffix}`} className="w-full sm:flex-1" onClick={() => trackAnalytics("paywall_explore_clicked", {})}>
           <Button variant="secondary" className="w-full">
             {t("paywall.viewPlans")}
           </Button>
