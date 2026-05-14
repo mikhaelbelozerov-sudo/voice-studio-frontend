@@ -103,16 +103,55 @@ export function buildReferralShareUrl(inviterTelegramId: number): string | null 
 }
 
 /**
- * Ссылка на диалог «Поделиться» (`t.me/share/url`).
- * С параметром `text=` многие клиенты Telegram показывают только текст + обычную ссылку без превью Mini App и без кнопки «Открыть».
- * По умолчанию передаём только `url`. Вернуть подпись: VITE_REFERRAL_SHARE_INCLUDE_CAPTION=1
+ * Диалог «поделиться в чат»: по спецификации Telegram ссылка `tg://msg_url?url=…` подставляется
+ * **в начало поля ввода** (как при ручной вставке), из‑за чего клиент может развернуть превью Mini App.
+ * `https://t.me/share/url` внутри WebView часто даёт только «голую» строку без превью.
+ *
+ * Формат https: VITE_REFERRAL_SHARE_LINK_FORMAT=https (или tme)
+ * Подпись после ссылки: VITE_REFERRAL_SHARE_INCLUDE_CAPTION=1
  */
 export function buildTelegramMiniAppShareDialogUrl(miniAppUrl: string, caption?: string): string {
-  const enc = encodeURIComponent(miniAppUrl);
-  if (import.meta.env.VITE_REFERRAL_SHARE_INCLUDE_CAPTION?.trim() === "1" && caption?.trim()) {
-    return `https://t.me/share/url?url=${enc}&text=${encodeURIComponent(caption.trim())}`;
+  const urlEnc = encodeURIComponent(miniAppUrl);
+  const fmt = (import.meta.env.VITE_REFERRAL_SHARE_LINK_FORMAT ?? "").trim().toLowerCase();
+  const useHttps = fmt === "https" || fmt === "tme";
+  const cap = caption?.trim();
+  const withCaption = import.meta.env.VITE_REFERRAL_SHARE_INCLUDE_CAPTION?.trim() === "1" && Boolean(cap);
+
+  if (useHttps) {
+    if (withCaption && cap) {
+      return `https://t.me/share/url?url=${urlEnc}&text=${encodeURIComponent(cap)}`;
+    }
+    return `https://t.me/share/url?url=${urlEnc}`;
   }
-  return `https://t.me/share/url?url=${enc}`;
+
+  if (withCaption && cap) {
+    return `tg://msg_url?url=${urlEnc}&text=${encodeURIComponent(cap)}`;
+  }
+  return `tg://msg_url?url=${urlEnc}`;
+}
+
+/** Открывает tg://msg_url или t.me/share — сначала openTelegramLink, затем openLink. */
+export function openTelegramMiniAppShareDialog(shareHref: string): void {
+  const wtg = (window as {
+    Telegram?: { WebApp?: { openTelegramLink?: (u: string) => void; openLink?: (u: string) => void } };
+  }).Telegram?.WebApp;
+  try {
+    if (typeof wtg?.openTelegramLink === "function") {
+      wtg.openTelegramLink(shareHref);
+      return;
+    }
+  } catch {
+    /* */
+  }
+  try {
+    if (typeof wtg?.openLink === "function") {
+      wtg.openLink(shareHref);
+      return;
+    }
+  } catch {
+    /* */
+  }
+  window.open(shareHref, "_blank", "noopener,noreferrer");
 }
 
 type TelegramWebAppStart = {

@@ -163,7 +163,7 @@
     "inviteSubtitle": "Bagikan VoiceStudio Pro ke kreator dan buka bonus waktu suara. Hadiah setelah pemakaian nyata: teman dapat bonus setelah voiceover pertama berhasil; Anda setelah mereka mengunduh.",
     "copyInviteLink": "Salin tautan undangan",
     "shareInvite": "Bagikan di Telegram",
-    "shareInviteLinkPreviewHint": "Bagikan hanya mengirim tautan agar Telegram bisa menampilkan pratinjau Mini App dengan tombol Buka. Tambahkan teks sendiri sebelum mengirim jika perlu.",
+    "shareInviteLinkPreviewHint": "Bagikan membuka pemilih chat dan menempatkan tautan di awal kolom (tg://msg_url), seperti menempel manual, agar pratinjau lebih muncul. Tambahkan teks setelah tautan sebelum mengirim.",
     "copied": "Disalin!",
     "inviteLinkMissing": "Setel VITE_TELEGRAM_BOT_USERNAME di env agar tautan undangan aktif.",
     "inviteShareCaption": "Buat voiceover AI kualitas studio dalam hitungan detik dengan VoiceStudio Pro 🔥\n\nSaya pakai untuk konten dan narasi.",

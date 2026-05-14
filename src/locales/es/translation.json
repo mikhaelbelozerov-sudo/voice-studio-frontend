@@ -163,7 +163,7 @@
     "inviteSubtitle": "Comparte VoiceStudio Pro con creadores y desbloquea tiempo extra de voz. Las recompensas llegan con uso real: tu amigo tras su primera voz generada con éxito; tú, tras descargar el audio.",
     "copyInviteLink": "Copiar enlace",
     "shareInvite": "Compartir en Telegram",
-    "shareInviteLinkPreviewHint": "Compartir envía solo el enlace para que Telegram muestre la vista previa de Mini App con Abrir. Puedes añadir tu propio texto antes de enviar.",
+    "shareInviteLinkPreviewHint": "Compartir abre el selector de chat y coloca el enlace al inicio del campo (tg://msg_url), como si lo pegaras a mano, para mejorar la vista previa. Puedes añadir texto después del enlace antes de enviar.",
     "copied": "Copiado!",
     "inviteLinkMissing": "Configura VITE_TELEGRAM_BOT_USERNAME para generar enlaces.",
     "inviteShareCaption": "Crea locuciones con IA de calidad de estudio en segundos con VoiceStudio Pro 🔥\n\nYo lo uso para contenido y narración.",

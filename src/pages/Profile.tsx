@@ -1,4 +1,3 @@
-import WebApp from "@twa-dev/sdk";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "../components/ui/Button";
@@ -9,7 +8,7 @@ import { useTelegram } from "../hooks/useTelegram";
 import { trackAnalytics } from "../lib/analytics";
 import { getUserProfile, updateUserLanguage, UserProfile } from "../services/api";
 import { LANGUAGE_STORAGE_KEY } from "../i18n";
-import { buildReferralMiniAppUrl, buildReferralShareUrl, buildTelegramMiniAppShareDialogUrl } from "../utils/referralLink";
+import { buildReferralMiniAppUrl, buildReferralShareUrl, buildTelegramMiniAppShareDialogUrl, openTelegramMiniAppShareDialog } from "../utils/referralLink";
 const FALLBACK_TELEGRAM_ID = 123456789;
 const SUPPORT_LINK = import.meta.env.VITE_SUPPORT_TELEGRAM_LINK || "";
 
@@ -117,11 +116,7 @@ export const ProfilePage = () => {
     }
     const share = buildTelegramMiniAppShareDialogUrl(urlToShare, t("profile.inviteShareCaption"));
     trackAnalytics("referral_link_shared", { source: "profile" });
-    try {
-      WebApp.openTelegramLink?.(share);
-    } catch {
-      window.open(share, "_blank", "noopener,noreferrer");
-    }
+    openTelegramMiniAppShareDialog(share);
   };
 
   const handleOpenSupport = () => {

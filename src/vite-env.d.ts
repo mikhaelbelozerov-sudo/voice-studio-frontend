@@ -16,6 +16,8 @@ interface ImportMetaEnv {
   readonly VITE_REFERRAL_SHARE_TELEGRAM_CARD?: string;
   /** 1 = в t.me/share/url снова добавить text= (подпись); часто ломает превью Mini App с кнопкой «Открыть» */
   readonly VITE_REFERRAL_SHARE_INCLUDE_CAPTION?: string;
+  /** https | tme = использовать https://t.me/share/url вместо tg://msg_url */
+  readonly VITE_REFERRAL_SHARE_LINK_FORMAT?: string;
   readonly VITE_PREMIUM_VOICE_IDS?: string;
 }
 

@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import WebApp from "@twa-dev/sdk";
 import { Link } from "react-router-dom";
 import { Sparkles } from "lucide-react";
 import { AudioPlayer } from "../components/ui/AudioPlayer";
@@ -20,7 +19,12 @@ import { trackAnalytics } from "../lib/analytics";
 import { ackReferralDownload, generateAudio, getUserProfile, getVoices, UserProfile, Voice } from "../services/api";
 import { useVoiceStore } from "../store/voiceStore";
 import { estimateSpeechSeconds, formatNarrationSeconds } from "../utils/credits";
-import { buildReferralMiniAppUrl, buildReferralShareUrl, buildTelegramMiniAppShareDialogUrl } from "../utils/referralLink";
+import {
+  buildReferralMiniAppUrl,
+  buildReferralShareUrl,
+  buildTelegramMiniAppShareDialogUrl,
+  openTelegramMiniAppShareDialog
+} from "../utils/referralLink";
 
 const TOPUP_STARTER_PACK = {
   productType: "credits" as const,
@@ -137,11 +141,7 @@ export const GeneratePage = () => {
     }
     const share = buildTelegramMiniAppShareDialogUrl(urlToShare, t("profile.inviteShareCaption"));
     trackAnalytics("referral_link_shared", { source: "post_generation" });
-    try {
-      WebApp.openTelegramLink?.(share);
-    } catch {
-      window.open(share, "_blank", "noopener,noreferrer");
-    }
+    openTelegramMiniAppShareDialog(share);
   };
 
   const handlePostGenReferralCopy = async () => {
