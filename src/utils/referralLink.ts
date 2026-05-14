@@ -102,6 +102,19 @@ export function buildReferralShareUrl(inviterTelegramId: number): string | null 
   return buildReferralMiniAppUrl(inviterTelegramId);
 }
 
+/**
+ * Ссылка на диалог «Поделиться» (`t.me/share/url`).
+ * С параметром `text=` многие клиенты Telegram показывают только текст + обычную ссылку без превью Mini App и без кнопки «Открыть».
+ * По умолчанию передаём только `url`. Вернуть подпись: VITE_REFERRAL_SHARE_INCLUDE_CAPTION=1
+ */
+export function buildTelegramMiniAppShareDialogUrl(miniAppUrl: string, caption?: string): string {
+  const enc = encodeURIComponent(miniAppUrl);
+  if (import.meta.env.VITE_REFERRAL_SHARE_INCLUDE_CAPTION?.trim() === "1" && caption?.trim()) {
+    return `https://t.me/share/url?url=${enc}&text=${encodeURIComponent(caption.trim())}`;
+  }
+  return `https://t.me/share/url?url=${enc}`;
+}
+
 type TelegramWebAppStart = {
   startParam?: string;
   initData?: string;

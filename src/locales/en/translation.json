@@ -163,6 +163,7 @@
     "inviteSubtitle": "Invite creators and unlock bonus voice time. Rewards apply after real use — friends get bonus seconds after their first successful voiceover; you earn more after they download.",
     "copyInviteLink": "Copy invite link",
     "shareInvite": "Share in Telegram",
+    "shareInviteLinkPreviewHint": "Share sends the link only so Telegram can show the Mini App preview with Open. Add your own message in the chat before sending if you like.",
     "copied": "Copied!",
     "inviteLinkMissing": "Set VITE_TELEGRAM_BOT_USERNAME in the app env to enable invite links.",
     "inviteShareCaption": "Create studio-quality AI voiceovers in seconds with VoiceStudio Pro 🔥\n\nI use it for content creation and narration.",

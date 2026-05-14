@@ -9,7 +9,7 @@ import { useTelegram } from "../hooks/useTelegram";
 import { trackAnalytics } from "../lib/analytics";
 import { getUserProfile, updateUserLanguage, UserProfile } from "../services/api";
 import { LANGUAGE_STORAGE_KEY } from "../i18n";
-import { buildReferralMiniAppUrl, buildReferralShareUrl } from "../utils/referralLink";
+import { buildReferralMiniAppUrl, buildReferralShareUrl, buildTelegramMiniAppShareDialogUrl } from "../utils/referralLink";
 const FALLBACK_TELEGRAM_ID = 123456789;
 const SUPPORT_LINK = import.meta.env.VITE_SUPPORT_TELEGRAM_LINK || "";
 
@@ -115,9 +115,7 @@ export const ProfilePage = () => {
     if (!urlToShare) {
       return;
     }
-    const text = encodeURIComponent(t("profile.inviteShareCaption"));
-    const url = encodeURIComponent(urlToShare);
-    const share = `https://t.me/share/url?url=${url}&text=${text}`;
+    const share = buildTelegramMiniAppShareDialogUrl(urlToShare, t("profile.inviteShareCaption"));
     trackAnalytics("referral_link_shared", { source: "profile" });
     try {
       WebApp.openTelegramLink?.(share);
@@ -255,6 +253,7 @@ export const ProfilePage = () => {
                 {t("profile.shareInvite")}
               </Button>
             </div>
+            <p className="text-[11px] leading-snug text-slate-500 dark:text-slate-400">{t("profile.shareInviteLinkPreviewHint")}</p>
           </div>
         )}
       </div>

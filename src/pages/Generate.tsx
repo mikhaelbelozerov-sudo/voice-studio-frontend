@@ -20,7 +20,7 @@ import { trackAnalytics } from "../lib/analytics";
 import { ackReferralDownload, generateAudio, getUserProfile, getVoices, UserProfile, Voice } from "../services/api";
 import { useVoiceStore } from "../store/voiceStore";
 import { estimateSpeechSeconds, formatNarrationSeconds } from "../utils/credits";
-import { buildReferralMiniAppUrl, buildReferralShareUrl } from "../utils/referralLink";
+import { buildReferralMiniAppUrl, buildReferralShareUrl, buildTelegramMiniAppShareDialogUrl } from "../utils/referralLink";
 
 const TOPUP_STARTER_PACK = {
   productType: "credits" as const,
@@ -135,9 +135,7 @@ export const GeneratePage = () => {
     if (!urlToShare) {
       return;
     }
-    const textEnc = encodeURIComponent(t("profile.inviteShareCaption"));
-    const urlEnc = encodeURIComponent(urlToShare);
-    const share = `https://t.me/share/url?url=${urlEnc}&text=${textEnc}`;
+    const share = buildTelegramMiniAppShareDialogUrl(urlToShare, t("profile.inviteShareCaption"));
     trackAnalytics("referral_link_shared", { source: "post_generation" });
     try {
       WebApp.openTelegramLink?.(share);
@@ -539,6 +537,7 @@ export const GeneratePage = () => {
               {t("referral.shareTelegram")}
             </Button>
           </div>
+          <p className="mt-2 text-[11px] leading-snug text-slate-500 dark:text-slate-400">{t("profile.shareInviteLinkPreviewHint")}</p>
         </div>
       ) : null}
 

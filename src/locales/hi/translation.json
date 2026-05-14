@@ -163,6 +163,7 @@
     "inviteSubtitle": "VoiceStudio Pro क्रिएटर दोस्तों के साथ शेयर करें और बोनस वॉइस टाइम पाएं। रिवॉर्ड असली इस्तेमाल के बाद: दोस्त को पहली सफल जनरेशन के बाद; आपको डाउनलोड के बाद।",
     "copyInviteLink": "लिंक कॉपी करें",
     "shareInvite": "Telegram में शेयर",
+    "shareInviteLinkPreviewHint": "शेयर में केवल लिंक जाता है ताकि Telegram Mini App प्रीव्यू और «खोलें» दिखा सके। भेजने से पहले अपना संदेश जोड़ सकते हैं।",
     "copied": "कॉपी हो गया!",
     "inviteLinkMissing": "लिंक के लिए VITE_TELEGRAM_BOT_USERNAME सेट करें।",
     "inviteShareCaption": "VoiceStudio Pro से सेकंडों में स्टूडियो-क्वालिटी AI वॉइसओवर बनाएं 🔥\n\nमैं इसे कंटेंट और नैरेशन के लिए इस्तेमाल करता हूँ।",

@@ -14,6 +14,8 @@ interface ImportMetaEnv {
   readonly VITE_PUBLIC_MINI_APP_ORIGIN?: string;
   /** 0 = «Поделиться» использует ту же ссылку, что и копирование; иначе при main/https в шаринг идёт t.me/бот/app для превью с кнопкой «Открыть» */
   readonly VITE_REFERRAL_SHARE_TELEGRAM_CARD?: string;
+  /** 1 = в t.me/share/url снова добавить text= (подпись); часто ломает превью Mini App с кнопкой «Открыть» */
+  readonly VITE_REFERRAL_SHARE_INCLUDE_CAPTION?: string;
   readonly VITE_PREMIUM_VOICE_IDS?: string;
 }
 
