@@ -41,6 +41,31 @@ export function buildReferralMiniAppUrl(inviterTelegramId: number): string | nul
   return `https://t.me/${bot}/${slug}?startapp=${encodeURIComponent(payload)}`;
 }
 
+function readTelegramStartParamRaw(): string | undefined {
+  if (typeof window === "undefined") {
+    return undefined;
+  }
+  const twa = (window as {
+    Telegram?: { WebApp?: { startParam?: string; initDataUnsafe?: { start_param?: string } } };
+  }).Telegram?.WebApp;
+  if (!twa) {
+    return undefined;
+  }
+  if (typeof twa.startParam === "string" && twa.startParam.length > 0) {
+    return twa.startParam;
+  }
+  const sp = twa.initDataUnsafe?.start_param;
+  return typeof sp === "string" && sp.length > 0 ? sp : undefined;
+}
+
+/**
+ * Mini App opened via referral direct link (?startapp=ref_<telegramId>).
+ * On Telegram iOS, expand/requestFullscreen during this launch can reload the WebView in a loop — skip that path in useTelegram.
+ */
+export function isReferralMiniAppLaunch(): boolean {
+  return parseReferrerFromStartParam(readTelegramStartParamRaw()) != null;
+}
+
 export function parseReferrerFromStartParam(raw: string | undefined | null): number | null {
   if (!raw || typeof raw !== "string") {
     return null;

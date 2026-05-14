@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import WebApp from "@twa-dev/sdk";
+import { isReferralMiniAppLaunch } from "../utils/referralLink";
 
 export type AppTheme = "light" | "dark";
 const THEME_STORAGE_KEY = "voice_studio_theme";
@@ -63,6 +64,10 @@ function tryExpandTelegramWebApp(mode: ExpandMode = "expandAndFullscreen"): void
 }
 
 function scheduleTelegramExpandRetries(): () => void {
+  /** Referral startapp + expand на iOS (и иногда Android) даёт бесконечное переоткрытие WebView. */
+  if (isReferralMiniAppLaunch()) {
+    return () => {};
+  }
   const ios = isTelegramIos();
   const delaysMs = ios ? [0, 200, 500] : [0, 80, 200, 450, 900, 1600, 2800];
   const bootMode = ios ? "expandOnly" : "expandAndFullscreen";
@@ -179,7 +184,11 @@ export const useTelegram = () => {
 
   useEffect(() => {
     WebApp.ready();
-    const cancelExpandSchedule = scheduleTelegramExpandRetries();
+    let cancelExpandSchedule = () => {};
+    /** Следующий тик: start_param у WebApp на iOS иногда заполняется сразу после ready(). */
+    const scheduleId = window.setTimeout(() => {
+      cancelExpandSchedule = scheduleTelegramExpandRetries();
+    }, 0);
     queueMicrotask(() => {
       syncTelegramContentSafeAreaVars();
     });
@@ -187,6 +196,7 @@ export const useTelegram = () => {
       syncTelegramContentSafeAreaVars();
     }, 200);
     return () => {
+      window.clearTimeout(scheduleId);
       cancelExpandSchedule();
       window.clearTimeout(insetRetry);
     };
@@ -195,6 +205,11 @@ export const useTelegram = () => {
   /** После первого жеста — повторный expand; на iOS без requestFullscreen (см. tryExpand). */
   useEffect(() => {
     const onFirstPointer = () => {
+      if (isReferralMiniAppLaunch()) {
+        document.removeEventListener("touchstart", onFirstPointer);
+        document.removeEventListener("click", onFirstPointer);
+        return;
+      }
       tryExpandTelegramWebApp(isTelegramIos() ? "expandOnly" : "expandAndFullscreen");
       document.removeEventListener("touchstart", onFirstPointer);
       document.removeEventListener("click", onFirstPointer);
@@ -249,7 +264,7 @@ export const useTelegram = () => {
 
     const onViewportChanged = (payload?: { isStateStable?: boolean }) => {
       syncTelegramContentSafeAreaVars();
-      if (payload?.isStateStable !== false && !isTelegramIos()) {
+      if (payload?.isStateStable !== false && !isTelegramIos() && !isReferralMiniAppLaunch()) {
         tryExpandTelegramWebApp("expandOnly");
       }
     };
