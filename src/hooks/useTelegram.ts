@@ -22,6 +22,10 @@ function getTelegramWebApp(): TelegramWebApp | undefined {
   return (window as unknown as { Telegram?: { WebApp: TelegramWebApp } }).Telegram?.WebApp;
 }
 
+function isTelegramIos(): boolean {
+  return String(getTelegramWebApp()?.platform ?? "").toLowerCase() === "ios";
+}
+
 type ExpandMode = "expandOnly" | "expandAndFullscreen";
 
 /**
@@ -31,6 +35,9 @@ type ExpandMode = "expandOnly" | "expandAndFullscreen";
  * Важно: не вызывать requestFullscreen() на каждом viewportChanged — на части клиентов
  * (в т.ч. при открытии по startapp / реферальной ссылке) это приводит к зацикливанию
  * перезапуска WebView. Полноэкран — только в начальных ретраях и по первому жесту.
+ *
+ * iOS Telegram (в т.ч. 12.x): requestFullscreen и частые expand при pageshow/viewport
+ * дают бесконечное переоткрытие Mini App с deep link — на iOS используем только expand().
  */
 function tryExpandTelegramWebApp(mode: ExpandMode = "expandAndFullscreen"): void {
   const tg = getTelegramWebApp() as TelegramWebAppWithFullscreen | undefined;
@@ -45,6 +52,9 @@ function tryExpandTelegramWebApp(mode: ExpandMode = "expandAndFullscreen"): void
   if (mode === "expandOnly") {
     return;
   }
+  if (isTelegramIos()) {
+    return;
+  }
   try {
     tg.requestFullscreen?.();
   } catch {
@@ -53,15 +63,22 @@ function tryExpandTelegramWebApp(mode: ExpandMode = "expandAndFullscreen"): void
 }
 
 function scheduleTelegramExpandRetries(): () => void {
-  const delaysMs = [0, 80, 200, 450, 900, 1600, 2800];
-  const ids = delaysMs.map((ms) => window.setTimeout(() => tryExpandTelegramWebApp("expandAndFullscreen"), ms));
+  const ios = isTelegramIos();
+  const delaysMs = ios ? [0, 200, 500] : [0, 80, 200, 450, 900, 1600, 2800];
+  const bootMode = ios ? "expandOnly" : "expandAndFullscreen";
+  const ids = delaysMs.map((ms) => window.setTimeout(() => tryExpandTelegramWebApp(bootMode), ms));
 
-  const onPageShow = () => tryExpandTelegramWebApp("expandAndFullscreen");
-  window.addEventListener("pageshow", onPageShow);
+  /** На iOS pageshow при переоткрытии WebView часто дублируется и вместе с expand провоцирует цикл. */
+  const onPageShow = ios ? null : () => tryExpandTelegramWebApp("expandAndFullscreen");
+  if (onPageShow) {
+    window.addEventListener("pageshow", onPageShow);
+  }
 
   return () => {
     ids.forEach((id) => window.clearTimeout(id));
-    window.removeEventListener("pageshow", onPageShow);
+    if (onPageShow) {
+      window.removeEventListener("pageshow", onPageShow);
+    }
   };
 }
 
@@ -175,10 +192,10 @@ export const useTelegram = () => {
     };
   }, []);
 
-  /** iOS: иногда разворот срабатывает надёжнее после первого жеста пользователя. */
+  /** После первого жеста — повторный expand; на iOS без requestFullscreen (см. tryExpand). */
   useEffect(() => {
     const onFirstPointer = () => {
-      tryExpandTelegramWebApp("expandAndFullscreen");
+      tryExpandTelegramWebApp(isTelegramIos() ? "expandOnly" : "expandAndFullscreen");
       document.removeEventListener("touchstart", onFirstPointer);
       document.removeEventListener("click", onFirstPointer);
     };
@@ -232,7 +249,7 @@ export const useTelegram = () => {
 
     const onViewportChanged = (payload?: { isStateStable?: boolean }) => {
       syncTelegramContentSafeAreaVars();
-      if (payload?.isStateStable !== false) {
+      if (payload?.isStateStable !== false && !isTelegramIos()) {
         tryExpandTelegramWebApp("expandOnly");
       }
     };
