@@ -7,7 +7,7 @@ import { Layout } from "./components/layout/Layout";
 import { DropdownMenu } from "./components/ui/DropdownMenu";
 import { usePreserveTelegramMiniAppBootstrap } from "./hooks/usePreserveTelegramMiniAppBootstrap";
 import { useReferralDeepLink } from "./hooks/useReferralDeepLink";
-import { useTelegram } from "./hooks/useTelegram";
+import { applyTelegramBottomBarColor, useTelegram } from "./hooks/useTelegram";
 import { useVirtualKeyboard } from "./hooks/useVirtualKeyboard";
 import { GeneratePage } from "./pages/Generate";
 import { LibraryPage } from "./pages/Library";
@@ -25,7 +25,7 @@ function RedirectToGenerate() {
 
 function App() {
   const { t, i18n } = useTranslation();
-  const { telegramId } = useTelegram();
+  const { telegramId, theme } = useTelegram();
   const { suffix: tgBootstrapSuffix } = usePreserveTelegramMiniAppBootstrap();
   useReferralDeepLink(telegramId);
   const { showKeyboardDone, dismissKeyboard } = useVirtualKeyboard();
@@ -75,12 +75,16 @@ function App() {
     const handleDoneClick = () => {
       dismissKeyboard();
     };
+    applyTelegramBottomBarColor(theme);
+
     if (showKeyboardDone) {
       mainButton.setText(t("common.keyboardDone"));
       mainButton.setParams({
         is_active: true,
         is_visible: true,
-        has_shine_effect: false
+        has_shine_effect: false,
+        color: "#2563eb",
+        text_color: "#ffffff"
       });
       mainButton.onClick(handleDoneClick);
       mainButton.show();
@@ -92,8 +96,9 @@ function App() {
     return () => {
       mainButton.offClick(handleDoneClick);
       mainButton.hide();
+      applyTelegramBottomBarColor(theme);
     };
-  }, [dismissKeyboard, showKeyboardDone, t]);
+  }, [dismissKeyboard, showKeyboardDone, t, theme]);
 
   return (
     <Layout>

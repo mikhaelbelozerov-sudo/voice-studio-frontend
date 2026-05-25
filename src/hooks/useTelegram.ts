@@ -6,10 +6,23 @@ export type AppTheme = "light" | "dark";
 const THEME_STORAGE_KEY = "voice_studio_theme";
 
 /** Совпадает с Tailwind bg-slate-100 / dark:bg-slate-950 в App */
-const APP_SCREEN_BG = {
+export const APP_SCREEN_BG = {
   light: "#f1f5f9",
   dark: "#020617"
 } as const;
+
+export function applyTelegramBottomBarColor(theme: AppTheme): void {
+  const screenBg = APP_SCREEN_BG[theme];
+  const tg = getTelegramWebApp();
+  if (!tg || typeof tg.setBottomBarColor !== "function") {
+    return;
+  }
+  try {
+    tg.setBottomBarColor(screenBg);
+  } catch {
+    /* старая версия клиента */
+  }
+}
 
 type TelegramWebApp = typeof WebApp;
 type TelegramWebAppWithFullscreen = TelegramWebApp & {
@@ -94,9 +107,7 @@ function applyTelegramChrome(isDark: boolean) {
   try {
     tg.setHeaderColor(screenBg);
     tg.setBackgroundColor(screenBg);
-    if (typeof tg.setBottomBarColor === "function") {
-      tg.setBottomBarColor(screenBg);
-    }
+    applyTelegramBottomBarColor(isDark ? "dark" : "light");
   } catch {
     /* старая версия клиента */
   }

@@ -98,12 +98,17 @@ body {
     visibility 0.2s ease;
 }
 
-/** Клавиатура открыта — убираем таббар с экрана (не над клавиатурой) */
+/** Клавиатура открыта — таббар полностью убираем (не оставляем тёмную полосу над MainButton) */
 .vs-keyboard-open .app-bottom-nav {
-  transform: translateY(100%);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
+  display: none;
+}
+
+/** Без отступа под скрытый таббар — иначе пустая тёмная зона над кнопкой «Готово» */
+.vs-keyboard-open .app-main {
+  padding-bottom: max(
+    env(safe-area-inset-bottom, 0px),
+    var(--tg-content-safe-area-inset-bottom, 0px)
+  );
 }
 
 @supports (padding: constant(safe-area-inset-bottom)) {
@@ -113,6 +118,13 @@ body {
         constant(safe-area-inset-bottom),
         var(--tg-content-safe-area-inset-bottom, 0px)
       )
+    );
+  }
+
+  .vs-keyboard-open .app-main {
+    padding-bottom: max(
+      constant(safe-area-inset-bottom),
+      var(--tg-content-safe-area-inset-bottom, 0px)
     );
   }
 
