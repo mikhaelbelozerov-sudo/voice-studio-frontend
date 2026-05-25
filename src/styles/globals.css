@@ -98,12 +98,17 @@ body {
     visibility 0.2s ease;
 }
 
-/** Клавиатура открыта — таббар полностью убираем (не оставляем тёмную полосу над MainButton) */
+/** Клавиатура открыта — таббар убираем; фон под «дырой» Telegram = как у приложения (не чёрный) */
 .vs-keyboard-open .app-bottom-nav {
   display: none;
 }
 
-/** Без отступа под скрытый таббар — иначе пустая тёмная зона над кнопкой «Готово» */
+html.vs-keyboard-open,
+html.vs-keyboard-open body,
+html.vs-keyboard-open #root {
+  background: var(--tg-theme-bg-color, #f1f5f9);
+}
+
 .vs-keyboard-open .app-main {
   padding-bottom: max(
     env(safe-area-inset-bottom, 0px),

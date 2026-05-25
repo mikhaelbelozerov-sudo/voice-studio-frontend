@@ -1,15 +1,13 @@
 import { Home, Library, UserCircle, WalletCards } from "lucide-react";
-import WebApp from "@twa-dev/sdk";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { KeyboardUiProvider } from "./contexts/KeyboardUiContext";
 import { Layout } from "./components/layout/Layout";
 import { DropdownMenu } from "./components/ui/DropdownMenu";
-import { KeyboardDoneBar } from "./components/ui/KeyboardDoneBar";
 import { usePreserveTelegramMiniAppBootstrap } from "./hooks/usePreserveTelegramMiniAppBootstrap";
 import { useReferralDeepLink } from "./hooks/useReferralDeepLink";
 import { useTelegram } from "./hooks/useTelegram";
-import { useVirtualKeyboard } from "./hooks/useVirtualKeyboard";
 import { GeneratePage } from "./pages/Generate";
 import { LibraryPage } from "./pages/Library";
 import { PricingPage } from "./pages/Pricing";
@@ -29,7 +27,6 @@ function App() {
   const { telegramId } = useTelegram();
   const { suffix: tgBootstrapSuffix } = usePreserveTelegramMiniAppBootstrap();
   useReferralDeepLink(telegramId);
-  const { showKeyboardDone, dismissKeyboard } = useVirtualKeyboard();
   const [showLanguageModal, setShowLanguageModal] = useState(() => !window.localStorage.getItem(LANGUAGE_STORAGE_KEY));
 
   const navItems = useMemo(
@@ -71,16 +68,8 @@ function App() {
     document.documentElement.dir = i18n.language.startsWith("ar") ? "rtl" : "ltr";
   }, [i18n.language]);
 
-  /** Native MainButton даёт чёрную полосу bottom bar — используем свою панель KeyboardDoneBar. */
-  useEffect(() => {
-    try {
-      WebApp.MainButton.hide();
-    } catch {
-      /* */
-    }
-  }, []);
-
   return (
+    <KeyboardUiProvider>
     <Layout>
       <div className="app-main mx-auto min-h-screen w-full max-w-3xl bg-slate-100 px-4 pt-2 dark:bg-slate-950">
         <Routes>
@@ -110,8 +99,6 @@ function App() {
           </div>
         </nav>
 
-        <KeyboardDoneBar visible={showKeyboardDone} label={t("common.keyboardDone")} onDone={dismissKeyboard} />
-
         {showLanguageModal ? (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 px-4">
             <div className="w-full max-w-sm rounded-2xl bg-white p-5 shadow-xl dark:bg-slate-900">
@@ -129,6 +116,7 @@ function App() {
         ) : null}
       </div>
     </Layout>
+    </KeyboardUiProvider>
   );
 }
 

@@ -10,7 +10,6 @@ function isFormField(el: EventTarget | null): boolean {
   return el.matches(FORM_SELECTOR) || el.closest(FORM_SELECTOR) !== null;
 }
 
-/** Поля, где пользователь набирает текст озвучки (показываем in-app KeyboardDoneBar). */
 function isTextLikeField(el: EventTarget | null): boolean {
   if (!el || !(el instanceof HTMLElement)) {
     return false;
@@ -25,6 +24,13 @@ function isTextLikeField(el: EventTarget | null): boolean {
   return false;
 }
 
+/** Telegram иногда оставляет padding-bottom на <html> после MainButton — даёт чёрную полосу при скролле. */
+export function clearTelegramWebViewChromePadding(): void {
+  const root = document.documentElement;
+  root.style.paddingBottom = "";
+  root.style.boxSizing = "";
+}
+
 function hideTelegramKeyboard(): void {
   const wtg = (window as { Telegram?: { WebApp?: { hideKeyboard?: () => void } } }).Telegram?.WebApp;
   if (typeof wtg?.hideKeyboard !== "function") {
@@ -33,7 +39,7 @@ function hideTelegramKeyboard(): void {
   try {
     wtg.hideKeyboard();
   } catch {
-    /* Bot API < 9.1 или не Mini App */
+    /* */
   }
 }
 
@@ -49,7 +55,7 @@ function readKeyboardUiState(): { open: boolean; showDone: boolean } {
 
 /**
  * Скрывает нижний таббар при наборе текста (класс vs-keyboard-open на html)
- * и даёт способ программно закрыть клавиатуру (панель «Готово» в App).
+ * и даёт способ закрыть клавиатуру (кнопка «Готово» под полем ввода, не fixed).
  */
 export function useVirtualKeyboard() {
   const [isKeyboardOpen, setKeyboardOpen] = useState(false);
@@ -61,9 +67,20 @@ export function useVirtualKeyboard() {
     if (ae instanceof HTMLElement) {
       ae.blur();
     }
+    clearTelegramWebViewChromePadding();
     document.documentElement.classList.remove("vs-keyboard-open");
     setKeyboardOpen(false);
     setShowKeyboardDone(false);
+  }, []);
+
+  useEffect(() => {
+    clearTelegramWebViewChromePadding();
+    try {
+      const wtg = (window as { Telegram?: { WebApp?: { MainButton?: { hide: () => void } } } }).Telegram?.WebApp;
+      wtg?.MainButton?.hide();
+    } catch {
+      /* */
+    }
   }, []);
 
   useEffect(() => {
@@ -74,6 +91,9 @@ export function useVirtualKeyboard() {
       setKeyboardOpen(open);
       setShowKeyboardDone(showDone);
       root.classList.toggle("vs-keyboard-open", open);
+      if (!open) {
+        clearTelegramWebViewChromePadding();
+      }
     };
 
     const syncFromActiveElement = () => {
@@ -89,8 +109,16 @@ export function useVirtualKeyboard() {
         clearTimeout(hideTimer);
         hideTimer = undefined;
       }
+      clearTelegramWebViewChromePadding();
       const { open, showDone } = readKeyboardUiState();
       applyUiState(open, showDone);
+
+      const focusTarget = event.target;
+      if (focusTarget instanceof HTMLTextAreaElement) {
+        window.setTimeout(() => {
+          focusTarget.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        }, 280);
+      }
     };
 
     const onFocusOut = () => {
@@ -100,42 +128,51 @@ export function useVirtualKeyboard() {
       hideTimer = window.setTimeout(() => {
         hideTimer = undefined;
         syncFromActiveElement();
+        clearTelegramWebViewChromePadding();
       }, 250);
     };
 
-    const vv = window.visualViewport;
-    const onViewportResize = () => {
-      if (!vv) {
-        return;
-      }
-      /**
-       * Пока поле в фокусе, viewport может ещё не сжаться (клавиатура анимируется)
-       * или на части клиентов ratio не падает ниже 0.72 — нельзя вызывать applyOpen(false),
-       * иначе пропадает MainButton «Готово».
-       */
+    const onScrollOrTouch = () => {
+      clearTelegramWebViewChromePadding();
       if (!isTextLikeField(document.activeElement)) {
         return;
       }
-      const ratio = vv.height / window.innerHeight;
-      if (ratio < 0.72) {
-        applyUiState(true, true);
+      const active = document.activeElement;
+      if (!(active instanceof HTMLElement)) {
+        return;
+      }
+      const rect = active.getBoundingClientRect();
+      const vv = window.visualViewport;
+      const visibleBottom = vv ? vv.offsetTop + vv.height : window.innerHeight;
+      if (rect.bottom < -40 || rect.top > visibleBottom + 40) {
+        dismissKeyboard();
       }
     };
 
     document.addEventListener("focusin", onFocusIn, true);
     document.addEventListener("focusout", onFocusOut, true);
-    vv?.addEventListener("resize", onViewportResize);
+    window.addEventListener("scroll", onScrollOrTouch, { passive: true, capture: true });
+    window.addEventListener("touchmove", onScrollOrTouch, { passive: true, capture: true });
+
+    const tg = (window as {
+      Telegram?: { WebApp?: { onEvent?: (n: string, h: () => void) => void; offEvent?: (n: string, h: () => void) => void } };
+    }).Telegram?.WebApp;
+    const onViewport = () => clearTelegramWebViewChromePadding();
+    tg?.onEvent?.("viewportChanged", onViewport);
 
     return () => {
       document.removeEventListener("focusin", onFocusIn, true);
       document.removeEventListener("focusout", onFocusOut, true);
-      vv?.removeEventListener("resize", onViewportResize);
+      window.removeEventListener("scroll", onScrollOrTouch, true);
+      window.removeEventListener("touchmove", onScrollOrTouch, true);
+      tg?.offEvent?.("viewportChanged", onViewport);
       if (hideTimer !== undefined) {
         clearTimeout(hideTimer);
       }
       applyUiState(false, false);
+      clearTelegramWebViewChromePadding();
     };
-  }, []);
+  }, [dismissKeyboard]);
 
   return { isKeyboardOpen, showKeyboardDone, dismissKeyboard };
 }
