@@ -114,13 +114,15 @@ function App() {
     }
     const tg = (window as { Telegram?: { WebApp?: { onEvent?: (n: string, h: () => void) => void; offEvent?: (n: string, h: () => void) => void } } })
       .Telegram?.WebApp;
-    if (!tg?.onEvent || !tg.offEvent) {
+    const onEvent = tg?.onEvent;
+    const offEvent = tg?.offEvent;
+    if (!onEvent || !offEvent) {
       return;
     }
     const repaint = () => applyTelegramBottomBarColor(theme);
-    tg.onEvent("viewportChanged", repaint);
+    onEvent("viewportChanged", repaint);
     return () => {
-      tg.offEvent("viewportChanged", repaint);
+      offEvent("viewportChanged", repaint);
     };
   }, [showKeyboardDone, theme]);
 
