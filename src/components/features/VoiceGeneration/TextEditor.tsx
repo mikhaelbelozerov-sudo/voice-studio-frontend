@@ -1,29 +1,34 @@
 import { FileUp, X } from "lucide-react";
 import { useRef, useState, type ChangeEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { Button } from "../../ui/Button";
+import { dismissTelegramKeyboardField } from "../../../utils/telegramWebView";
 import { trackAnalytics } from "../../../lib/analytics";
 
 interface TextEditorProps {
   value: string;
   maxLength?: number;
   onChange: (value: string) => void;
-  showDoneButton?: boolean;
-  onDone?: () => void;
 }
 
 function normalizeImportedText(raw: string): string {
   return raw.replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim();
 }
 
-export const TextEditor = ({ value, onChange, maxLength = 1000, showDoneButton = false, onDone }: TextEditorProps) => {
+export const TextEditor = ({ value, onChange, maxLength = 1000 }: TextEditorProps) => {
   const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [fileNotice, setFileNotice] = useState<"truncated" | "empty" | "readError" | null>(null);
+  const [isFocused, setIsFocused] = useState(false);
   const hasText = value.trim().length > 0;
 
   const clearFileNoticeSoon = () => {
     window.setTimeout(() => setFileNotice(null), 6000);
+  };
+
+  const handleDismissKeyboard = () => {
+    dismissTelegramKeyboardField(textareaRef.current);
+    setIsFocused(false);
   };
 
   const handlePickFile = () => {
@@ -82,7 +87,16 @@ export const TextEditor = ({ value, onChange, maxLength = 1000, showDoneButton =
       />
       <div className="flex items-center justify-between gap-2">
         <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{t("voice.text")}</h2>
-        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+        <div className="flex shrink-0 items-center gap-2">
+          {isFocused ? (
+            <button
+              type="button"
+              onClick={handleDismissKeyboard}
+              className="text-xs font-medium text-blue-600 underline-offset-2 hover:underline dark:text-blue-400"
+            >
+              {t("common.keyboardDone")}
+            </button>
+          ) : null}
           <span className="text-xs text-slate-500 dark:text-slate-400">
             {value.length}/{maxLength}
           </span>
@@ -121,22 +135,17 @@ export const TextEditor = ({ value, onChange, maxLength = 1000, showDoneButton =
               : t("voice.fileReadError")}
         </p>
       ) : null}
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
-        <textarea
-          value={value}
-          maxLength={maxLength}
-          onChange={(event) => onChange(event.target.value)}
-          placeholder={t("voice.textPlaceholder")}
-          className="min-h-36 w-full resize-y border-0 bg-transparent p-4 text-sm text-slate-900 outline-none transition focus:ring-2 focus:ring-blue-100 dark:text-slate-100 dark:focus:ring-blue-900/40"
-        />
-        {showDoneButton && onDone ? (
-          <div className="flex justify-end border-t border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-700 dark:bg-slate-800">
-            <Button type="button" className="h-9 min-w-[7rem] px-4 text-sm font-semibold" onClick={onDone}>
-              {t("common.keyboardDone")}
-            </Button>
-          </div>
-        ) : null}
-      </div>
+      <textarea
+        ref={textareaRef}
+        value={value}
+        maxLength={maxLength}
+        enterKeyHint="done"
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder={t("voice.textPlaceholder")}
+        className="min-h-36 w-full resize-y rounded-2xl border border-slate-200 bg-white p-4 text-sm text-slate-900 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+      />
     </div>
   );
 };

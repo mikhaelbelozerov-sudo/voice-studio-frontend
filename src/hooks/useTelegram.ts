@@ -1,55 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
 import WebApp from "@twa-dev/sdk";
+import { APP_SCREEN_BG, type AppTheme } from "../constants/telegramTheme";
+import {
+  hideTelegramMainButton,
+  isTelegramKeyboardLikelyOpen,
+  paintTelegramWebViewBackground,
+  syncTelegramWebViewAfterViewport
+} from "../utils/telegramWebView";
 import { isReferralMiniAppLaunch } from "../utils/referralLink";
 
-export type AppTheme = "light" | "dark";
+export type { AppTheme } from "../constants/telegramTheme";
+export { APP_SCREEN_BG } from "../constants/telegramTheme";
 const THEME_STORAGE_KEY = "voice_studio_theme";
-
-/** Совпадает с Tailwind bg-slate-100 / dark:bg-slate-950 в App */
-export const APP_SCREEN_BG = {
-  light: "#f1f5f9",
-  dark: "#020617"
-} as const;
-
-export function applyTelegramBottomBarColor(theme: AppTheme): void {
-  const screenBg = APP_SCREEN_BG[theme];
-  const tg = getTelegramWebApp();
-  if (!tg) {
-    return;
-  }
-  try {
-    if (typeof tg.setBackgroundColor === "function") {
-      tg.setBackgroundColor(screenBg);
-    }
-    if (typeof tg.setBottomBarColor === "function") {
-      tg.setBottomBarColor(screenBg);
-    }
-  } catch {
-    /* старая версия клиента */
-  }
-}
-
-/**
- * MainButton.show() на первом кадре иногда рисует bottom bar чёрным до применения цвета.
- * Повторяем setBottomBarColor после layout и с небольшой задержкой.
- */
-export function scheduleTelegramBottomBarRepaint(theme: AppTheme): () => void {
-  const paint = () => applyTelegramBottomBarColor(theme);
-  paint();
-  let rafB = 0;
-  const rafA = requestAnimationFrame(() => {
-    paint();
-    rafB = requestAnimationFrame(paint);
-  });
-  const timers = [16, 48, 120, 240].map((ms) => window.setTimeout(paint, ms));
-  return () => {
-    cancelAnimationFrame(rafA);
-    if (rafB) {
-      cancelAnimationFrame(rafB);
-    }
-    timers.forEach((id) => window.clearTimeout(id));
-  };
-}
 
 type TelegramWebApp = typeof WebApp;
 type TelegramWebAppWithFullscreen = TelegramWebApp & {
@@ -125,7 +87,7 @@ function scheduleTelegramExpandRetries(): () => void {
 
 function applyTelegramChrome(isDark: boolean) {
   const screenBg = (isDark ? APP_SCREEN_BG.dark : APP_SCREEN_BG.light) as `#${string}`;
-  document.documentElement.style.setProperty("--tg-theme-bg-color", screenBg);
+  paintTelegramWebViewBackground(isDark ? "dark" : "light");
 
   const tg = getTelegramWebApp();
   if (!tg) {
@@ -133,8 +95,6 @@ function applyTelegramChrome(isDark: boolean) {
   }
   try {
     tg.setHeaderColor(screenBg);
-    tg.setBackgroundColor(screenBg);
-    applyTelegramBottomBarColor(isDark ? "dark" : "light");
   } catch {
     /* старая версия клиента */
   }
@@ -218,6 +178,7 @@ export const useTelegram = () => {
 
   useEffect(() => {
     WebApp.ready();
+    hideTelegramMainButton();
     let cancelExpandSchedule = () => {};
     /** Следующий тик: start_param у WebApp на iOS иногда заполняется сразу после ready(). */
     const scheduleId = window.setTimeout(() => {
@@ -292,11 +253,17 @@ export const useTelegram = () => {
 
     const onLayout = () => {
       syncTelegramContentSafeAreaVars();
+      syncTelegramWebViewAfterViewport(theme);
     };
 
     const onViewportChanged = (payload?: { isStateStable?: boolean }) => {
       syncTelegramContentSafeAreaVars();
-      if (payload?.isStateStable !== false && allowProgrammaticTelegramExpand()) {
+      syncTelegramWebViewAfterViewport(theme);
+      if (
+        payload?.isStateStable !== false &&
+        allowProgrammaticTelegramExpand() &&
+        !isTelegramKeyboardLikelyOpen()
+      ) {
         tryExpandTelegramWebApp("expandOnly");
       }
     };
@@ -321,7 +288,7 @@ export const useTelegram = () => {
         }
       }
     };
-  }, []);
+  }, [theme]);
 
   const setTheme = useCallback(
     (nextTheme: AppTheme) => {

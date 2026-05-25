@@ -2,7 +2,6 @@ import { Home, Library, UserCircle, WalletCards } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom";
-import { KeyboardUiProvider } from "./contexts/KeyboardUiContext";
 import { Layout } from "./components/layout/Layout";
 import { DropdownMenu } from "./components/ui/DropdownMenu";
 import { usePreserveTelegramMiniAppBootstrap } from "./hooks/usePreserveTelegramMiniAppBootstrap";
@@ -69,7 +68,6 @@ function App() {
   }, [i18n.language]);
 
   return (
-    <KeyboardUiProvider>
     <Layout>
       <div className="app-main mx-auto min-h-screen w-full max-w-3xl bg-slate-100 px-4 pt-2 dark:bg-slate-950">
         <Routes>
@@ -116,7 +114,6 @@ function App() {
         ) : null}
       </div>
     </Layout>
-    </KeyboardUiProvider>
   );
 }
 

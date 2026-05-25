@@ -11,7 +11,6 @@ import { VoiceControls } from "../components/features/VoiceGeneration/VoiceContr
 import { VoiceSelector } from "../components/features/VoiceGeneration/VoiceSelector";
 import { VoicePresetId, VOICE_PRESET_OPTIONS } from "../constants/voicePresets";
 import { mapInterfaceLanguageToTtsCode } from "../constants/ttsLanguages";
-import { useKeyboardUi } from "../contexts/KeyboardUiContext";
 import { usePreserveTelegramMiniAppBootstrap } from "../hooks/usePreserveTelegramMiniAppBootstrap";
 import { useTelegram } from "../hooks/useTelegram";
 import { PRO_CREATOR_STARS_PRICE } from "../constants/catalog";
@@ -52,7 +51,6 @@ const PRO_CREATOR_BETA_INVOICE = {
 
 export const GeneratePage = () => {
   const { t, i18n } = useTranslation();
-  const { showKeyboardDone, dismissKeyboard } = useKeyboardUi();
   const [voices, setVoices] = useState<Voice[]>([]);
   const [isLoadingVoices, setIsLoadingVoices] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -507,13 +505,7 @@ export const GeneratePage = () => {
         ) : null}
       </div>
 
-      <TextEditor
-        value={text}
-        onChange={setText}
-        maxLength={maxScriptLen}
-        showDoneButton={showKeyboardDone}
-        onDone={dismissKeyboard}
-      />
+      <TextEditor value={text} onChange={setText} maxLength={maxScriptLen} />
 
       <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-slate-50 px-3 py-2 text-xs text-slate-600 dark:bg-slate-800 dark:text-slate-300">
         <span>{t("generate.estimatedNarration")}</span>
