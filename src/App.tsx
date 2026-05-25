@@ -7,7 +7,11 @@ import { Layout } from "./components/layout/Layout";
 import { DropdownMenu } from "./components/ui/DropdownMenu";
 import { usePreserveTelegramMiniAppBootstrap } from "./hooks/usePreserveTelegramMiniAppBootstrap";
 import { useReferralDeepLink } from "./hooks/useReferralDeepLink";
-import { applyTelegramBottomBarColor, useTelegram } from "./hooks/useTelegram";
+import {
+  applyTelegramBottomBarColor,
+  scheduleTelegramBottomBarRepaint,
+  useTelegram
+} from "./hooks/useTelegram";
 import { useVirtualKeyboard } from "./hooks/useVirtualKeyboard";
 import { GeneratePage } from "./pages/Generate";
 import { LibraryPage } from "./pages/Library";
@@ -75,7 +79,7 @@ function App() {
     const handleDoneClick = () => {
       dismissKeyboard();
     };
-    applyTelegramBottomBarColor(theme);
+    let cancelBarRepaint = () => {};
 
     if (showKeyboardDone) {
       mainButton.setText(t("common.keyboardDone"));
@@ -88,17 +92,37 @@ function App() {
       });
       mainButton.onClick(handleDoneClick);
       mainButton.show();
+      cancelBarRepaint = scheduleTelegramBottomBarRepaint(theme);
     } else {
       mainButton.offClick(handleDoneClick);
       mainButton.hide();
+      applyTelegramBottomBarColor(theme);
     }
 
     return () => {
+      cancelBarRepaint();
       mainButton.offClick(handleDoneClick);
       mainButton.hide();
       applyTelegramBottomBarColor(theme);
     };
   }, [dismissKeyboard, showKeyboardDone, t, theme]);
+
+  /** Клавиатура сжимает viewport — клиент иногда сбрасывает цвет bottom bar на первом открытии. */
+  useEffect(() => {
+    if (!showKeyboardDone) {
+      return;
+    }
+    const tg = (window as { Telegram?: { WebApp?: { onEvent?: (n: string, h: () => void) => void; offEvent?: (n: string, h: () => void) => void } } })
+      .Telegram?.WebApp;
+    if (!tg?.onEvent || !tg.offEvent) {
+      return;
+    }
+    const repaint = () => applyTelegramBottomBarColor(theme);
+    tg.onEvent("viewportChanged", repaint);
+    return () => {
+      tg.offEvent("viewportChanged", repaint);
+    };
+  }, [showKeyboardDone, theme]);
 
   return (
     <Layout>

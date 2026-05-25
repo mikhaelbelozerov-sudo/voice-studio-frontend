@@ -14,14 +14,41 @@ export const APP_SCREEN_BG = {
 export function applyTelegramBottomBarColor(theme: AppTheme): void {
   const screenBg = APP_SCREEN_BG[theme];
   const tg = getTelegramWebApp();
-  if (!tg || typeof tg.setBottomBarColor !== "function") {
+  if (!tg) {
     return;
   }
   try {
-    tg.setBottomBarColor(screenBg);
+    if (typeof tg.setBackgroundColor === "function") {
+      tg.setBackgroundColor(screenBg);
+    }
+    if (typeof tg.setBottomBarColor === "function") {
+      tg.setBottomBarColor(screenBg);
+    }
   } catch {
     /* старая версия клиента */
   }
+}
+
+/**
+ * MainButton.show() на первом кадре иногда рисует bottom bar чёрным до применения цвета.
+ * Повторяем setBottomBarColor после layout и с небольшой задержкой.
+ */
+export function scheduleTelegramBottomBarRepaint(theme: AppTheme): () => void {
+  const paint = () => applyTelegramBottomBarColor(theme);
+  paint();
+  let rafB = 0;
+  const rafA = requestAnimationFrame(() => {
+    paint();
+    rafB = requestAnimationFrame(paint);
+  });
+  const timers = [16, 48, 120, 240].map((ms) => window.setTimeout(paint, ms));
+  return () => {
+    cancelAnimationFrame(rafA);
+    if (rafB) {
+      cancelAnimationFrame(rafB);
+    }
+    timers.forEach((id) => window.clearTimeout(id));
+  };
 }
 
 type TelegramWebApp = typeof WebApp;
