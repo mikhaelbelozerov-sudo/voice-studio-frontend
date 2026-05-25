@@ -1,4 +1,5 @@
 import { Home, Library, UserCircle, WalletCards } from "lucide-react";
+import WebApp from "@twa-dev/sdk";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom";
@@ -7,6 +8,7 @@ import { DropdownMenu } from "./components/ui/DropdownMenu";
 import { usePreserveTelegramMiniAppBootstrap } from "./hooks/usePreserveTelegramMiniAppBootstrap";
 import { useReferralDeepLink } from "./hooks/useReferralDeepLink";
 import { useTelegram } from "./hooks/useTelegram";
+import { useVirtualKeyboard } from "./hooks/useVirtualKeyboard";
 import { GeneratePage } from "./pages/Generate";
 import { LibraryPage } from "./pages/Library";
 import { PricingPage } from "./pages/Pricing";
@@ -26,6 +28,7 @@ function App() {
   const { telegramId } = useTelegram();
   const { suffix: tgBootstrapSuffix } = usePreserveTelegramMiniAppBootstrap();
   useReferralDeepLink(telegramId);
+  const { isKeyboardOpen, dismissKeyboard } = useVirtualKeyboard();
   const [showLanguageModal, setShowLanguageModal] = useState(() => !window.localStorage.getItem(LANGUAGE_STORAGE_KEY));
 
   const navItems = useMemo(
@@ -66,6 +69,34 @@ function App() {
   useEffect(() => {
     document.documentElement.dir = i18n.language.startsWith("ar") ? "rtl" : "ltr";
   }, [i18n.language]);
+
+  useEffect(() => {
+    const mainButton = WebApp.MainButton;
+    const handleDoneClick = () => {
+      dismissKeyboard();
+    };
+    const activeTag = document.activeElement?.tagName?.toUpperCase();
+    const shouldShowDone = isKeyboardOpen && activeTag !== "SELECT";
+
+    if (shouldShowDone) {
+      mainButton.setText(t("common.keyboardDone"));
+      mainButton.setParams({
+        is_active: true,
+        is_visible: true,
+        has_shine_effect: false
+      });
+      mainButton.onClick(handleDoneClick);
+      mainButton.show();
+    } else {
+      mainButton.offClick(handleDoneClick);
+      mainButton.hide();
+    }
+
+    return () => {
+      mainButton.offClick(handleDoneClick);
+      mainButton.hide();
+    };
+  }, [dismissKeyboard, isKeyboardOpen, t]);
 
   return (
     <Layout>

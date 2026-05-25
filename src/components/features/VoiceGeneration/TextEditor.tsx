@@ -1,7 +1,6 @@
 import { FileUp, X } from "lucide-react";
 import { useRef, useState, type ChangeEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { dismissTelegramKeyboardField } from "../../../utils/telegramWebView";
 import { trackAnalytics } from "../../../lib/analytics";
 
 interface TextEditorProps {
@@ -17,18 +16,11 @@ function normalizeImportedText(raw: string): string {
 export const TextEditor = ({ value, onChange, maxLength = 1000 }: TextEditorProps) => {
   const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [fileNotice, setFileNotice] = useState<"truncated" | "empty" | "readError" | null>(null);
-  const [isFocused, setIsFocused] = useState(false);
   const hasText = value.trim().length > 0;
 
   const clearFileNoticeSoon = () => {
     window.setTimeout(() => setFileNotice(null), 6000);
-  };
-
-  const handleDismissKeyboard = () => {
-    dismissTelegramKeyboardField(textareaRef.current);
-    setIsFocused(false);
   };
 
   const handlePickFile = () => {
@@ -87,16 +79,7 @@ export const TextEditor = ({ value, onChange, maxLength = 1000 }: TextEditorProp
       />
       <div className="flex items-center justify-between gap-2">
         <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{t("voice.text")}</h2>
-        <div className="flex shrink-0 items-center gap-2">
-          {isFocused ? (
-            <button
-              type="button"
-              onClick={handleDismissKeyboard}
-              className="text-xs font-medium text-blue-600 underline-offset-2 hover:underline dark:text-blue-400"
-            >
-              {t("common.keyboardDone")}
-            </button>
-          ) : null}
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
           <span className="text-xs text-slate-500 dark:text-slate-400">
             {value.length}/{maxLength}
           </span>
@@ -136,12 +119,8 @@ export const TextEditor = ({ value, onChange, maxLength = 1000 }: TextEditorProp
         </p>
       ) : null}
       <textarea
-        ref={textareaRef}
         value={value}
         maxLength={maxLength}
-        enterKeyHint="done"
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
         onChange={(event) => onChange(event.target.value)}
         placeholder={t("voice.textPlaceholder")}
         className="min-h-36 w-full resize-y rounded-2xl border border-slate-200 bg-white p-4 text-sm text-slate-900 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
