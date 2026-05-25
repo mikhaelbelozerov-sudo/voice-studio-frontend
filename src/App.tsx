@@ -28,7 +28,7 @@ function App() {
   const { telegramId } = useTelegram();
   const { suffix: tgBootstrapSuffix } = usePreserveTelegramMiniAppBootstrap();
   useReferralDeepLink(telegramId);
-  const { isKeyboardOpen, dismissKeyboard } = useVirtualKeyboard();
+  const { showKeyboardDone, dismissKeyboard } = useVirtualKeyboard();
   const [showLanguageModal, setShowLanguageModal] = useState(() => !window.localStorage.getItem(LANGUAGE_STORAGE_KEY));
 
   const navItems = useMemo(
@@ -75,10 +75,7 @@ function App() {
     const handleDoneClick = () => {
       dismissKeyboard();
     };
-    const activeTagName = document.activeElement?.tagName?.toUpperCase();
-    const shouldShowDone = isKeyboardOpen && activeTagName !== "SELECT";
-
-    if (shouldShowDone) {
+    if (showKeyboardDone) {
       mainButton.setText(t("common.keyboardDone"));
       mainButton.setParams({
         is_active: true,
@@ -96,7 +93,7 @@ function App() {
       mainButton.offClick(handleDoneClick);
       mainButton.hide();
     };
-  }, [dismissKeyboard, isKeyboardOpen, t]);
+  }, [dismissKeyboard, showKeyboardDone, t]);
 
   return (
     <Layout>
