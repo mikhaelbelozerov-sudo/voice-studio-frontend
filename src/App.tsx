@@ -5,13 +5,10 @@ import { useTranslation } from "react-i18next";
 import { NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Layout } from "./components/layout/Layout";
 import { DropdownMenu } from "./components/ui/DropdownMenu";
+import { KeyboardDoneBar } from "./components/ui/KeyboardDoneBar";
 import { usePreserveTelegramMiniAppBootstrap } from "./hooks/usePreserveTelegramMiniAppBootstrap";
 import { useReferralDeepLink } from "./hooks/useReferralDeepLink";
-import {
-  applyTelegramBottomBarColor,
-  scheduleTelegramBottomBarRepaint,
-  useTelegram
-} from "./hooks/useTelegram";
+import { useTelegram } from "./hooks/useTelegram";
 import { useVirtualKeyboard } from "./hooks/useVirtualKeyboard";
 import { GeneratePage } from "./pages/Generate";
 import { LibraryPage } from "./pages/Library";
@@ -29,7 +26,7 @@ function RedirectToGenerate() {
 
 function App() {
   const { t, i18n } = useTranslation();
-  const { telegramId, theme } = useTelegram();
+  const { telegramId } = useTelegram();
   const { suffix: tgBootstrapSuffix } = usePreserveTelegramMiniAppBootstrap();
   useReferralDeepLink(telegramId);
   const { showKeyboardDone, dismissKeyboard } = useVirtualKeyboard();
@@ -74,57 +71,14 @@ function App() {
     document.documentElement.dir = i18n.language.startsWith("ar") ? "rtl" : "ltr";
   }, [i18n.language]);
 
+  /** Native MainButton даёт чёрную полосу bottom bar — используем свою панель KeyboardDoneBar. */
   useEffect(() => {
-    const mainButton = WebApp.MainButton;
-    const handleDoneClick = () => {
-      dismissKeyboard();
-    };
-    let cancelBarRepaint = () => {};
-
-    if (showKeyboardDone) {
-      mainButton.setText(t("common.keyboardDone"));
-      mainButton.setParams({
-        is_active: true,
-        is_visible: true,
-        has_shine_effect: false,
-        color: "#2563eb",
-        text_color: "#ffffff"
-      });
-      mainButton.onClick(handleDoneClick);
-      mainButton.show();
-      cancelBarRepaint = scheduleTelegramBottomBarRepaint(theme);
-    } else {
-      mainButton.offClick(handleDoneClick);
-      mainButton.hide();
-      applyTelegramBottomBarColor(theme);
+    try {
+      WebApp.MainButton.hide();
+    } catch {
+      /* */
     }
-
-    return () => {
-      cancelBarRepaint();
-      mainButton.offClick(handleDoneClick);
-      mainButton.hide();
-      applyTelegramBottomBarColor(theme);
-    };
-  }, [dismissKeyboard, showKeyboardDone, t, theme]);
-
-  /** Клавиатура сжимает viewport — клиент иногда сбрасывает цвет bottom bar на первом открытии. */
-  useEffect(() => {
-    if (!showKeyboardDone) {
-      return;
-    }
-    const tg = (window as { Telegram?: { WebApp?: { onEvent?: (n: string, h: () => void) => void; offEvent?: (n: string, h: () => void) => void } } })
-      .Telegram?.WebApp;
-    const onEvent = tg?.onEvent;
-    const offEvent = tg?.offEvent;
-    if (!onEvent || !offEvent) {
-      return;
-    }
-    const repaint = () => applyTelegramBottomBarColor(theme);
-    onEvent("viewportChanged", repaint);
-    return () => {
-      offEvent("viewportChanged", repaint);
-    };
-  }, [showKeyboardDone, theme]);
+  }, []);
 
   return (
     <Layout>
@@ -155,6 +109,8 @@ function App() {
             ))}
           </div>
         </nav>
+
+        <KeyboardDoneBar visible={showKeyboardDone} label={t("common.keyboardDone")} onDone={dismissKeyboard} />
 
         {showLanguageModal ? (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 px-4">

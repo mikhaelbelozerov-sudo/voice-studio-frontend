@@ -10,7 +10,7 @@ function isFormField(el: EventTarget | null): boolean {
   return el.matches(FORM_SELECTOR) || el.closest(FORM_SELECTOR) !== null;
 }
 
-/** Поля, где пользователь набирает текст озвучки (кнопка «Готово» на MainButton). */
+/** Поля, где пользователь набирает текст озвучки (показываем in-app KeyboardDoneBar). */
 function isTextLikeField(el: EventTarget | null): boolean {
   if (!el || !(el instanceof HTMLElement)) {
     return false;
@@ -49,7 +49,7 @@ function readKeyboardUiState(): { open: boolean; showDone: boolean } {
 
 /**
  * Скрывает нижний таббар при наборе текста (класс vs-keyboard-open на html)
- * и даёт способ программно закрыть клавиатуру (MainButton «Готово» в App).
+ * и даёт способ программно закрыть клавиатуру (панель «Готово» в App).
  */
 export function useVirtualKeyboard() {
   const [isKeyboardOpen, setKeyboardOpen] = useState(false);
