@@ -67,7 +67,7 @@
     "label": "Preset kreator",
     "hint": "Pilih preset agar cerita lebih cepat — ritme dan kehangatan disetel untuk TikTok/Reels/format panjang.",
     "custom": "Campuran sendiri (slider Anda)",
-    "overrideNotice": "Preset aktif: slider hanya pratinjau — campuran final diproses di server.",
+    "overrideNotice": "Preset aktif",
     "tiktokStory": "Cerita TikTok",
     "youtubeDocumentary": "Dokumenter YouTube",
     "luxuryAd": "Iklan premium",

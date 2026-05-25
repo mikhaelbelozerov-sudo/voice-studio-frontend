@@ -67,7 +67,7 @@
     "label": "Creator presets",
     "hint": "Pick a preset for faster storytelling — we tune pacing and warmth for TikTok/Reels/long-form.",
     "custom": "Custom mix (your sliders)",
-    "overrideNotice": "Preset active: sliders preview only — we bake the mix server-side.",
+    "overrideNotice": "Preset active",
     "tiktokStory": "TikTok story",
     "youtubeDocumentary": "YouTube documentary",
     "luxuryAd": "Luxury ad",
