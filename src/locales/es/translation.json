@@ -57,6 +57,8 @@
     "paidCredits": "Tiempo de narracion disponible",
     "proReserve": "Pool Pro {{sub}} min · cartera {{wallet}} min",
     "lifetimeMeter": "Tiempo de prueba total",
+    "secondsMeter": "Segundos de prueba (total)",
+    "rendersMeter": "Renders de prueba (total)",
     "dailyMeter": "Intentos de hoy",
     "remainingMeter": "Creditos restantes (~seg)",
     "freePoolShort": "{{seconds}} / {{lifetime}} s · {{gens}} renders"

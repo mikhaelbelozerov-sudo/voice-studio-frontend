@@ -57,6 +57,8 @@
     "paidCredits": "Доступное время озвучки",
     "proReserve": "Pro-пул {{sub}} мин · кошелёк {{wallet}} мин",
     "lifetimeMeter": "Пожизненный лимит превью",
+    "secondsMeter": "Секунды превью (всего)",
+    "rendersMeter": "Рендеры превью (всего)",
     "dailyMeter": "Попытки сегодня",
     "remainingMeter": "Осталось кредитов (~сек)",
     "freePoolShort": "{{seconds}} / {{lifetime}} сек · {{gens}} рендеров"

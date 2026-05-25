@@ -57,6 +57,8 @@
     "paidCredits": "Waktu narasi yang bisa dipakai",
     "proReserve": "Pool Pro {{sub}} mnt · dompet {{wallet}} mnt",
     "lifetimeMeter": "Waktu pratinjau seumur hidup",
+    "secondsMeter": "Detik pratinjau (total)",
+    "rendersMeter": "Render pratinjau (total)",
     "dailyMeter": "Percobaan studio hari ini",
     "remainingMeter": "Kredit tersisa (~detik)",
     "freePoolShort": "{{seconds}} / {{lifetime}} dtk · {{gens}} render"

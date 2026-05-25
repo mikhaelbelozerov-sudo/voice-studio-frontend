@@ -57,6 +57,8 @@
     "paidCredits": "Spendable narration time",
     "proReserve": "Pro pool {{sub}} min · wallet {{wallet}} min",
     "lifetimeMeter": "Lifetime preview time",
+    "secondsMeter": "Preview seconds (total)",
+    "rendersMeter": "Preview renders (total)",
     "dailyMeter": "Today’s studio tries",
     "remainingMeter": "Credits remaining (~seconds)",
     "freePoolShort": "{{seconds}} / {{lifetime}}s · {{gens}} renders"

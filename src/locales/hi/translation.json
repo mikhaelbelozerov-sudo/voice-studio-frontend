@@ -57,6 +57,8 @@
     "paidCredits": "उपलब्ध नैरेशन समय",
     "proReserve": "Pro पूल {{sub}} मि · वॉलेट {{wallet}} मि",
     "lifetimeMeter": "लाइफटाइम प्रीव्यू",
+    "secondsMeter": "प्रीव्यू सेकंड (कुल)",
+    "rendersMeter": "प्रीव्यू रेंडर (कुल)",
     "dailyMeter": "आज की कोशिशें",
     "remainingMeter": "बचे क्रेडिट (~सेकंड)",
     "freePoolShort": "{{seconds}} / {{lifetime}} सेक · {{gens}} रेंडर"

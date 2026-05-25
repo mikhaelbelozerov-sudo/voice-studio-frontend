@@ -57,6 +57,8 @@
     "paidCredits": "وقت تعليق يمكن انفاقه",
     "proReserve": "احتياطي Pro {{sub}} د · المحفظة {{wallet}} د",
     "lifetimeMeter": "وقت المعاينة مدى الحياة",
+    "secondsMeter": "ثواني المعاينة (الإجمالي)",
+    "rendersMeter": "عمليات المعاينة (الإجمالي)",
     "dailyMeter": "تجارب الاستوديو اليوم",
     "remainingMeter": "الرصيد المتبقي (~ثوان)",
     "freePoolShort": "{{seconds}} / {{lifetime}} ث · {{gens}} عمليات"

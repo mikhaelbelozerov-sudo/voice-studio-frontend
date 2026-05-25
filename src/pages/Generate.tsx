@@ -192,19 +192,12 @@ export const GeneratePage = () => {
   const isPaidTrack =
     walletTotal > 0 || profile?.subscription_tier === "pro" || profile?.subscription_tier === "premium";
 
-  const freeLifetimeProgress = Math.min(
-    100,
-    Math.max(profile?.free_seconds_used && profile.free_seconds_cap
-      ? (profile.free_seconds_used / profile.free_seconds_cap) * 100
-      : 0, 0)
-  );
-  const dailyProgress = Math.min(
-    100,
-    Math.max(
-      profile?.daily_gen_used != null && profile.daily_gen_cap ? (profile.daily_gen_used / profile.daily_gen_cap) * 100 : 0,
-      0
-    )
-  );
+  const freeSecondsCap = profile?.free_seconds_cap ?? 60;
+  const freeSecondsUsed = profile?.free_seconds_used ?? 0;
+  const freeRendersCap = profile?.free_generation_cap ?? 3;
+  const freeRendersUsed = profile?.free_generation_count ?? 0;
+  const freeSecondsProgress = Math.min(100, Math.max((freeSecondsUsed / freeSecondsCap) * 100, 0));
+  const freeRendersProgress = Math.min(100, Math.max((freeRendersUsed / freeRendersCap) * 100, 0));
 
   const maxScriptLen = isPaidTrack ? 2500 : 420;
 
@@ -411,25 +404,29 @@ export const GeneratePage = () => {
             <div className="space-y-2">
               <div>
                 <div className="mb-1 flex justify-between text-[11px] text-slate-500 dark:text-slate-400">
-                  <span>{t("usage.lifetimeMeter")}</span>
-                  <span>{Math.round(freeLifetimeProgress)}%</span>
+                  <span>{t("usage.secondsMeter")}</span>
+                  <span>
+                    {freeSecondsUsed}/{freeSecondsCap}s
+                  </span>
                 </div>
                 <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-700">
                   <div
                     className="h-2 rounded-full bg-amber-500 transition-[width]"
-                    style={{ width: `${freeLifetimeProgress}%` }}
+                    style={{ width: `${freeSecondsProgress}%` }}
                   />
                 </div>
               </div>
               <div>
                 <div className="mb-1 flex justify-between text-[11px] text-slate-500 dark:text-slate-400">
-                  <span>{t("usage.dailyMeter")}</span>
-                  <span>{profile?.daily_gen_used ?? 0}/{profile?.daily_gen_cap ?? 5}</span>
+                  <span>{t("usage.rendersMeter")}</span>
+                  <span>
+                    {freeRendersUsed}/{freeRendersCap} {t("usage.renders")}
+                  </span>
                 </div>
                 <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-700">
                   <div
                     className="h-2 rounded-full bg-blue-600 transition-[width]"
-                    style={{ width: `${dailyProgress}%` }}
+                    style={{ width: `${freeRendersProgress}%` }}
                   />
                 </div>
               </div>
