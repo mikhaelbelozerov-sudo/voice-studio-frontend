@@ -5,12 +5,12 @@ type AppPageProps = {
   className?: string;
 };
 
-/** Обёртка страницы: отступ снизу даёт .app-main; маркер — для ограничения прокрутки. */
+/** Обёртка страницы: нижний spacer = высота меню (предел прокрутки как у верхнего края). */
 export function AppPage({ children, className = "space-y-5" }: AppPageProps) {
   return (
     <div className={className}>
       {children}
-      <div className="app-page-scroll-end" aria-hidden="true" />
+      <div className="app-page-bottom-spacer" aria-hidden="true" />
     </div>
   );
 }

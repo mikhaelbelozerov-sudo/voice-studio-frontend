@@ -3,6 +3,15 @@
  * См. https://core.telegram.org/bots/webapps — CSS vars --tg-content-safe-area-inset-*
  * и env(safe-area-inset-*) для Dynamic Island / жестов.
  */
+:root {
+  --vs-bottom-nav-scroll-padding: calc(
+    4.75rem + max(
+      env(safe-area-inset-bottom, 0px),
+      var(--tg-content-safe-area-inset-bottom, 0px)
+    )
+  );
+}
+
 html {
   touch-action: manipulation;
   overscroll-behavior-y: none;
@@ -16,6 +25,7 @@ body,
   height: 100%;
   background: var(--tg-theme-bg-color, #f1f5f9);
   overflow-x: hidden;
+  overscroll-behavior-y: none;
 }
 
 body {
@@ -75,14 +85,8 @@ body {
 
 .app-main {
   box-sizing: border-box;
-  overscroll-behavior-y: contain;
+  overscroll-behavior-y: none;
   -webkit-overflow-scrolling: touch;
-  padding-bottom: calc(
-    4.75rem + max(
-      env(safe-area-inset-bottom, 0px),
-      var(--tg-content-safe-area-inset-bottom, 0px)
-    )
-  );
 }
 
 /* Отступы для scrollIntoView / программной прокрутки при фокусе в поле ввода */
@@ -93,17 +97,13 @@ body {
       var(--tg-content-safe-area-inset-top, 0px)
     ) + 72px
   );
-  scroll-margin-bottom: calc(
-    4.75rem + max(
-      env(safe-area-inset-bottom, 0px),
-      var(--tg-content-safe-area-inset-bottom, 0px)
-    )
-  );
+  scroll-margin-bottom: var(--vs-bottom-nav-scroll-padding);
 }
 
-.app-page-scroll-end {
-  height: 0;
-  overflow: hidden;
+/** Ровно под высоту fixed-меню — естественный предел прокрутки без JS-clamp. */
+.app-page-bottom-spacer {
+  height: var(--vs-bottom-nav-scroll-padding);
+  flex-shrink: 0;
   pointer-events: none;
 }
 
@@ -121,8 +121,8 @@ html.dark .app-bottom-nav {
 }
 
 @supports (padding: constant(safe-area-inset-bottom)) {
-  .app-main {
-    padding-bottom: calc(
+  :root {
+    --vs-bottom-nav-scroll-padding: calc(
       4.75rem + max(
         constant(safe-area-inset-bottom),
         var(--tg-content-safe-area-inset-bottom, 0px)
