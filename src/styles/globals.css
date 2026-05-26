@@ -87,29 +87,16 @@ body {
 }
 
 .app-bottom-nav {
-  transform: translateY(0);
+  z-index: 40;
+  background-color: var(--tg-theme-bg-color, #f1f5f9);
   padding-bottom: max(
     env(safe-area-inset-bottom, 0px),
     var(--tg-content-safe-area-inset-bottom, 0px)
   );
-  transition:
-    transform 0.2s ease,
-    opacity 0.15s ease,
-    visibility 0.2s ease;
 }
 
-.vs-keyboard-open .app-bottom-nav {
-  transform: translateY(100%);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.vs-keyboard-open .app-main {
-  padding-bottom: max(
-    env(safe-area-inset-bottom, 0px),
-    var(--tg-content-safe-area-inset-bottom, 0px)
-  );
+html.dark .app-bottom-nav {
+  background-color: var(--tg-theme-bg-color, #020617);
 }
 
 @supports (padding: constant(safe-area-inset-bottom)) {
@@ -123,13 +110,6 @@ body {
   }
 
   .app-bottom-nav {
-    padding-bottom: max(
-      constant(safe-area-inset-bottom),
-      var(--tg-content-safe-area-inset-bottom, 0px)
-    );
-  }
-
-  .vs-keyboard-open .app-main {
     padding-bottom: max(
       constant(safe-area-inset-bottom),
       var(--tg-content-safe-area-inset-bottom, 0px)

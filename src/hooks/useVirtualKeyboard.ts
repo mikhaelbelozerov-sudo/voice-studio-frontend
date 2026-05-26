@@ -22,9 +22,7 @@ function hideTelegramKeyboard(): void {
   }
 }
 
-/**
- * MainButton «Готово» в App + класс vs-keyboard-open (скрывает нижний таббар при вводе).
- */
+/** Состояние клавиатуры для MainButton «Готово»; нижнее меню не скрываем (иначе чёрная полоса). */
 export function useVirtualKeyboard() {
   const [isKeyboardOpen, setKeyboardOpen] = useState(false);
 
@@ -34,17 +32,14 @@ export function useVirtualKeyboard() {
     if (ae instanceof HTMLElement) {
       ae.blur();
     }
-    document.documentElement.classList.remove("vs-keyboard-open");
     setKeyboardOpen(false);
   }, []);
 
   useEffect(() => {
-    const root = document.documentElement;
     let hideTimer: ReturnType<typeof setTimeout> | undefined;
 
-    const applyOpen = (open: boolean) => {
+    const setOpen = (open: boolean) => {
       setKeyboardOpen(open);
-      root.classList.toggle("vs-keyboard-open", open);
     };
 
     const onFocusIn = (event: FocusEvent) => {
@@ -53,7 +48,7 @@ export function useVirtualKeyboard() {
           clearTimeout(hideTimer);
           hideTimer = undefined;
         }
-        applyOpen(true);
+        setOpen(true);
       }
     };
 
@@ -64,7 +59,7 @@ export function useVirtualKeyboard() {
       hideTimer = window.setTimeout(() => {
         hideTimer = undefined;
         if (!isFormField(document.activeElement)) {
-          applyOpen(false);
+          setOpen(false);
         }
       }, 250);
     };
@@ -76,7 +71,7 @@ export function useVirtualKeyboard() {
       }
       const ratio = vv ? vv.height / window.innerHeight : 1;
       if (ratio < 0.72) {
-        applyOpen(true);
+        setOpen(true);
       }
     };
 
@@ -91,7 +86,7 @@ export function useVirtualKeyboard() {
       if (hideTimer !== undefined) {
         clearTimeout(hideTimer);
       }
-      applyOpen(false);
+      setOpen(false);
     };
   }, []);
 

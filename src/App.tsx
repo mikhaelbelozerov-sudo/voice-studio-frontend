@@ -9,6 +9,7 @@ import { usePreserveTelegramMiniAppBootstrap } from "./hooks/usePreserveTelegram
 import { useReferralDeepLink } from "./hooks/useReferralDeepLink";
 import { useTelegram } from "./hooks/useTelegram";
 import { useVirtualKeyboard } from "./hooks/useVirtualKeyboard";
+import { clearTelegramWebViewChromePadding, paintTelegramWebViewBackground } from "./utils/telegramWebView";
 import { GeneratePage } from "./pages/Generate";
 import { LibraryPage } from "./pages/Library";
 import { PricingPage } from "./pages/Pricing";
@@ -25,7 +26,7 @@ function RedirectToGenerate() {
 
 function App() {
   const { t, i18n } = useTranslation();
-  const { telegramId } = useTelegram();
+  const { telegramId, theme } = useTelegram();
   const { suffix: tgBootstrapSuffix } = usePreserveTelegramMiniAppBootstrap();
   useReferralDeepLink(telegramId);
   const { isKeyboardOpen, dismissKeyboard } = useVirtualKeyboard();
@@ -79,6 +80,8 @@ function App() {
     const shouldShowDone = isKeyboardOpen && activeTag !== "SELECT";
 
     if (shouldShowDone) {
+      clearTelegramWebViewChromePadding();
+      paintTelegramWebViewBackground(theme);
       mainButton.setText(t("common.keyboardDone"));
       mainButton.setParams({
         is_active: true,
@@ -90,13 +93,17 @@ function App() {
     } else {
       mainButton.offClick(handleDoneClick);
       mainButton.hide();
+      clearTelegramWebViewChromePadding();
+      paintTelegramWebViewBackground(theme);
     }
 
     return () => {
       mainButton.offClick(handleDoneClick);
       mainButton.hide();
+      clearTelegramWebViewChromePadding();
+      paintTelegramWebViewBackground(theme);
     };
-  }, [dismissKeyboard, isKeyboardOpen, t]);
+  }, [dismissKeyboard, isKeyboardOpen, t, theme]);
 
   return (
     <Layout>
@@ -109,7 +116,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
         </Routes>
 
-        <nav className="app-bottom-nav fixed bottom-0 left-0 right-0 border-t border-slate-200 bg-white/95 backdrop-blur dark:border-slate-800 dark:bg-slate-900/95">
+        <nav className="app-bottom-nav fixed bottom-0 left-0 right-0 border-t border-slate-200 dark:border-slate-800">
           <div className="mx-auto grid w-full max-w-3xl grid-cols-4 gap-1 px-2 py-2">
             {navItems.map(({ to, label, icon: Icon }) => (
               <NavLink
