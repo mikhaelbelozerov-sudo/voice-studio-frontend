@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { AppPage } from "../components/layout/AppPage";
 import { Button } from "../components/ui/Button";
 import { Spinner } from "../components/ui/Spinner";
 import { PRO_CREATOR_STARS_PRICE } from "../constants/catalog";
@@ -157,7 +158,7 @@ export const PricingPage = () => {
   };
 
   return (
-    <div className="space-y-6 pb-24">
+    <AppPage className="space-y-6">
       <div className="space-y-2">
         <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">{t("pricing.title")}</h1>
         <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300">{t("pricing.subtitleV2")}</p>
@@ -245,6 +246,6 @@ export const PricingPage = () => {
           </div>
         </div>
       </section>
-    </div>
+    </AppPage>
   );
 };

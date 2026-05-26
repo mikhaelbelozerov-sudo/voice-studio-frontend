@@ -6,6 +6,7 @@ import { AudioPlayer } from "../components/ui/AudioPlayer";
 import { Button } from "../components/ui/Button";
 import { DropdownMenu } from "../components/ui/DropdownMenu";
 import { Spinner } from "../components/ui/Spinner";
+import { AppPage } from "../components/layout/AppPage";
 import { TextEditor } from "../components/features/VoiceGeneration/TextEditor";
 import { VoiceControls } from "../components/features/VoiceGeneration/VoiceControls";
 import { VoiceSelector } from "../components/features/VoiceGeneration/VoiceSelector";
@@ -355,7 +356,7 @@ export const GeneratePage = () => {
       : t("generate.gateShortfallFallback");
 
   return (
-    <div className="space-y-5 pb-24">
+    <AppPage>
       <div>
         <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("generate.title")}</h1>
         <p className="text-sm text-slate-600 dark:text-slate-300">{t("generate.subtitle")}</p>
@@ -568,6 +569,6 @@ export const GeneratePage = () => {
       ) : null}
 
       {successPaywallVisible ? paywallCard : null}
-    </div>
+    </AppPage>
   );
 };

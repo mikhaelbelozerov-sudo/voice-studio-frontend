@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useTelegram } from "../hooks/useTelegram";
 import { fetchGenerations, Generation, getVoices, UserTier, Voice } from "../services/api";
+import { AppPage } from "../components/layout/AppPage";
 import { Button } from "../components/ui/Button";
 import { Spinner } from "../components/ui/Spinner";
 import { getRemainingStorageInfo, isExpiringSoon } from "../utils/formatRemainingTime";
@@ -187,7 +188,7 @@ export const LibraryPage = () => {
   }, [loadMore]);
 
   return (
-    <div className="space-y-4 pb-24">
+    <AppPage className="space-y-4">
       <div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t("library.title")}</h1>
         <p className="text-sm text-gray-600 dark:text-gray-400">{t("library.subtitle")}</p>
@@ -280,6 +281,6 @@ export const LibraryPage = () => {
           </Button>
         </div>
       ) : null}
-    </div>
+    </AppPage>
   );
 };

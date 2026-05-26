@@ -75,7 +75,6 @@ body {
 
 .app-main {
   box-sizing: border-box;
-  min-height: 100%;
   overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
   padding-bottom: calc(
@@ -95,11 +94,17 @@ body {
     ) + 72px
   );
   scroll-margin-bottom: calc(
-    5.5rem + 56px + max(
+    4.75rem + max(
       env(safe-area-inset-bottom, 0px),
       var(--tg-content-safe-area-inset-bottom, 0px)
     )
   );
+}
+
+.app-page-scroll-end {
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
 }
 
 .app-bottom-nav {

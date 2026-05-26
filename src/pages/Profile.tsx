@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { AppPage } from "../components/layout/AppPage";
 import { Button } from "../components/ui/Button";
 import { Spinner } from "../components/ui/Spinner";
 import { DropdownMenu } from "../components/ui/DropdownMenu";
@@ -158,7 +159,7 @@ export const ProfilePage = () => {
   };
 
   return (
-    <div className="space-y-4 pb-24">
+    <AppPage className="space-y-4">
       <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("profile.title")}</h1>
 
       {error ? (
@@ -291,6 +292,6 @@ export const ProfilePage = () => {
         </Button>
       </div>
 
-    </div>
+    </AppPage>
   );
 };

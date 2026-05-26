@@ -1,5 +1,7 @@
 /** Прокрутка поля ввода в зону над клавиатурой, MainButton и нижним меню. */
 
+const SCROLL_END_GAP_PX = 12;
+
 const TOP_INSET_PX = 16;
 const BOTTOM_GAP_PX = 10;
 /** Доля видимой высоты от верха — поле оказывается в верхней трети, виден ввод. */
@@ -22,6 +24,28 @@ function getReadableViewportBounds(): { top: number; bottom: number } | null {
   }
 
   return { top, bottom };
+}
+
+/** Максимальный scrollY: низ маркера .app-page-scroll-end не уходит под нижнее меню. */
+export function getMaxAllowedScrollY(): number {
+  const end = document.querySelector<HTMLElement>(".app-page-scroll-end");
+  const nav = document.querySelector<HTMLElement>(".app-bottom-nav");
+  if (!end || !nav) {
+    const doc = document.documentElement;
+    return Math.max(0, doc.scrollHeight - window.innerHeight);
+  }
+
+  const endRect = end.getBoundingClientRect();
+  const navTop = nav.getBoundingClientRect().top;
+  const endDocBottom = endRect.bottom + window.scrollY;
+  return Math.max(0, endDocBottom - navTop + SCROLL_END_GAP_PX);
+}
+
+export function clampDocumentScroll(behavior: ScrollBehavior = "auto"): void {
+  const max = getMaxAllowedScrollY();
+  if (window.scrollY > max + 0.5) {
+    window.scrollTo({ top: max, behavior });
+  }
 }
 
 export function scrollFieldIntoReadableView(field: HTMLElement): void {
@@ -49,7 +73,20 @@ export function scrollFieldIntoReadableView(field: HTMLElement): void {
     return;
   }
 
+  const maxScroll = getMaxAllowedScrollY();
+  const targetScroll = window.scrollY + scrollDelta;
+  if (targetScroll > maxScroll) {
+    scrollDelta = maxScroll - window.scrollY;
+  }
+  if (targetScroll < 0) {
+    scrollDelta = -window.scrollY;
+  }
+  if (Math.abs(scrollDelta) < 4) {
+    return;
+  }
+
   window.scrollBy({ top: scrollDelta, behavior: "smooth" });
+  window.setTimeout(() => clampDocumentScroll("auto"), 450);
 }
 
 const pendingScrollTimers = new WeakMap<HTMLElement, number[]>();

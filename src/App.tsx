@@ -8,6 +8,7 @@ import { DropdownMenu } from "./components/ui/DropdownMenu";
 import { usePreserveTelegramMiniAppBootstrap } from "./hooks/usePreserveTelegramMiniAppBootstrap";
 import { useReferralDeepLink } from "./hooks/useReferralDeepLink";
 import { useTelegram } from "./hooks/useTelegram";
+import { useClampPageScroll } from "./hooks/useClampPageScroll";
 import { useVirtualKeyboard } from "./hooks/useVirtualKeyboard";
 import { clearTelegramWebViewChromePadding, paintTelegramWebViewBackground } from "./utils/telegramWebView";
 import { GeneratePage } from "./pages/Generate";
@@ -30,6 +31,7 @@ function App() {
   const { suffix: tgBootstrapSuffix } = usePreserveTelegramMiniAppBootstrap();
   useReferralDeepLink(telegramId);
   const { isKeyboardOpen, dismissKeyboard } = useVirtualKeyboard();
+  useClampPageScroll();
   const [showLanguageModal, setShowLanguageModal] = useState(() => !window.localStorage.getItem(LANGUAGE_STORAGE_KEY));
 
   const navItems = useMemo(
@@ -107,7 +109,7 @@ function App() {
 
   return (
     <Layout>
-      <div className="app-main mx-auto min-h-screen w-full max-w-3xl bg-slate-100 px-4 pt-2 dark:bg-slate-950">
+      <div className="app-main mx-auto w-full max-w-3xl bg-slate-100 px-4 pt-2 dark:bg-slate-950">
         <Routes>
           <Route path="/" element={<RedirectToGenerate />} />
           <Route path="/generate" element={<GeneratePage />} />
