@@ -95,9 +95,89 @@ export function syncTelegramWebViewAfterViewport(theme: AppTheme): void {
   applyTelegramViewportLayout(theme);
 }
 
-/** Минимальная прокрутка — только если поле реально не видно (как при вводе текста). */
+const READABLE_TOP_INSET_PX = 12;
+const READABLE_BOTTOM_GAP_PX = 12;
+const FIELD_EDGE_PADDING_PX = 10;
+
+function getReadableBounds(): { top: number; bottom: number } | null {
+  const vv = window.visualViewport;
+  if (!vv) {
+    return null;
+  }
+
+  const nav = document.querySelector<HTMLElement>(".app-bottom-nav");
+  const navTop = nav?.getBoundingClientRect().top ?? vv.offsetTop + vv.height;
+  const top = vv.offsetTop + READABLE_TOP_INSET_PX;
+  const bottom = Math.min(vv.offsetTop + vv.height, navTop) - READABLE_BOTTOM_GAP_PX;
+
+  if (bottom - top < 72) {
+    return null;
+  }
+
+  return { top, bottom };
+}
+
+function getDocumentMaxScrollY(): number {
+  const doc = document.documentElement;
+  const vv = window.visualViewport;
+  if (!vv) {
+    return Math.max(0, doc.scrollHeight - window.innerHeight);
+  }
+  return Math.max(0, doc.scrollHeight - vv.height - vv.offsetTop);
+}
+
+function clampScrollDelta(scrollDelta: number): number {
+  const maxScroll = getDocumentMaxScrollY();
+  const targetScroll = window.scrollY + scrollDelta;
+  if (targetScroll > maxScroll) {
+    scrollDelta = maxScroll - window.scrollY;
+  }
+  if (targetScroll < 0) {
+    scrollDelta = -window.scrollY;
+  }
+  return scrollDelta;
+}
+
+/** Прокрутка так, чтобы поле целиком поместилось над клавиатурой и нижним меню. */
 export function ensureFieldVisibleInViewport(field: HTMLElement): void {
-  field.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "auto" });
+  const bounds = getReadableBounds();
+  if (!bounds) {
+    field.scrollIntoView({ block: "start", inline: "nearest", behavior: "auto" });
+    return;
+  }
+
+  const { top: visibleTop, bottom: visibleBottom } = bounds;
+  const rect = field.getBoundingClientRect();
+  const pad = FIELD_EDGE_PADDING_PX;
+  const innerTop = visibleTop + pad;
+  const innerBottom = visibleBottom - pad;
+  const visibleHeight = innerBottom - innerTop;
+
+  if (rect.top >= innerTop && rect.bottom <= innerBottom) {
+    return;
+  }
+
+  let scrollDelta = 0;
+
+  if (rect.height <= visibleHeight) {
+    const idealTop = innerTop + (visibleHeight - rect.height) / 2;
+    scrollDelta = rect.top - idealTop;
+  } else if (rect.top < innerTop) {
+    scrollDelta = rect.top - innerTop;
+  } else if (rect.bottom > innerBottom) {
+    scrollDelta = rect.bottom - innerBottom;
+  }
+
+  if (Math.abs(scrollDelta) < 4) {
+    return;
+  }
+
+  scrollDelta = clampScrollDelta(scrollDelta);
+  if (Math.abs(scrollDelta) < 4) {
+    return;
+  }
+
+  window.scrollBy({ top: scrollDelta, behavior: "auto" });
 }
 
 const repairTimers = new WeakMap<HTMLElement, number[]>();

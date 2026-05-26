@@ -89,10 +89,9 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Небольшие отступы — крупные scroll-margin вызывают рывок и «чёрный экран» при фокусе */
 .vs-text-input {
   scroll-margin-top: 12px;
-  scroll-margin-bottom: 12px;
+  scroll-margin-bottom: var(--vs-bottom-nav-scroll-padding);
 }
 
 /** Ровно под высоту fixed-меню — естественный предел прокрутки без JS-clamp. */
