@@ -1,7 +1,9 @@
 import { FileUp, X } from "lucide-react";
-import { useRef, useState, type ChangeEvent, type PointerEvent } from "react";
+import { useCallback, useRef, useState, type ChangeEvent } from "react";
 import { useTranslation } from "react-i18next";
+import { useTelegram } from "../../../hooks/useTelegram";
 import { trackAnalytics } from "../../../lib/analytics";
+import { applyTelegramViewportLayout, ensureFieldVisibleInViewport } from "../../../utils/telegramWebView";
 
 interface TextEditorProps {
   value: string;
@@ -15,24 +17,23 @@ function normalizeImportedText(raw: string): string {
 
 export const TextEditor = ({ value, onChange, maxLength = 1000 }: TextEditorProps) => {
   const { t } = useTranslation();
+  const { theme } = useTelegram();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [fileNotice, setFileNotice] = useState<"truncated" | "empty" | "readError" | null>(null);
   const hasText = value.trim().length > 0;
 
-  const clearFileNoticeSoon = () => {
-    window.setTimeout(() => setFileNotice(null), 6000);
-  };
-
-  const handleTextareaPointerDown = (event: PointerEvent<HTMLTextAreaElement>) => {
+  const repairKeyboardViewport = useCallback(() => {
     const textarea = textareaRef.current;
-    if (!textarea || document.activeElement === textarea) {
+    if (!textarea) {
       return;
     }
-    if (event.pointerType === "touch") {
-      event.preventDefault();
-      textarea.focus({ preventScroll: true });
-    }
+    applyTelegramViewportLayout(theme);
+    ensureFieldVisibleInViewport(textarea);
+  }, [theme]);
+
+  const clearFileNoticeSoon = () => {
+    window.setTimeout(() => setFileNotice(null), 6000);
   };
 
   const handlePickFile = () => {
@@ -76,6 +77,17 @@ export const TextEditor = ({ value, onChange, maxLength = 1000 }: TextEditorProp
       setFileNotice("readError");
       clearFileNoticeSoon();
     }
+  };
+
+  const handleTextareaFocus = () => {
+    repairKeyboardViewport();
+    requestAnimationFrame(repairKeyboardViewport);
+    window.setTimeout(repairKeyboardViewport, 280);
+  };
+
+  const handleTextareaChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    onChange(event.target.value);
+    repairKeyboardViewport();
   };
 
   return (
@@ -134,8 +146,8 @@ export const TextEditor = ({ value, onChange, maxLength = 1000 }: TextEditorProp
         ref={textareaRef}
         value={value}
         maxLength={maxLength}
-        onChange={(event) => onChange(event.target.value)}
-        onPointerDown={handleTextareaPointerDown}
+        onChange={handleTextareaChange}
+        onFocus={handleTextareaFocus}
         placeholder={t("voice.textPlaceholder")}
         rows={6}
         enterKeyHint="done"

@@ -4,6 +4,7 @@
  * и env(safe-area-inset-*) для Dynamic Island / жестов.
  */
 :root {
+  --vs-viewport-height: 100dvh;
   --vs-bottom-nav-scroll-padding: calc(
     4.75rem + max(
       env(safe-area-inset-bottom, 0px),
@@ -22,20 +23,19 @@ body,
 #root {
   margin: 0;
   padding: 0;
-  height: 100%;
+  min-height: 100%;
   background: var(--tg-theme-bg-color, #f1f5f9);
   overflow-x: hidden;
   overscroll-behavior-y: none;
 }
 
 body {
-  overscroll-behavior-y: none;
+  min-height: var(--vs-viewport-height, 100dvh);
 }
 
 .app-container {
   box-sizing: border-box;
-  min-height: 100vh;
-  min-height: 100dvh;
+  min-height: var(--vs-viewport-height, 100dvh);
   background: var(--tg-theme-bg-color, #f1f5f9);
 
   /* Доп. сдвиг вниз под строку Telegram (закрыть / заголовок / меню) — задаётся в useTelegram: --vs-app-top-offset */

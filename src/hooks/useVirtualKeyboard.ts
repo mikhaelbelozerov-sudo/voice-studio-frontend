@@ -1,9 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  isVisualKeyboardOpen,
-  scheduleScrollFieldIntoReadableView,
-  scrollFieldIntoReadableView
-} from "../utils/scrollIntoReadableView";
+import { isTelegramKeyboardLikelyOpen, scheduleKeyboardViewportRepair } from "../utils/telegramWebView";
 
 const FORM_SELECTOR =
   "input:not([type='button']):not([type='submit']):not([type='reset']):not([type='checkbox']):not([type='radio']):not([type='hidden']):not([type='file']), textarea, select, [contenteditable='true']";
@@ -40,7 +36,7 @@ function hideTelegramKeyboard(): void {
 /** Состояние клавиатуры для MainButton «Готово»; нижнее меню не скрываем (иначе чёрная полоса). */
 export function useVirtualKeyboard() {
   const [isKeyboardOpen, setKeyboardOpen] = useState(false);
-  const viewportScrollTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>();
+  const viewportRepairTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>();
 
   const dismissKeyboard = useCallback(() => {
     hideTelegramKeyboard();
@@ -69,7 +65,7 @@ export function useVirtualKeyboard() {
       }
       setOpen(true);
       if (field.classList.contains("vs-text-input")) {
-        scheduleScrollFieldIntoReadableView(field);
+        scheduleKeyboardViewportRepair(field);
       }
     };
 
@@ -91,19 +87,18 @@ export function useVirtualKeyboard() {
       if (!field?.classList.contains("vs-text-input")) {
         return;
       }
-      const ratio = vv ? vv.height / window.innerHeight : 1;
-      if (ratio < 0.72) {
+      if (isTelegramKeyboardLikelyOpen()) {
         setOpen(true);
       }
-      if (viewportScrollTimerRef.current !== undefined) {
-        clearTimeout(viewportScrollTimerRef.current);
+      if (viewportRepairTimerRef.current !== undefined) {
+        clearTimeout(viewportRepairTimerRef.current);
       }
-      viewportScrollTimerRef.current = window.setTimeout(() => {
-        viewportScrollTimerRef.current = undefined;
-        if (isVisualKeyboardOpen()) {
-          scrollFieldIntoReadableView(field);
+      viewportRepairTimerRef.current = window.setTimeout(() => {
+        viewportRepairTimerRef.current = undefined;
+        if (isTelegramKeyboardLikelyOpen()) {
+          scheduleKeyboardViewportRepair(field);
         }
-      }, 160);
+      }, 120);
     };
 
     document.addEventListener("focusin", onFocusIn, true);
@@ -117,8 +112,8 @@ export function useVirtualKeyboard() {
       if (hideTimer !== undefined) {
         clearTimeout(hideTimer);
       }
-      if (viewportScrollTimerRef.current !== undefined) {
-        clearTimeout(viewportScrollTimerRef.current);
+      if (viewportRepairTimerRef.current !== undefined) {
+        clearTimeout(viewportRepairTimerRef.current);
       }
       setOpen(false);
     };
