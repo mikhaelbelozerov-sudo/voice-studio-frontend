@@ -1,59 +1,48 @@
-/** Прокрутка поля ввода в зону над клавиатурой, MainButton и нижним меню. */
+/** Минимальная прокрутка поля ввода — только когда клавиатура открыта и поле перекрыто. */
 
-const TOP_INSET_PX = 16;
-const BOTTOM_GAP_PX = 10;
-/** Доля видимой высоты от верха — поле оказывается в верхней трети, виден ввод. */
-const FIELD_TOP_RATIO = 0.2;
+const TOP_INSET_PX = 12;
+const BOTTOM_GAP_PX = 12;
+const FIELD_PADDING_PX = 10;
+const KEYBOARD_OPEN_HEIGHT_RATIO = 0.72;
+const KEYBOARD_SETTLE_MS = 300;
 
-function getDocumentMaxScrollY(): number {
-  const doc = document.documentElement;
-  return Math.max(0, doc.scrollHeight - window.innerHeight);
+export function isVisualKeyboardOpen(): boolean {
+  const vv = window.visualViewport;
+  if (!vv) {
+    return false;
+  }
+  return vv.height < window.innerHeight * KEYBOARD_OPEN_HEIGHT_RATIO;
 }
 
-function getReadableViewportBounds(): { top: number; bottom: number } | null {
+export function getDocumentMaxScrollY(): number {
+  const doc = document.documentElement;
+  const vv = window.visualViewport;
+  if (!vv) {
+    return Math.max(0, doc.scrollHeight - window.innerHeight);
+  }
+  return Math.max(0, doc.scrollHeight - vv.height - vv.offsetTop);
+}
+
+function getVisibleScrollBounds(): { top: number; bottom: number } | null {
   const vv = window.visualViewport;
   if (!vv) {
     return null;
   }
 
   const nav = document.querySelector<HTMLElement>(".app-bottom-nav");
-  const navTop = nav?.getBoundingClientRect().top ?? window.innerHeight;
+  const navTop = nav?.getBoundingClientRect().top ?? vv.offsetTop + vv.height;
 
   const top = vv.offsetTop + TOP_INSET_PX;
   const bottom = Math.min(vv.offsetTop + vv.height, navTop) - BOTTOM_GAP_PX;
 
-  if (bottom - top < 72) {
+  if (bottom - top < 64) {
     return null;
   }
 
   return { top, bottom };
 }
 
-export function scrollFieldIntoReadableView(field: HTMLElement): void {
-  const bounds = getReadableViewportBounds();
-  if (!bounds) {
-    field.scrollIntoView({ block: "center", inline: "nearest", behavior: "smooth" });
-    return;
-  }
-
-  const { top: readableTop, bottom: readableBottom } = bounds;
-  const readableHeight = readableBottom - readableTop;
-  const targetTop = readableTop + readableHeight * FIELD_TOP_RATIO;
-  const targetBottom = readableTop + readableHeight * 0.78;
-
-  const rect = field.getBoundingClientRect();
-  let scrollDelta = 0;
-
-  if (rect.bottom > targetBottom) {
-    scrollDelta = rect.bottom - targetBottom;
-  } else if (rect.top < targetTop) {
-    scrollDelta = rect.top - targetTop;
-  }
-
-  if (Math.abs(scrollDelta) < 4) {
-    return;
-  }
-
+function clampScrollDelta(scrollDelta: number): number {
   const maxScroll = getDocumentMaxScrollY();
   const targetScroll = window.scrollY + scrollDelta;
   if (targetScroll > maxScroll) {
@@ -62,27 +51,61 @@ export function scrollFieldIntoReadableView(field: HTMLElement): void {
   if (targetScroll < 0) {
     scrollDelta = -window.scrollY;
   }
+  return scrollDelta;
+}
+
+/** Прокрутить ровно настолько, чтобы поле целиком поместилось в видимую зону. */
+export function scrollFieldIntoReadableView(field: HTMLElement): void {
+  if (!field.classList.contains("vs-text-input")) {
+    return;
+  }
+  if (!isVisualKeyboardOpen()) {
+    return;
+  }
+
+  const bounds = getVisibleScrollBounds();
+  if (!bounds) {
+    return;
+  }
+
+  const { top: visibleTop, bottom: visibleBottom } = bounds;
+  const rect = field.getBoundingClientRect();
+
+  let scrollDelta = 0;
+
+  if (rect.bottom > visibleBottom - FIELD_PADDING_PX) {
+    scrollDelta = rect.bottom - (visibleBottom - FIELD_PADDING_PX);
+  } else if (rect.top < visibleTop + FIELD_PADDING_PX) {
+    scrollDelta = rect.top - (visibleTop + FIELD_PADDING_PX);
+  }
+
   if (Math.abs(scrollDelta) < 4) {
     return;
   }
 
-  window.scrollBy({ top: scrollDelta, behavior: "smooth" });
+  scrollDelta = clampScrollDelta(scrollDelta);
+  if (Math.abs(scrollDelta) < 4) {
+    return;
+  }
+
+  window.scrollBy({ top: scrollDelta, behavior: "auto" });
 }
 
 const pendingScrollTimers = new WeakMap<HTMLElement, number[]>();
 
 export function scheduleScrollFieldIntoReadableView(field: HTMLElement): void {
+  if (!field.classList.contains("vs-text-input")) {
+    return;
+  }
+
   const prev = pendingScrollTimers.get(field);
   if (prev) {
     prev.forEach((id) => window.clearTimeout(id));
   }
 
   const run = () => scrollFieldIntoReadableView(field);
-  run();
-  requestAnimationFrame(run);
-
-  const ids = [80, 200, 420, 700].map((ms) => window.setTimeout(run, ms));
-  pendingScrollTimers.set(field, ids);
+  const timers = [KEYBOARD_SETTLE_MS, KEYBOARD_SETTLE_MS + 180].map((ms) => window.setTimeout(run, ms));
+  pendingScrollTimers.set(field, timers);
 }
 
 export function cancelScheduledScrollField(field: HTMLElement): void {

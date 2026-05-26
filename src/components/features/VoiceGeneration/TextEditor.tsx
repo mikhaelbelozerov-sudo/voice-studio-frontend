@@ -1,5 +1,5 @@
 import { FileUp, X } from "lucide-react";
-import { useRef, useState, type ChangeEvent } from "react";
+import { useRef, useState, type ChangeEvent, type PointerEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { trackAnalytics } from "../../../lib/analytics";
 
@@ -16,11 +16,23 @@ function normalizeImportedText(raw: string): string {
 export const TextEditor = ({ value, onChange, maxLength = 1000 }: TextEditorProps) => {
   const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [fileNotice, setFileNotice] = useState<"truncated" | "empty" | "readError" | null>(null);
   const hasText = value.trim().length > 0;
 
   const clearFileNoticeSoon = () => {
     window.setTimeout(() => setFileNotice(null), 6000);
+  };
+
+  const handleTextareaPointerDown = (event: PointerEvent<HTMLTextAreaElement>) => {
+    const textarea = textareaRef.current;
+    if (!textarea || document.activeElement === textarea) {
+      return;
+    }
+    if (event.pointerType === "touch") {
+      event.preventDefault();
+      textarea.focus({ preventScroll: true });
+    }
   };
 
   const handlePickFile = () => {
@@ -119,9 +131,11 @@ export const TextEditor = ({ value, onChange, maxLength = 1000 }: TextEditorProp
         </p>
       ) : null}
       <textarea
+        ref={textareaRef}
         value={value}
         maxLength={maxLength}
         onChange={(event) => onChange(event.target.value)}
+        onPointerDown={handleTextareaPointerDown}
         placeholder={t("voice.textPlaceholder")}
         rows={6}
         enterKeyHint="done"

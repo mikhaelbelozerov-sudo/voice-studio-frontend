@@ -1,5 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
-import { scheduleScrollFieldIntoReadableView, scrollFieldIntoReadableView } from "../utils/scrollIntoReadableView";
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  isVisualKeyboardOpen,
+  scheduleScrollFieldIntoReadableView,
+  scrollFieldIntoReadableView
+} from "../utils/scrollIntoReadableView";
 
 const FORM_SELECTOR =
   "input:not([type='button']):not([type='submit']):not([type='reset']):not([type='checkbox']):not([type='radio']):not([type='hidden']):not([type='file']), textarea, select, [contenteditable='true']";
@@ -36,6 +40,7 @@ function hideTelegramKeyboard(): void {
 /** Состояние клавиатуры для MainButton «Готово»; нижнее меню не скрываем (иначе чёрная полоса). */
 export function useVirtualKeyboard() {
   const [isKeyboardOpen, setKeyboardOpen] = useState(false);
+  const viewportScrollTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>();
 
   const dismissKeyboard = useCallback(() => {
     hideTelegramKeyboard();
@@ -63,7 +68,9 @@ export function useVirtualKeyboard() {
         hideTimer = undefined;
       }
       setOpen(true);
-      scheduleScrollFieldIntoReadableView(field);
+      if (field.classList.contains("vs-text-input")) {
+        scheduleScrollFieldIntoReadableView(field);
+      }
     };
 
     const onFocusOut = () => {
@@ -81,14 +88,22 @@ export function useVirtualKeyboard() {
     const vv = window.visualViewport;
     const onViewportResize = () => {
       const field = resolveFormField(document.activeElement);
-      if (!field) {
+      if (!field?.classList.contains("vs-text-input")) {
         return;
       }
       const ratio = vv ? vv.height / window.innerHeight : 1;
       if (ratio < 0.72) {
         setOpen(true);
       }
-      scrollFieldIntoReadableView(field);
+      if (viewportScrollTimerRef.current !== undefined) {
+        clearTimeout(viewportScrollTimerRef.current);
+      }
+      viewportScrollTimerRef.current = window.setTimeout(() => {
+        viewportScrollTimerRef.current = undefined;
+        if (isVisualKeyboardOpen()) {
+          scrollFieldIntoReadableView(field);
+        }
+      }, 160);
     };
 
     document.addEventListener("focusin", onFocusIn, true);
@@ -101,6 +116,9 @@ export function useVirtualKeyboard() {
       vv?.removeEventListener("resize", onViewportResize);
       if (hideTimer !== undefined) {
         clearTimeout(hideTimer);
+      }
+      if (viewportScrollTimerRef.current !== undefined) {
+        clearTimeout(viewportScrollTimerRef.current);
       }
       setOpen(false);
     };
