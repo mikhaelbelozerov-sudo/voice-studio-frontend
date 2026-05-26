@@ -86,6 +86,22 @@ body {
   );
 }
 
+/* Отступы для scrollIntoView / программной прокрутки при фокусе в поле ввода */
+.vs-text-input {
+  scroll-margin-top: calc(
+    max(
+      env(safe-area-inset-top, 0px),
+      var(--tg-content-safe-area-inset-top, 0px)
+    ) + 72px
+  );
+  scroll-margin-bottom: calc(
+    5.5rem + 56px + max(
+      env(safe-area-inset-bottom, 0px),
+      var(--tg-content-safe-area-inset-bottom, 0px)
+    )
+  );
+}
+
 .app-bottom-nav {
   z-index: 40;
   background-color: var(--tg-theme-bg-color, #f1f5f9);

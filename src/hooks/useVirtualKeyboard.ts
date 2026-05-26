@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { scheduleScrollFieldIntoReadableView, scrollFieldIntoReadableView } from "../utils/scrollIntoReadableView";
 
 const FORM_SELECTOR =
   "input:not([type='button']):not([type='submit']):not([type='reset']):not([type='checkbox']):not([type='radio']):not([type='hidden']):not([type='file']), textarea, select, [contenteditable='true']";
@@ -8,6 +9,16 @@ function isFormField(el: EventTarget | null): boolean {
     return false;
   }
   return el.matches(FORM_SELECTOR) || el.closest(FORM_SELECTOR) !== null;
+}
+
+function resolveFormField(el: EventTarget | null): HTMLElement | null {
+  if (!el || !(el instanceof Element)) {
+    return null;
+  }
+  if (el instanceof HTMLElement && el.matches(FORM_SELECTOR)) {
+    return el;
+  }
+  return el.closest<HTMLElement>(FORM_SELECTOR);
 }
 
 function hideTelegramKeyboard(): void {
@@ -43,13 +54,16 @@ export function useVirtualKeyboard() {
     };
 
     const onFocusIn = (event: FocusEvent) => {
-      if (isFormField(event.target)) {
-        if (hideTimer !== undefined) {
-          clearTimeout(hideTimer);
-          hideTimer = undefined;
-        }
-        setOpen(true);
+      const field = resolveFormField(event.target);
+      if (!field) {
+        return;
       }
+      if (hideTimer !== undefined) {
+        clearTimeout(hideTimer);
+        hideTimer = undefined;
+      }
+      setOpen(true);
+      scheduleScrollFieldIntoReadableView(field);
     };
 
     const onFocusOut = () => {
@@ -66,13 +80,15 @@ export function useVirtualKeyboard() {
 
     const vv = window.visualViewport;
     const onViewportResize = () => {
-      if (!isFormField(document.activeElement)) {
+      const field = resolveFormField(document.activeElement);
+      if (!field) {
         return;
       }
       const ratio = vv ? vv.height / window.innerHeight : 1;
       if (ratio < 0.72) {
         setOpen(true);
       }
+      scrollFieldIntoReadableView(field);
     };
 
     document.addEventListener("focusin", onFocusIn, true);

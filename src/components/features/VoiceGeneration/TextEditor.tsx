@@ -123,7 +123,9 @@ export const TextEditor = ({ value, onChange, maxLength = 1000 }: TextEditorProp
         maxLength={maxLength}
         onChange={(event) => onChange(event.target.value)}
         placeholder={t("voice.textPlaceholder")}
-        className="min-h-36 w-full resize-y rounded-2xl border border-slate-200 bg-white p-4 text-sm text-slate-900 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+        rows={6}
+        enterKeyHint="done"
+        className="vs-text-input min-h-36 w-full resize-y rounded-2xl border border-slate-200 bg-white p-4 text-sm text-slate-900 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
       />
     </div>
   );
