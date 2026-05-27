@@ -199,10 +199,48 @@ export const GeneratePage = () => {
   const freeRendersUsed = profile?.free_generation_count ?? 0;
   const freeSecondsProgress = Math.min(100, Math.max((freeSecondsUsed / freeSecondsCap) * 100, 0));
   const freeRendersProgress = Math.min(100, Math.max((freeRendersUsed / freeRendersCap) * 100, 0));
+  const freeRendersExhausted = freeRendersUsed >= freeRendersCap;
+  const freeSecondsExhausted = freeSecondsUsed >= freeSecondsCap;
+  const freeSecondsLeft = Math.max(0, freeSecondsCap - freeSecondsUsed);
+  const freeRendersLeft = Math.max(0, freeRendersCap - freeRendersUsed);
+  const freeSecondsInsufficientForScript =
+    !isPaidTrack && Boolean(text.trim()) && etaSeconds > 0 && freeSecondsUsed + etaSeconds > freeSecondsCap;
+
+  const freePreviewStatusKey = useMemo(() => {
+    if (isPaidTrack) {
+      return null;
+    }
+    if (freeRendersExhausted && freeSecondsExhausted) {
+      return "usage.freeStatusBoth";
+    }
+    if (freeRendersExhausted) {
+      return "usage.freeStatusRenders";
+    }
+    if (freeSecondsExhausted) {
+      return "usage.freeStatusSeconds";
+    }
+    if (freeSecondsInsufficientForScript) {
+      return "usage.freeStatusSecondsShortfall";
+    }
+    return null;
+  }, [
+    isPaidTrack,
+    freeRendersExhausted,
+    freeSecondsExhausted,
+    freeSecondsInsufficientForScript
+  ]);
 
   const maxScriptLen = isPaidTrack ? 2500 : 420;
 
   const canGenerate = useMemo(() => {
+    if (!isPaidTrack && profile) {
+      if (freeRendersUsed >= freeRendersCap) {
+        return false;
+      }
+      if (text.trim() && etaSeconds > 0 && freeSecondsUsed + etaSeconds > freeSecondsCap) {
+        return false;
+      }
+    }
     return Boolean(
       telegramId &&
         selectedVoiceId &&
@@ -210,7 +248,20 @@ export const GeneratePage = () => {
         text.length <= maxScriptLen &&
         !isGenerating
     );
-  }, [telegramId, isGenerating, selectedVoiceId, text, maxScriptLen]);
+  }, [
+    telegramId,
+    isGenerating,
+    selectedVoiceId,
+    text,
+    maxScriptLen,
+    isPaidTrack,
+    profile,
+    freeRendersUsed,
+    freeRendersCap,
+    freeSecondsUsed,
+    freeSecondsCap,
+    etaSeconds
+  ]);
 
   const handleGenerate = async () => {
     if (!selectedVoiceId) {
@@ -403,6 +454,24 @@ export const GeneratePage = () => {
 
           {!isPaidTrack ? (
             <div className="space-y-2">
+              <p className="text-[11px] leading-relaxed text-slate-600 dark:text-slate-400">
+                {t("usage.freePreviewRules", { secondsCap: freeSecondsCap, rendersCap: freeRendersCap })}
+              </p>
+              {freePreviewStatusKey ? (
+                <p
+                  className="rounded-xl border border-amber-200/80 bg-amber-50/90 px-3 py-2 text-[11px] leading-relaxed text-amber-950 dark:border-amber-800/60 dark:bg-amber-950/40 dark:text-amber-100"
+                  role="status"
+                >
+                  {t(freePreviewStatusKey, {
+                    secondsCap: freeSecondsCap,
+                    rendersCap: freeRendersCap,
+                    secondsLeft: freeSecondsLeft,
+                    rendersLeft: freeRendersLeft,
+                    need: etaSeconds,
+                    left: freeSecondsLeft
+                  })}
+                </p>
+              ) : null}
               <div>
                 <div className="mb-1 flex justify-between text-[11px] text-slate-500 dark:text-slate-400">
                   <span>{t("usage.secondsMeter")}</span>

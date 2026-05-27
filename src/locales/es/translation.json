@@ -61,7 +61,12 @@
     "rendersMeter": "Renders de prueba (total)",
     "dailyMeter": "Intentos de hoy",
     "remainingMeter": "Creditos restantes (~seg)",
-    "freePoolShort": "{{seconds}} / {{lifetime}} s · {{gens}} renders"
+    "freePoolShort": "{{seconds}} / {{lifetime}} s · {{gens}} renders",
+    "freePreviewRules": "Vista previa beta: dos limites — hasta {{secondsCap}} s de narracion y hasta {{rendersCap}} locuciones en total. Hace falta tiempo suficiente para el texto y una locucion libre.",
+    "freeStatusRenders": "Se usaron las {{rendersCap}} locuciones de prueba. Los {{secondsLeft}} s restantes no se pueden gastar — recarga o pasa a Pro.",
+    "freeStatusSeconds": "Agotaste los {{secondsCap}} s de prueba. Acorta el texto o pasa a un plan de pago.",
+    "freeStatusBoth": "Prueba agotada: segundos ({{secondsCap}} s) y locuciones ({{rendersCap}}).",
+    "freeStatusSecondsShortfall": "Este texto necesita ~{{need}} s; quedan ~{{left}} s en la prueba. Acorta el guion o recarga."
   },
   "presets": {
     "label": "Presets para creadores",

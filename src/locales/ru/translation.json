@@ -61,7 +61,12 @@
     "rendersMeter": "Рендеры превью (всего)",
     "dailyMeter": "Попытки сегодня",
     "remainingMeter": "Осталось кредитов (~сек)",
-    "freePoolShort": "{{seconds}} / {{lifetime}} сек · {{gens}} рендеров"
+    "freePoolShort": "{{seconds}} / {{lifetime}} сек · {{gens}} рендеров",
+    "freePreviewRules": "Бета-превью: учитываются оба лимита — до {{secondsCap}} с озвучки и до {{rendersCap}} озвучек за всё время. Новая генерация возможна только если хватает и секунд на длину текста, и свободного рендера.",
+    "freeStatusRenders": "Использованы все {{rendersCap}} озвучки превью. Оставшиеся {{secondsLeft}} с не тратятся — пополните баланс или оформите Pro.",
+    "freeStatusSeconds": "Исчерпан лимит {{secondsCap}} с превью. Сократите текст или перейдите на платный тариф.",
+    "freeStatusBoth": "Превью полностью использовано: и секунды ({{secondsCap}} с), и озвучки ({{rendersCap}}).",
+    "freeStatusSecondsShortfall": "На этот текст нужно ~{{need}} с, в превью осталось ~{{left}} с. Сократите сценарий или пополните баланс."
   },
   "presets": {
     "label": "Пресеты для креаторов",

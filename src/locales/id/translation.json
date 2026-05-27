@@ -61,7 +61,12 @@
     "rendersMeter": "Render pratinjau (total)",
     "dailyMeter": "Percobaan studio hari ini",
     "remainingMeter": "Kredit tersisa (~detik)",
-    "freePoolShort": "{{seconds}} / {{lifetime}} dtk · {{gens}} render"
+    "freePoolShort": "{{seconds}} / {{lifetime}} dtk · {{gens}} render",
+    "freePreviewRules": "Pratinjau beta: dua batas — hingga {{secondsCap}} dtk narasi dan {{rendersCap}} voiceover seumur hidup. Perlu cukup detik untuk teks dan satu render tersisa.",
+    "freeStatusRenders": "Semua {{rendersCap}} voiceover pratinjau terpakai. {{secondsLeft}} dtk tersisa tidak bisa dipakai — isi ulang atau Pro.",
+    "freeStatusSeconds": "Batas {{secondsCap}} dtk pratinjau habis. Persingkat teks atau pakai paket berbayar.",
+    "freeStatusBoth": "Pratinjau habis: detik ({{secondsCap}} dtk) dan voiceover ({{rendersCap}}).",
+    "freeStatusSecondsShortfall": "Teks ini butuh ~{{need}} dtk; tersisa ~{{left}} dtk di pratinjau. Persingkat naskah atau isi ulang."
   },
   "presets": {
     "label": "Preset kreator",

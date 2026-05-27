@@ -61,7 +61,12 @@
     "rendersMeter": "प्रीव्यू रेंडर (कुल)",
     "dailyMeter": "आज की कोशिशें",
     "remainingMeter": "बचे क्रेडिट (~सेकंड)",
-    "freePoolShort": "{{seconds}} / {{lifetime}} सेक · {{gens}} रेंडर"
+    "freePoolShort": "{{seconds}} / {{lifetime}} सेक · {{gens}} रेंडर",
+    "freePreviewRules": "बीटा प्रीव्यू: दो सीमाएँ — कुल {{secondsCap}} सेक नैरेशन और {{rendersCap}} वॉइसओवर। टेक्स्ट के लिए पर्याप्त सेकंड और एक खाली रेंडर दोनों चाहिए।",
+    "freeStatusRenders": "सभी {{rendersCap}} प्रीव्यू वॉइसओवर उपयोग हो गए। बचे {{secondsLeft}} सेक खर्च नहीं हो सकते — टॉप-अप या Pro लें।",
+    "freeStatusSeconds": "{{secondsCap}} सेक की प्रीव्यू सीमा समाप्त। टेक्स्ट छोटा करें या पेड प्लान लें।",
+    "freeStatusBoth": "प्रीव्यू पूर्ण: सेकंड ({{secondsCap}}) और वॉइसओवर ({{rendersCap}}) दोनों।",
+    "freeStatusSecondsShortfall": "इस टेक्स्ट को ~{{need}} सेक चाहिए; प्रीव्यू में ~{{left}} सेक बचे हैं। टेक्स्ट छोटा करें या टॉप-अप करें।"
   },
   "presets": {
     "label": "क्रिएटर प्रीसेट",

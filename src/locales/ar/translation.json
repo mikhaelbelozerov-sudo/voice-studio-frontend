@@ -61,7 +61,12 @@
     "rendersMeter": "عمليات المعاينة (الإجمالي)",
     "dailyMeter": "تجارب الاستوديو اليوم",
     "remainingMeter": "الرصيد المتبقي (~ثوان)",
-    "freePoolShort": "{{seconds}} / {{lifetime}} ث · {{gens}} عمليات"
+    "freePoolShort": "{{seconds}} / {{lifetime}} ث · {{gens}} عمليات",
+    "freePreviewRules": "معاينة بيتا: حدان — حتى {{secondsCap}} ثانية تعليق و{{rendersCap}} تعليقات صوتية طوال مدة الحساب. يلزم وقت كافٍ للنص وتعليق مجاني متبقٍ.",
+    "freeStatusRenders": "استُخدمت كل {{rendersCap}} تعليقات المعاينة. لا يمكن صرف {{secondsLeft}} ث المتبقية — عبّئ الرصيد أو Pro.",
+    "freeStatusSeconds": "نُفدت حدود {{secondsCap}} ث في المعاينة. قصّر النص أو انتقل لخطة مدفوعة.",
+    "freeStatusBoth": "اكتملت المعاينة: الثواني ({{secondsCap}} ث) والتعليقات ({{rendersCap}}).",
+    "freeStatusSecondsShortfall": "هذا النص يحتاج ~{{need}} ث؛ تبقى ~{{left}} ث في المعاينة. قصّر النص أو عبّئ الرصيد."
   },
   "presets": {
     "label": "إعدادات مسبقة للمبدعين",

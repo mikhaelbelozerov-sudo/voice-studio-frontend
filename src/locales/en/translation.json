@@ -61,7 +61,12 @@
     "rendersMeter": "Preview renders (total)",
     "dailyMeter": "Today’s studio tries",
     "remainingMeter": "Credits remaining (~seconds)",
-    "freePoolShort": "{{seconds}} / {{lifetime}}s · {{gens}} renders"
+    "freePoolShort": "{{seconds}} / {{lifetime}}s · {{gens}} renders",
+    "freePreviewRules": "Beta preview uses two limits: up to {{secondsCap}}s of narration and up to {{rendersCap}} voiceovers for the lifetime of your account. You need both enough seconds for the script and a free render left.",
+    "freeStatusRenders": "All {{rendersCap}} preview voiceovers are used. The remaining {{secondsLeft}}s cannot be spent — top up or go Pro.",
+    "freeStatusSeconds": "The {{secondsCap}}s preview cap is used up. Shorten the script or switch to a paid plan.",
+    "freeStatusBoth": "Preview fully used: both seconds ({{secondsCap}}s) and voiceovers ({{rendersCap}}).",
+    "freeStatusSecondsShortfall": "This script needs ~{{need}}s; only ~{{left}}s left in preview. Shorten the text or top up."
   },
   "presets": {
     "label": "Creator presets",
