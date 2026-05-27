@@ -47,7 +47,13 @@
     "gateTitle": "Almost there — a little more studio time",
     "gateBody": "You need about {{time}} more to render this voiceover. Grab a quick top-up or go PRO Creator Beta.",
     "gateShortfallFallback": "a bit more time",
-    "gateDismiss": "Not now"
+    "gateDismiss": "Not now",
+    "upgradeGateTitle": "Preview limit reached",
+    "upgradeGateBodyRenders": "You've used all {{rendersCap}} free voiceovers. Get a minute pack or PRO Creator subscription to keep creating.",
+    "upgradeGateBodyBoth": "Beta preview is fully used: {{secondsCap}}s and {{rendersCap}} voiceovers. Top up with a pack or subscription.",
+    "upgradeGateBodySeconds": "You've used all {{secondsCap}}s of preview time. Top up or shorten your script.",
+    "upgradeGateBodyShortfall": "This script needs ~{{need}}s; only ~{{left}}s left in preview. Shorten the text or go to pricing.",
+    "upgradeGateCta": "View packs & subscription"
   },
   "usage": {
     "studioBalance": "Studio balance",

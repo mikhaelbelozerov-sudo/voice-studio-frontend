@@ -47,7 +47,13 @@
     "gateTitle": "تقريبا جاهز — تحتاج المزيد من الوقت",
     "gateBody": "تحتاج حوالي {{time}} اضافية لهذا الدوبلاج. اشحن سريعا او PRO Creator Beta.",
     "gateShortfallFallback": "قليلا من الوقت",
-    "gateDismiss": "ليس الآن"
+    "gateDismiss": "ليس الآن",
+    "upgradeGateTitle": "انتهت حدود المعاينة",
+    "upgradeGateBodyRenders": "استخدمت كل {{rendersCap}} تعليقات المعاينة. اختر باقة دقائق او اشتراك PRO Creator.",
+    "upgradeGateBodyBoth": "اكتملت المعاينة: {{secondsCap}} ث و {{rendersCap}} تعليقات. عبّئ الرصيد بباقة او اشتراك.",
+    "upgradeGateBodySeconds": "نفدت {{secondsCap}} ث من المعاينة. عبّئ الرصيد او قصّر النص.",
+    "upgradeGateBodyShortfall": "هذا النص يحتاج ~{{need}} ث؛ تبقى ~{{left}} ث. قصّر النص او انتقل للدفع.",
+    "upgradeGateCta": "الباقات والاشتراك"
   },
   "usage": {
     "studioBalance": "رصيد الاستوديو",

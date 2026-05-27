@@ -47,7 +47,13 @@
     "gateTitle": "Casi listo — un poco mas de tiempo",
     "gateBody": "Necesitas unos {{time}} mas para esta voz. Top-up rapido o PRO Creator Beta.",
     "gateShortfallFallback": "un poco mas",
-    "gateDismiss": "Ahora no"
+    "gateDismiss": "Ahora no",
+    "upgradeGateTitle": "Limite de prueba alcanzado",
+    "upgradeGateBodyRenders": "Usaste las {{rendersCap}} locuciones gratis. Elige un paquete de minutos o la suscripcion PRO Creator.",
+    "upgradeGateBodyBoth": "Prueba agotada: {{secondsCap}} s y {{rendersCap}} locuciones. Recarga con un paquete o suscripcion.",
+    "upgradeGateBodySeconds": "Agotaste los {{secondsCap}} s de prueba. Recarga o acorta el guion.",
+    "upgradeGateBodyShortfall": "Este texto necesita ~{{need}} s; quedan ~{{left}} s. Acorta el texto o ve a pago.",
+    "upgradeGateCta": "Paquetes y suscripcion"
   },
   "usage": {
     "studioBalance": "Saldo del estudio",

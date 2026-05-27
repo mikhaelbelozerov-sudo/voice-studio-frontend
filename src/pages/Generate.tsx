@@ -222,6 +222,44 @@ export const GeneratePage = () => {
 
   const maxScriptLen = isPaidTrack ? 2500 : 420;
 
+  const freeLimitBlocksGenerate = useMemo(() => {
+    if (isPaidTrack || !profile) {
+      return false;
+    }
+    if (freeRendersUsed >= freeRendersCap) {
+      return true;
+    }
+    if (freeSecondsUsed >= freeSecondsCap) {
+      return true;
+    }
+    return Boolean(text.trim()) && etaSeconds > 0 && freeSecondsUsed + etaSeconds > freeSecondsCap;
+  }, [
+    isPaidTrack,
+    profile,
+    freeRendersUsed,
+    freeRendersCap,
+    freeSecondsUsed,
+    freeSecondsCap,
+    text,
+    etaSeconds
+  ]);
+
+  const upgradePromptKey = useMemo(() => {
+    if (!freeLimitBlocksGenerate) {
+      return null;
+    }
+    if (freeRendersExhausted && freeSecondsExhausted) {
+      return "generate.upgradeGateBodyBoth";
+    }
+    if (freeRendersExhausted) {
+      return "generate.upgradeGateBodyRenders";
+    }
+    if (freeSecondsExhausted) {
+      return "generate.upgradeGateBodySeconds";
+    }
+    return "generate.upgradeGateBodyShortfall";
+  }, [freeLimitBlocksGenerate, freeRendersExhausted, freeSecondsExhausted]);
+
   const canGenerate = useMemo(() => {
     if (!isPaidTrack && profile) {
       if (freeRendersUsed >= freeRendersCap) {
@@ -252,6 +290,13 @@ export const GeneratePage = () => {
     freeSecondsCap,
     etaSeconds
   ]);
+
+  useEffect(() => {
+    if (!freeLimitBlocksGenerate) {
+      return;
+    }
+    trackAnalytics("paywall_shown", { variant: "free_preview_exhausted" });
+  }, [freeLimitBlocksGenerate]);
 
   const handleGenerate = async () => {
     if (!selectedVoiceId) {
@@ -559,6 +604,33 @@ export const GeneratePage = () => {
         onPresetChange={setPresetId}
         onReset={resetVoiceSliders}
       />
+
+      {upgradePromptKey ? (
+        <div
+          className="rounded-2xl border border-amber-200/90 bg-gradient-to-br from-amber-50 via-white to-white p-4 shadow-sm dark:border-amber-800/70 dark:from-amber-950/50 dark:via-slate-900 dark:to-slate-900"
+          role="region"
+          aria-labelledby="upgrade-gate-title"
+        >
+          <p id="upgrade-gate-title" className="text-base font-semibold text-slate-900 dark:text-slate-100">
+            {t("generate.upgradeGateTitle")}
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+            {t(upgradePromptKey, {
+              secondsCap: freeSecondsCap,
+              rendersCap: freeRendersCap,
+              need: etaSeconds,
+              left: freeSecondsLeft
+            })}
+          </p>
+          <Link
+            to={`/pricing${tgBootstrapSuffix}`}
+            className="mt-4 block"
+            onClick={() => trackAnalytics("paywall_explore_clicked", { source: "free_preview_gate" })}
+          >
+            <Button className="w-full">{t("generate.upgradeGateCta")}</Button>
+          </Link>
+        </div>
+      ) : null}
 
       <Button className="w-full gap-2" onClick={handleGenerate} disabled={!canGenerate} loading={isGenerating}>
         {isGenerating ? (

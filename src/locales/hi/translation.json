@@ -47,7 +47,13 @@
     "gateTitle": "लगभग तैयार — थोड़ा और समय चाहिए",
     "gateBody": "इस वॉइसओवर के लिए लगभग {{time}} और चाहिए। तुरंत टॉप-अप या PRO Creator Beta।",
     "gateShortfallFallback": "थोड़ा समय",
-    "gateDismiss": "अभी नहीं"
+    "gateDismiss": "अभी नहीं",
+    "upgradeGateTitle": "प्रीव्यू सीमा पूरी",
+    "upgradeGateBodyRenders": "सभी {{rendersCap}} मुफ्त वॉइसओवर उपयोग हो गए। मिनट पैक या PRO Creator सब्सक्रिप्शन लें।",
+    "upgradeGateBodyBoth": "बीटा प्रीव्यू खत्म: {{secondsCap}} सेक और {{rendersCap}} वॉइसओवर। पैक या सब्सक्रिप्शन से टॉप-अप करें।",
+    "upgradeGateBodySeconds": "{{secondsCap}} सेक की प्रीव्यू सीमा समाप्त। टॉप-अप करें या टेक्स्ट छोटा करें।",
+    "upgradeGateBodyShortfall": "इस टेक्स्ट को ~{{need}} सेक चाहिए; ~{{left}} सेक बचे हैं। टेक्स्ट छोटा करें या भुगतान पर जाएं।",
+    "upgradeGateCta": "पैक और सब्सक्रिप्शन"
   },
   "usage": {
     "studioBalance": "स्टूडियो बैलेंस",

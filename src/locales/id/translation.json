@@ -47,7 +47,13 @@
     "gateTitle": "Hampir selesai — perlu sedikit waktu lagi",
     "gateBody": "Butuh sekitar {{time}} lagi untuk render ini. Top-up cepat atau PRO Creator Beta.",
     "gateShortfallFallback": "sedikit waktu",
-    "gateDismiss": "Nanti"
+    "gateDismiss": "Nanti",
+    "upgradeGateTitle": "Batas pratinjau tercapai",
+    "upgradeGateBodyRenders": "Semua {{rendersCap}} voiceover gratis terpakai. Pilih paket menit atau langganan PRO Creator.",
+    "upgradeGateBodyBoth": "Pratinjau habis: {{secondsCap}} dtk dan {{rendersCap}} voiceover. Isi ulang dengan paket atau langganan.",
+    "upgradeGateBodySeconds": "Batas {{secondsCap}} dtk pratinjau habis. Isi ulang atau persingkat naskah.",
+    "upgradeGateBodyShortfall": "Teks ini butuh ~{{need}} dtk; tersisa ~{{left}} dtk. Persingkat teks atau ke pembayaran.",
+    "upgradeGateCta": "Paket & langganan"
   },
   "usage": {
     "studioBalance": "Saldo studio",

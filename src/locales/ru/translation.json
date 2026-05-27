@@ -47,7 +47,13 @@
     "gateTitle": "Почти готово — чуть больше студийного времени",
     "gateBody": "Нужно примерно на {{time}} больше, чтобы собрать эту озвучку. Мгновенный топап или PRO Creator Beta.",
     "gateShortfallFallback": "немного времени",
-    "gateDismiss": "Позже"
+    "gateDismiss": "Позже",
+    "upgradeGateTitle": "Превью закончилось",
+    "upgradeGateBodyRenders": "Вы использовали все {{rendersCap}} бесплатные озвучки. Чтобы снова генерировать аудио, выберите пакет минут или подписку PRO Creator.",
+    "upgradeGateBodyBoth": "Лимит бета-превью исчерпан: {{secondsCap}} с и {{rendersCap}} озвучки. Пополните студию — пакет минут или подписка.",
+    "upgradeGateBodySeconds": "Исчерпан лимит {{secondsCap}} с превью. Пополните баланс или сократите сценарий.",
+    "upgradeGateBodyShortfall": "На этот текст нужно ~{{need}} с, в превью осталось ~{{left}} с. Сократите текст или перейдите к оплате.",
+    "upgradeGateCta": "Пакеты и подписка"
   },
   "usage": {
     "studioBalance": "Баланс студии",
