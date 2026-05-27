@@ -546,14 +546,7 @@ export const GeneratePage = () => {
         />
       )}
 
-      <TextEditor value={text} onChange={setText} maxLength={maxScriptLen} />
-
-      <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-slate-50 px-3 py-2 text-xs text-slate-600 dark:bg-slate-800 dark:text-slate-300">
-        <span>{t("generate.estimatedNarration")}</span>
-        <span className="font-semibold tabular-nums text-slate-900 dark:text-slate-50">
-          ~{Math.max(1, etaSeconds)}s {t("generate.audioForScript")}
-        </span>
-      </div>
+      <TextEditor value={text} onChange={setText} maxLength={maxScriptLen} etaSeconds={etaSeconds} />
 
       <VoiceStylePanel
         languageCode={languageCode}
