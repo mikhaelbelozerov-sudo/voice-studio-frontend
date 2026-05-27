@@ -1,13 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AppPage } from "../components/layout/AppPage";
 import { Button } from "../components/ui/Button";
-import { Spinner } from "../components/ui/Spinner";
 import { PRO_CREATOR_STARS_PRICE } from "../constants/catalog";
 import { useTelegram } from "../hooks/useTelegram";
 import { useTelegramStarsPurchase } from "../hooks/useTelegramStarsPurchase";
-import { CreateInvoiceRequest, getUserProfile, UserProfile } from "../services/api";
-import { formatNarrationSeconds } from "../utils/credits";
+import { CreateInvoiceRequest } from "../services/api";
 
 const FALLBACK_TELEGRAM_ID = 123456789;
 
@@ -20,68 +18,11 @@ type Pack = {
   invoice: CreateInvoiceRequest;
 };
 
-function isProActive(profile: UserProfile | null): boolean {
-  if (!profile) return false;
-  if (profile.subscription_tier === "premium") return true;
-  if (profile.subscription_tier !== "pro" || !profile.subscription_expires_at) return false;
-  return new Date(profile.subscription_expires_at).getTime() > Date.now();
-}
-
 export const PricingPage = () => {
   const { t } = useTranslation();
   const { telegramId: telegramUserId } = useTelegram();
   const telegramId = telegramUserId ?? FALLBACK_TELEGRAM_ID;
   const proStars = PRO_CREATOR_STARS_PRICE;
-
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [profileLoading, setProfileLoading] = useState(false);
-
-  useEffect(() => {
-    if (!telegramUserId) {
-      setProfile(null);
-      return;
-    }
-    let cancelled = false;
-    setProfileLoading(true);
-    void getUserProfile(telegramUserId)
-      .then((data) => {
-        if (!cancelled) setProfile(data);
-      })
-      .catch(() => {
-        if (!cancelled) setProfile(null);
-      })
-      .finally(() => {
-        if (!cancelled) setProfileLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [telegramUserId]);
-
-  const walletSeconds = profile ? (profile.credit_balance ?? 0) + (profile.subscription_credit_balance ?? 0) : 0;
-  const proOn = isProActive(profile);
-  const hasWallet = (profile?.credit_balance ?? 0) > 0;
-  const isPaidTrack =
-    walletSeconds > 0 || profile?.subscription_tier === "pro" || profile?.subscription_tier === "premium";
-
-  const planBadge = useMemo(() => {
-    if (proOn) return t("pricing.planBadgeProBeta");
-    if (hasWallet || walletSeconds > 0) return t("pricing.planBadgeStudio");
-    return t("pricing.planBadgeBeta");
-  }, [proOn, hasWallet, walletSeconds, t]);
-
-  const narrationLabel = useMemo(() => formatNarrationSeconds(walletSeconds).label, [walletSeconds]);
-
-  const usageBarPercent = useMemo(() => {
-    if (!profile) return 0;
-    if (!isPaidTrack) {
-      const cap = profile.free_seconds_cap ?? 60;
-      const used = profile.free_seconds_used ?? 0;
-      return Math.min(100, Math.max(0, (used / Math.max(cap, 1)) * 100));
-    }
-    const denom = proOn ? 6000 : Math.max(300, walletSeconds, 1);
-    return Math.min(100, Math.round((walletSeconds / denom) * 100));
-  }, [profile, isPaidTrack, proOn, walletSeconds]);
 
   const topUps: Pack[] = useMemo(
     () => [
@@ -148,7 +89,6 @@ export const PricingPage = () => {
       setIsPurchasingId(null);
       if (status === "paid") {
         setSuccess(t("pricing.paid"));
-        void getUserProfile(telegramUserId).then(setProfile);
       } else if (status === "cancelled") {
         setError(t("pricing.cancelled"));
       } else {
@@ -162,38 +102,7 @@ export const PricingPage = () => {
       <div className="space-y-2">
         <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">{t("pricing.title")}</h1>
         <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300">{t("pricing.subtitleV2")}</p>
-      </div>
-
-      <div className="rounded-2xl border border-slate-200/80 bg-gradient-to-br from-slate-50 to-white p-4 shadow-sm dark:border-slate-700 dark:from-slate-900 dark:to-slate-950">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <span className="inline-flex items-center rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white dark:bg-slate-100 dark:text-slate-900">
-            {planBadge}
-          </span>
-          {profileLoading ? (
-            <span className="flex items-center gap-2 text-xs text-slate-500">
-              <Spinner />
-              {t("common.loading")}
-            </span>
-          ) : null}
-        </div>
-        <p className="mt-3 text-sm font-medium text-slate-800 dark:text-slate-100">{t("pricing.studioTimeAvailable")}</p>
-        <p className="mt-1 text-2xl font-semibold tabular-nums text-slate-900 dark:text-slate-50">{narrationLabel}</p>
-        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-          {t("pricing.approxMinutesHint", { minutes: Math.floor(walletSeconds / 60) })}
-        </p>
-        <div className="mt-4">
-          <div className="mb-1 flex justify-between text-[11px] text-slate-500 dark:text-slate-400">
-            <span>{isPaidTrack ? t("pricing.usageBarPaid") : t("pricing.usageBarPreview")}</span>
-            <span>{Math.round(usageBarPercent)}%</span>
-          </div>
-          <div className="h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
-            <div
-              className={`h-2 rounded-full transition-[width] ${isPaidTrack ? "bg-emerald-500" : "bg-amber-500"}`}
-              style={{ width: `${usageBarPercent}%` }}
-            />
-          </div>
-        </div>
-        <p className="mt-3 text-xs leading-relaxed text-slate-600 dark:text-slate-400">{t("pricing.softUpgradeHint")}</p>
+        <p className="text-xs leading-relaxed text-slate-500 dark:text-slate-400">{t("pricing.balanceOnGenerateHint")}</p>
       </div>
 
       {error ? <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div> : null}

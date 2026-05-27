@@ -57,10 +57,6 @@ export const ProfilePage = () => {
     trackAnalytics("referral_limit_reached", { source: "profile_ui" });
   }, [profile?.referral?.referralAtMonthlyLimit]);
 
-  const walletSeconds = profile
-    ? (profile.credit_balance ?? 0) + (profile.subscription_credit_balance ?? 0)
-    : 0;
-
   useEffect(() => {
     const loadProfile = async () => {
       setIsLoading(true);
@@ -184,17 +180,6 @@ export const ProfilePage = () => {
         </p>
         <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
           {t("profile.greetingSubtitle")}
-        </p>
-      </div>
-
-      <div className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
-        <p className="text-sm text-slate-500 dark:text-slate-400">{t("profile.studioWalletTitle")}</p>
-        <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-          {t("profile.studioWalletDetail", {
-            total: walletSeconds,
-            wallet: profile?.credit_balance ?? 0,
-            sub: profile?.subscription_credit_balance ?? 0
-          })}
         </p>
       </div>
 
