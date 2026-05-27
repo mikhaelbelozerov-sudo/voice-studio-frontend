@@ -1,8 +1,10 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import { AppPage } from "../components/layout/AppPage";
 import { Button } from "../components/ui/Button";
 import { PRO_CREATOR_STARS_PRICE } from "../constants/catalog";
+import { usePreserveTelegramMiniAppBootstrap } from "../hooks/usePreserveTelegramMiniAppBootstrap";
 import { useTelegram } from "../hooks/useTelegram";
 import { useTelegramStarsPurchase } from "../hooks/useTelegramStarsPurchase";
 import { CreateInvoiceRequest } from "../services/api";
@@ -20,6 +22,7 @@ type Pack = {
 
 export const PricingPage = () => {
   const { t } = useTranslation();
+  const { suffix: tgBootstrapSuffix } = usePreserveTelegramMiniAppBootstrap();
   const { telegramId: telegramUserId } = useTelegram();
   const telegramId = telegramUserId ?? FALLBACK_TELEGRAM_ID;
   const proStars = PRO_CREATOR_STARS_PRICE;
@@ -101,8 +104,13 @@ export const PricingPage = () => {
     <AppPage className="space-y-6">
       <div className="space-y-2">
         <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">{t("pricing.title")}</h1>
-        <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300">{t("pricing.subtitleV2")}</p>
-        <p className="text-xs leading-relaxed text-slate-500 dark:text-slate-400">{t("pricing.balanceOnGenerateHint")}</p>
+        <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300">{t("pricing.subtitle")}</p>
+        <Link
+          to={`/generate${tgBootstrapSuffix}`}
+          className="inline-block text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+        >
+          {t("pricing.viewBalance")}
+        </Link>
       </div>
 
       {error ? <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div> : null}
@@ -111,8 +119,7 @@ export const PricingPage = () => {
       ) : null}
 
       <section className="space-y-3">
-        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t("pricing.topUpsTitle")}</h2>
-        <p className="text-xs text-slate-500 dark:text-slate-400">{t("pricing.topUpsHint")}</p>
+        <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{t("pricing.topUpsTitle")}</h2>
         <div className="grid gap-3">
           {topUps.map((pack) => (
             <div
