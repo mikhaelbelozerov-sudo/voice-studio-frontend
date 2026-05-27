@@ -71,7 +71,7 @@
   "presets": {
     "label": "Creator presets",
     "hint": "Pick a preset for faster storytelling — we tune pacing and warmth for TikTok/Reels/long-form.",
-    "custom": "Custom mix (your sliders)",
+    "custom": "Custom",
     "overrideNotice": "Preset active",
     "tiktokStory": "TikTok story",
     "youtubeDocumentary": "YouTube documentary",
@@ -110,6 +110,12 @@
     "fileEmpty": "This file is empty or has no text to read.",
     "fileReadError": "Could not read this file. Try another .txt file.",
     "voiceParams": "Voice settings",
+    "styleTitle": "Voice style",
+    "styleHint": "Pick a preset for TikTok, Reels, and more — or tune sliders below.",
+    "presetSection": "Preset",
+    "manualSection": "Fine-tune",
+    "narrationLanguage": "Narration language",
+    "presetSliderHint": "Moving a slider switches to your custom mix.",
     "speed": "Speed",
     "pitch": "Pitch",
     "resetSliders": "Reset"

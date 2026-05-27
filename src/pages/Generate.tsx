@@ -4,13 +4,11 @@ import { Link } from "react-router-dom";
 import { Sparkles } from "lucide-react";
 import { AudioPlayer } from "../components/ui/AudioPlayer";
 import { Button } from "../components/ui/Button";
-import { DropdownMenu } from "../components/ui/DropdownMenu";
 import { Spinner } from "../components/ui/Spinner";
 import { AppPage } from "../components/layout/AppPage";
 import { TextEditor } from "../components/features/VoiceGeneration/TextEditor";
-import { VoiceControls } from "../components/features/VoiceGeneration/VoiceControls";
+import { VoiceStylePanel } from "../components/features/VoiceGeneration/VoiceStylePanel";
 import { VoiceSelector } from "../components/features/VoiceGeneration/VoiceSelector";
-import { VoicePresetId, VOICE_PRESET_OPTIONS } from "../constants/voicePresets";
 import { mapInterfaceLanguageToTtsCode } from "../constants/ttsLanguages";
 import { usePreserveTelegramMiniAppBootstrap } from "../hooks/usePreserveTelegramMiniAppBootstrap";
 import { useTelegram } from "../hooks/useTelegram";
@@ -120,14 +118,6 @@ export const GeneratePage = () => {
     };
     void loadUsage();
   }, [telegramId, audioUrl]);
-
-  const presetOptions = useMemo(
-    () => [
-      { value: "custom", label: t("presets.custom") },
-      ...VOICE_PRESET_OPTIONS.map((option) => ({ value: option.id, label: t(option.labelKey) }))
-    ],
-    [t]
-  );
 
   const etaSeconds = useMemo(() => {
     if (!text.trim()) {
@@ -556,25 +546,6 @@ export const GeneratePage = () => {
         />
       )}
 
-      <div className="space-y-2 rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
-        <span className="text-sm font-medium text-slate-800 dark:text-slate-100">{t("presets.label")}</span>
-        <p className="text-xs text-slate-500 dark:text-slate-400">{t("presets.hint")}</p>
-        <DropdownMenu
-          value={presetId ?? "custom"}
-          options={presetOptions}
-          onChange={(val) => {
-            if (val === "custom") {
-              setPresetId(null);
-            } else {
-              setPresetId(val as VoicePresetId);
-            }
-          }}
-        />
-        {presetId ? (
-          <p className="text-xs text-blue-700 dark:text-blue-300">{t("presets.overrideNotice")}</p>
-        ) : null}
-      </div>
-
       <TextEditor value={text} onChange={setText} maxLength={maxScriptLen} />
 
       <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-slate-50 px-3 py-2 text-xs text-slate-600 dark:bg-slate-800 dark:text-slate-300">
@@ -584,14 +555,16 @@ export const GeneratePage = () => {
         </span>
       </div>
 
-      <VoiceControls
+      <VoiceStylePanel
         languageCode={languageCode}
         speed={speed}
         pitch={pitch}
+        presetId={presetId}
         onLanguageCodeChange={setLanguageCode}
         onSpeedChange={setSpeed}
         onPitchChange={setPitch}
-        onResetSliders={resetVoiceSliders}
+        onPresetChange={setPresetId}
+        onReset={resetVoiceSliders}
       />
 
       <Button className="w-full gap-2" onClick={handleGenerate} disabled={!canGenerate} loading={isGenerating}>

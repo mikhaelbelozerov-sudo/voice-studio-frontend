@@ -31,5 +31,5 @@ export const useVoiceStore = create<VoiceState>((set) => ({
   setPitch: (pitch) => set({ pitch: Math.min(Math.max(Number(pitch), -1), 1) }),
   setLanguageCode: (languageCode) => set({ languageCode }),
   setPresetId: (presetId) => set({ presetId }),
-  resetVoiceSliders: () => set({ speed: 1.0, pitch: 0 })
+  resetVoiceSliders: () => set({ speed: 1.0, pitch: 0, presetId: null })
 }));

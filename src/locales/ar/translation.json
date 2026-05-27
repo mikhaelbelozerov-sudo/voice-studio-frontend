@@ -110,6 +110,12 @@
     "fileEmpty": "الملف فارغ أو لا يحتوي على نص.",
     "fileReadError": "تعذر قراءة الملف. جرّب ملف .txt آخر.",
     "voiceParams": "اعدادات الصوت",
+    "styleTitle": "نمط الصوت",
+    "styleHint": "قالب لـ TikTok و Reels — او اضبط المنزلقات بالاسفل.",
+    "presetSection": "قالب",
+    "manualSection": "ضبط دقيق",
+    "narrationLanguage": "لغة التعليق",
+    "presetSliderHint": "تحريك المنزلق يحوّلك الى مزيج مخصص.",
     "speed": "السرعة",
     "pitch": "النبرة",
     "resetSliders": "إعادة تعيين"

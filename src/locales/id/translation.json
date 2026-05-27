@@ -110,6 +110,12 @@
     "fileEmpty": "File kosong atau tidak ada teks.",
     "fileReadError": "Tidak bisa membaca file. Coba file .txt lain.",
     "voiceParams": "Pengaturan suara",
+    "styleTitle": "Gaya suara",
+    "styleHint": "Preset untuk TikTok, Reels, dll. — atau atur slider di bawah.",
+    "presetSection": "Preset",
+    "manualSection": "Penyesuaian",
+    "narrationLanguage": "Bahasa narasi",
+    "presetSliderHint": "Geser slider untuk beralih ke mix kustom.",
     "speed": "Kecepatan",
     "pitch": "Nada",
     "resetSliders": "Atur ulang"

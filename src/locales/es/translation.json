@@ -110,6 +110,12 @@
     "fileEmpty": "El archivo está vacío o no tiene texto.",
     "fileReadError": "No se pudo leer el archivo. Prueba con otro .txt.",
     "voiceParams": "Ajustes de voz",
+    "styleTitle": "Estilo de voz",
+    "styleHint": "Preset para TikTok, Reels y mas — o ajusta los controles abajo.",
+    "presetSection": "Preset",
+    "manualSection": "Ajuste fino",
+    "narrationLanguage": "Idioma de locucion",
+    "presetSliderHint": "Al mover un control pasas a mezcla personalizada.",
     "speed": "Velocidad",
     "pitch": "Tono",
     "resetSliders": "Restablecer"

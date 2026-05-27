@@ -110,6 +110,12 @@
     "fileEmpty": "फाइल खाली है या इसमें कोई टेक्स्ट नहीं।",
     "fileReadError": "फाइल नहीं पढ़ी जा सकी। दूसरी .txt आज़माएं।",
     "voiceParams": "वॉइस सेटिंग्स",
+    "styleTitle": "वॉइस स्टाइल",
+    "styleHint": "TikTok, Reels के लिए प्रीसेट — या नीचे स्लाइडर से अपना मिक्स।",
+    "presetSection": "प्रीसेट",
+    "manualSection": "फाइन-ट्यून",
+    "narrationLanguage": "नैरेशन भाषा",
+    "presetSliderHint": "स्लाइडर हिलाने पर कस्टम मिक्स पर स्विच होगा।",
     "speed": "स्पीड",
     "pitch": "पिच",
     "resetSliders": "रीसेट"

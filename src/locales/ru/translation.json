@@ -71,7 +71,7 @@
   "presets": {
     "label": "Пресеты для креаторов",
     "hint": "Быстрый стиль под TikTok, Reels или длинный контент — мы подстраиваем темп и настроение.",
-    "custom": "Свой микс (ползунки)",
+    "custom": "Свой",
     "overrideNotice": "Пресет активен",
     "tiktokStory": "История TikTok",
     "youtubeDocumentary": "Документалка YouTube",
@@ -110,6 +110,12 @@
     "fileEmpty": "Файл пустой или в нём нет текста.",
     "fileReadError": "Не удалось прочитать файл. Попробуйте другой .txt.",
     "voiceParams": "Параметры голоса",
+    "styleTitle": "Стиль озвучки",
+    "styleHint": "Пресет для TikTok, Reels и др. — или свои ползунки ниже.",
+    "presetSection": "Пресет",
+    "manualSection": "Настройка",
+    "narrationLanguage": "Язык озвучки",
+    "presetSliderHint": "Двигая ползунок, вы переключитесь на свой микс.",
     "speed": "Скорость",
     "pitch": "Высота тона",
     "resetSliders": "Сбросить"
