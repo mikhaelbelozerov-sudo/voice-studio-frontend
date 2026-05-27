@@ -578,18 +578,12 @@ export const GeneratePage = () => {
         </div>
       ) : null}
 
-      {isLoadingVoices ? (
-        <div className="flex items-center gap-2 text-sm text-slate-600">
-          <Spinner />
-          <span>{t("common.loading")}</span>
-        </div>
-      ) : (
-        <VoiceSelector
-          voices={voices}
-          selectedVoiceId={selectedVoiceId}
-          onSelect={(voiceId) => setSelectedVoiceId(voiceId)}
-        />
-      )}
+      <VoiceSelector
+        voices={voices}
+        selectedVoiceId={selectedVoiceId}
+        isLoading={isLoadingVoices}
+        onSelect={(voiceId) => setSelectedVoiceId(voiceId)}
+      />
 
       <TextEditor value={text} onChange={setText} maxLength={maxScriptLen} etaSeconds={etaSeconds} />
 

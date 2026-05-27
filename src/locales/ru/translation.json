@@ -101,7 +101,11 @@
     "fileDeleted": "Файл удалён"
   },
   "voice": {
-    "selectVoice": "Выберите голос",
+    "selectVoice": "Голос",
+    "selectVoiceHint": "Выберите голос и послушайте превью перед генерацией.",
+    "selectedVoiceLabel": "Выбран",
+    "selectedVoiceEmpty": "не выбран",
+    "noVoices": "Голоса временно недоступны. Попробуйте позже.",
     "selected": "Выбран",
     "play": "Play",
     "pause": "Pause",

@@ -1,19 +1,22 @@
-import { Pause, Play } from "lucide-react";
+import { Mic2, Pause, Play } from "lucide-react";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Voice } from "../../../services/api";
-import { Button } from "../../ui/Button";
+import { Spinner } from "../../ui/Spinner";
 
 interface VoiceSelectorProps {
   voices: Voice[];
   selectedVoiceId: string | null;
+  isLoading?: boolean;
   onSelect: (voiceId: string) => void;
 }
 
-export const VoiceSelector = ({ voices, selectedVoiceId, onSelect }: VoiceSelectorProps) => {
+export const VoiceSelector = ({ voices, selectedVoiceId, isLoading = false, onSelect }: VoiceSelectorProps) => {
   const { t } = useTranslation();
   const [playingVoiceId, setPlayingVoiceId] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const selectedVoice = voices.find((voice) => voice.voice_id === selectedVoiceId);
 
   const handlePreview = (voice: Voice) => {
     if (!voice.preview_url) {
@@ -40,46 +43,90 @@ export const VoiceSelector = ({ voices, selectedVoiceId, onSelect }: VoiceSelect
   };
 
   return (
-    <div className="space-y-3">
-      <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{t("voice.selectVoice")}</h2>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {voices.map((voice) => {
-          const selected = selectedVoiceId === voice.voice_id;
-          const isPlaying = playingVoiceId === voice.voice_id;
+    <div className="space-y-4 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2">
+          <Mic2 className="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" aria-hidden />
+          <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{t("voice.selectVoice")}</h2>
+        </div>
+        <p className="mt-1 text-xs leading-relaxed text-slate-500 dark:text-slate-400">{t("voice.selectVoiceHint")}</p>
+      </div>
 
-          return (
-            <button
-              key={voice.voice_id}
-              type="button"
-              onClick={() => onSelect(voice.voice_id)}
-              className={`rounded-2xl border p-4 text-left transition ${
-                selected
-                  ? "border-blue-500 bg-blue-50 shadow-sm dark:bg-blue-950/40"
-                  : "border-slate-200 bg-white hover:border-slate-300 dark:border-slate-700 dark:bg-slate-900"
-              }`}
-            >
-              <div className="mb-3 flex items-center justify-between">
-                <p className="font-medium text-slate-900 dark:text-slate-100">{voice.name}</p>
-                {selected ? (
-                  <span className="rounded-full bg-blue-600 px-2 py-1 text-xs text-white">{t("voice.selected")}</span>
-                ) : null}
-              </div>
-              <Button
+      {isLoading ? (
+        <div className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-slate-50 py-10 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300">
+          <Spinner />
+          <span>{t("common.loading")}</span>
+        </div>
+      ) : voices.length === 0 ? (
+        <p className="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-3 py-8 text-center text-sm text-slate-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400">
+          {t("voice.noVoices")}
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+          {voices.map((voice) => {
+            const selected = selectedVoiceId === voice.voice_id;
+            const isPlaying = playingVoiceId === voice.voice_id;
+
+            return (
+              <button
+                key={voice.voice_id}
                 type="button"
-                variant="secondary"
-                className="w-full gap-2"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  handlePreview(voice);
-                }}
-                disabled={!voice.preview_url}
+                onClick={() => onSelect(voice.voice_id)}
+                className={`rounded-xl border p-3 text-left transition ${
+                  selected
+                    ? "border-blue-600 bg-blue-50/80 dark:border-blue-500 dark:bg-blue-950/30"
+                    : "border-slate-200 bg-slate-50 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-950 dark:hover:border-slate-600"
+                }`}
               >
-                {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-                {voice.preview_url ? (isPlaying ? t("voice.pause") : t("voice.play")) : t("voice.noPreview")}
-              </Button>
-            </button>
-          );
-        })}
+                <div className="mb-2 flex items-center justify-between gap-2">
+                  <p className="truncate text-sm font-medium text-slate-900 dark:text-slate-100">{voice.name}</p>
+                  {selected ? (
+                    <span className="shrink-0 rounded-full bg-blue-600 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-white">
+                      {t("voice.selected")}
+                    </span>
+                  ) : null}
+                </div>
+                <span
+                  role="button"
+                  tabIndex={voice.preview_url ? 0 : -1}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    handlePreview(voice);
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key !== "Enter" && event.key !== " ") {
+                      return;
+                    }
+                    event.preventDefault();
+                    event.stopPropagation();
+                    handlePreview(voice);
+                  }}
+                  className={`inline-flex w-full items-center justify-center gap-1.5 rounded-full border px-2.5 py-1.5 text-xs font-medium transition ${
+                    voice.preview_url
+                      ? "border-slate-200 bg-white text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200"
+                      : "cursor-not-allowed border-slate-100 text-slate-400 opacity-60 dark:border-slate-800"
+                  }`}
+                  aria-disabled={!voice.preview_url}
+                >
+                  {isPlaying ? <Pause size={14} /> : <Play size={14} />}
+                  {voice.preview_url ? (isPlaying ? t("voice.pause") : t("voice.play")) : t("voice.noPreview")}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      <div
+        className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-4 text-xs dark:border-slate-800"
+        role="status"
+      >
+        <span className="font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
+          {t("voice.selectedVoiceLabel")}
+        </span>
+        <span className="font-semibold text-slate-900 dark:text-slate-50">
+          {selectedVoice ? selectedVoice.name : t("voice.selectedVoiceEmpty")}
+        </span>
       </div>
     </div>
   );

@@ -101,7 +101,11 @@
     "fileDeleted": "File deleted"
   },
   "voice": {
-    "selectVoice": "Choose voice",
+    "selectVoice": "Voice",
+    "selectVoiceHint": "Pick a voice and play the preview before generating.",
+    "selectedVoiceLabel": "Selected",
+    "selectedVoiceEmpty": "none",
+    "noVoices": "Voices are temporarily unavailable. Try again later.",
     "selected": "Selected",
     "play": "Play",
     "pause": "Pause",

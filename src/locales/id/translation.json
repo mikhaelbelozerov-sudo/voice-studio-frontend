@@ -101,7 +101,11 @@
     "fileDeleted": "File dihapus"
   },
   "voice": {
-    "selectVoice": "Pilih suara",
+    "selectVoice": "Suara",
+    "selectVoiceHint": "Pilih suara dan dengarkan pratinjau sebelum membuat.",
+    "selectedVoiceLabel": "Dipilih",
+    "selectedVoiceEmpty": "belum dipilih",
+    "noVoices": "Suara sementara tidak tersedia. Coba lagi nanti.",
     "selected": "Dipilih",
     "play": "Putar",
     "pause": "Jeda",

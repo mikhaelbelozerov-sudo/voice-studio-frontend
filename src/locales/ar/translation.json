@@ -101,7 +101,11 @@
     "fileDeleted": "تم حذف الملف"
   },
   "voice": {
-    "selectVoice": "اختر صوتا",
+    "selectVoice": "الصوت",
+    "selectVoiceHint": "اختر صوتاً واستمع إلى المعاينة قبل التوليد.",
+    "selectedVoiceLabel": "المحدد",
+    "selectedVoiceEmpty": "غير محدد",
+    "noVoices": "الأصوات غير متاحة مؤقتاً. حاول لاحقاً.",
     "selected": "تم الاختيار",
     "play": "تشغيل",
     "pause": "إيقاف",

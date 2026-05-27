@@ -101,7 +101,11 @@
     "fileDeleted": "फाइल हटाई गई"
   },
   "voice": {
-    "selectVoice": "वॉइस चुनें",
+    "selectVoice": "आवाज़",
+    "selectVoiceHint": "जनरेट करने से पहले आवाज़ चुनें और प्रीव्यू सुनें।",
+    "selectedVoiceLabel": "चुना गया",
+    "selectedVoiceEmpty": "नहीं चुना",
+    "noVoices": "आवाज़ें अस्थायी रूप से उपलब्ध नहीं हैं। बाद में कोशिश करें।",
     "selected": "चयनित",
     "play": "चलाएं",
     "pause": "रोकें",
