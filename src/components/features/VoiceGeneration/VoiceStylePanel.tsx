@@ -7,7 +7,14 @@ import {
 } from "../../../constants/voicePresets";
 import { TTS_LANGUAGE_OPTIONS, type TtsLanguageCode } from "../../../constants/ttsLanguages";
 import { Button } from "../../ui/Button";
-import { DropdownMenu } from "../../ui/DropdownMenu";
+
+function chipClassName(active: boolean): string {
+  return `shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition ${
+    active
+      ? "border-blue-600 bg-blue-600 text-white dark:border-blue-500 dark:bg-blue-500"
+      : "border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
+  }`;
+}
 
 const SPEED_SLIDER_MIN = -10;
 const SPEED_SLIDER_MAX = 10;
@@ -117,11 +124,7 @@ export const VoiceStylePanel = ({
           <button
             type="button"
             onClick={() => selectPreset(null)}
-            className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition ${
-              isCustom
-                ? "border-blue-600 bg-blue-600 text-white dark:border-blue-500 dark:bg-blue-500"
-                : "border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
-            }`}
+            className={chipClassName(isCustom)}
           >
             {t("presets.custom")}
           </button>
@@ -132,11 +135,7 @@ export const VoiceStylePanel = ({
                 key={option.id}
                 type="button"
                 onClick={() => selectPreset(option.id)}
-                className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition ${
-                  active
-                    ? "border-blue-600 bg-blue-600 text-white dark:border-blue-500 dark:bg-blue-500"
-                    : "border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
-                }`}
+                className={chipClassName(active)}
               >
                 {t(option.labelKey)}
               </button>
@@ -148,19 +147,37 @@ export const VoiceStylePanel = ({
         ) : null}
       </div>
 
+      <div className="space-y-2 border-t border-slate-100 pt-4 dark:border-slate-800">
+        <span className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
+          {t("voice.narrationLanguage")}
+        </span>
+        <div
+          className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          role="listbox"
+          aria-label={t("voice.narrationLanguage")}
+        >
+          {TTS_LANGUAGE_OPTIONS.map((option) => {
+            const active = languageCode === option.code;
+            return (
+              <button
+                key={option.code}
+                type="button"
+                role="option"
+                aria-selected={active}
+                onClick={() => onLanguageCodeChange(option.code)}
+                className={chipClassName(active)}
+              >
+                {option.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       <div className="space-y-4 border-t border-slate-100 pt-4 dark:border-slate-800">
         <span className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
           {t("voice.manualSection")}
         </span>
-
-        <div className="block space-y-2">
-          <span className="text-sm text-slate-700 dark:text-slate-300">{t("voice.narrationLanguage")}</span>
-          <DropdownMenu
-            value={languageCode}
-            options={TTS_LANGUAGE_OPTIONS.map((option) => ({ value: option.code, label: option.label }))}
-            onChange={(nextValue) => onLanguageCodeChange(nextValue as TtsLanguageCode)}
-          />
-        </div>
 
         <label className={`block space-y-2 ${!isCustom ? "opacity-80" : ""}`}>
           <div className="flex items-center justify-between text-sm text-slate-700 dark:text-slate-300">
