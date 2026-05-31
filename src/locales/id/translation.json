@@ -22,13 +22,16 @@
     "pricing": "Harga",
     "profile": "Profil"
   },
+  "app": {
+    "brand": "Voice Studio"
+  },
   "languageModal": {
     "title": "Selamat datang di VoiceStudio Pro",
     "description": "Pilih bahasa Anda. Bisa diubah nanti di Profil."
   },
   "generate": {
-    "title": "VoiceStudioPro untuk kreator",
-    "subtitle": "Kualitas suara studio untuk TikTok, Reels, dan Shorts dalam hitungan detik — hanya teks Anda, tanpa ribet.",
+    "title": "Buat",
+    "subtitle": "Teks jadi voiceover studio dalam hitungan detik.",
     "loadVoicesError": "Gagal memuat daftar suara",
     "selectVoiceFirst": "Pilih suara terlebih dahulu",
     "telegramMissing": "Pengguna Telegram tidak terdeteksi. Buka ulang aplikasi.",
@@ -136,7 +139,7 @@
   },
   "pricing": {
     "title": "Pembayaran",
-    "subtitle": "Menit narasi dengan Stars — masuk langsung setelah bayar.",
+    "subtitle": "Menit dengan Stars — langsung ke saldo.",
     "viewBalance": "Saldo saya →",
     "topUpsTitle": "Paket sekali beli",
     "topUpsHint": "Menit masuk langsung setelah bayar dengan Stars.",
@@ -177,6 +180,7 @@
   },
   "profile": {
     "title": "Profil",
+    "headerSubtitle": "Akun, bahasa, dan undangan.",
     "loadError": "Gagal memuat profil",
     "loading": "Memuat profil...",
     "name": "Nama",
@@ -217,7 +221,7 @@
   },
   "library": {
     "title": "Riwayat",
-    "subtitle": "Audio terbaru yang Anda buat",
+    "subtitle": "Voiceover Anda — dengarkan dan unduh.",
     "loadError": "Gagal memuat riwayat. Cek koneksi lalu coba lagi.",
     "loading": "Memuat riwayat...",
     "emptyTitle": "Belum ada",

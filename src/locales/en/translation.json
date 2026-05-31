@@ -22,13 +22,16 @@
     "pricing": "Pricing",
     "profile": "Profile"
   },
+  "app": {
+    "brand": "Voice Studio"
+  },
   "languageModal": {
     "title": "Welcome to VoiceStudio Pro",
     "description": "Choose your language. You can change it later in Profile."
   },
   "generate": {
-    "title": "VoiceStudioPro for creators",
-    "subtitle": "Studio-quality sound for TikTok, Reels, and Shorts in seconds — just your text, no extra hassle.",
+    "title": "Generate",
+    "subtitle": "Turn text into studio voiceovers in seconds.",
     "loadVoicesError": "Failed to load voices",
     "selectVoiceFirst": "Select a voice first",
     "telegramMissing": "Cannot detect Telegram user. Please restart the app.",
@@ -136,7 +139,7 @@
   },
   "pricing": {
     "title": "Top up",
-    "subtitle": "Narration minutes with Stars — credited right after payment.",
+    "subtitle": "Narration minutes with Stars — credited instantly.",
     "viewBalance": "My balance →",
     "topUpsTitle": "One-time packs",
     "topUpsHint": "Minutes are credited right after Stars payment.",
@@ -177,6 +180,7 @@
   },
   "profile": {
     "title": "Profile",
+    "headerSubtitle": "Account, language, and referrals.",
     "loadError": "Failed to load profile",
     "loading": "Loading profile...",
     "name": "Name",
@@ -217,7 +221,7 @@
   },
   "library": {
     "title": "History",
-    "subtitle": "Your latest generated audio",
+    "subtitle": "Your voiceovers — listen and download.",
     "loadError": "Failed to load history. Check your connection and try again.",
     "loading": "Loading history...",
     "emptyTitle": "Nothing yet",

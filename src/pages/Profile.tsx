@@ -2,6 +2,7 @@ import { Gift, Globe, MessageCircle, Moon, Sun, UserRound } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AppPage } from "../components/layout/AppPage";
+import { PageHeader } from "../components/layout/PageHeader";
 import { Button } from "../components/ui/Button";
 import { Spinner } from "../components/ui/Spinner";
 import { DropdownMenu } from "../components/ui/DropdownMenu";
@@ -162,9 +163,7 @@ export const ProfilePage = () => {
 
   return (
     <AppPage>
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("profile.title")}</h1>
-      </div>
+      <PageHeader icon={UserRound} title={t("nav.profile")} subtitle={t("profile.headerSubtitle")} />
 
       {error ? (
         <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/30 dark:text-red-300">

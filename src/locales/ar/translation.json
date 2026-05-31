@@ -22,13 +22,16 @@
     "pricing": "الاسعار",
     "profile": "الملف الشخصي"
   },
+  "app": {
+    "brand": "Voice Studio"
+  },
   "languageModal": {
     "title": "مرحبا بك في VoiceStudio Pro",
     "description": "اختر لغتك. يمكنك تغييرها لاحقا من الملف الشخصي."
   },
   "generate": {
-    "title": "VoiceStudioPro للمبدعين",
-    "subtitle": "جودة صوت استوديو لـ TikTok و Reels و Shorts في ثوانٍ — نصك فقط، دون عناء إضافي.",
+    "title": "التوليد",
+    "subtitle": "حوّل النص إلى تعليق صوتي خلال ثوانٍ.",
     "loadVoicesError": "تعذر تحميل قائمة الاصوات",
     "selectVoiceFirst": "اختر صوتا اولا",
     "telegramMissing": "تعذر التعرف على مستخدم Telegram. اعد تشغيل التطبيق.",
@@ -136,7 +139,7 @@
   },
   "pricing": {
     "title": "الدفع",
-    "subtitle": "دقائق تعليق بـ Stars — تُضاف فور الدفع.",
+    "subtitle": "دقائق بـ Stars — تُضاف فوراً للرصيد.",
     "viewBalance": "رصيدي →",
     "topUpsTitle": "باقات لمرة واحدة",
     "topUpsHint": "تُضاف الدقائق فور الدفع بـ Stars.",
@@ -177,6 +180,7 @@
   },
   "profile": {
     "title": "الملف الشخصي",
+    "headerSubtitle": "الحساب واللغة والدعوات.",
     "loadError": "تعذر تحميل الملف الشخصي",
     "loading": "جار تحميل الملف الشخصي...",
     "name": "الاسم",
@@ -217,7 +221,7 @@
   },
   "library": {
     "title": "السجل",
-    "subtitle": "احدث الملفات الصوتية التي تم توليدها",
+    "subtitle": "تعليقاتك الصوتية — استمع وحمّل.",
     "loadError": "تعذر تحميل السجل. تحقق من الاتصال وحاول مرة اخرى.",
     "loading": "جار تحميل السجل...",
     "emptyTitle": "لا شيء بعد",

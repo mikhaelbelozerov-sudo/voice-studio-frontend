@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { Sparkles } from "lucide-react";
+import { Coins, History, Sparkles, UserRound } from "lucide-react";
 import { AudioPlayer } from "../components/ui/AudioPlayer";
 import { Button } from "../components/ui/Button";
 import { Spinner } from "../components/ui/Spinner";
 import { AppPage } from "../components/layout/AppPage";
+import { PageHeader } from "../components/layout/PageHeader";
 import { TextEditor } from "../components/features/VoiceGeneration/TextEditor";
 import { VoiceStylePanel } from "../components/features/VoiceGeneration/VoiceStylePanel";
 import { VoiceSelector } from "../components/features/VoiceGeneration/VoiceSelector";
@@ -448,10 +449,11 @@ export const GeneratePage = () => {
 
   return (
     <AppPage>
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("generate.title")}</h1>
-        <p className="text-sm text-slate-600 dark:text-slate-300">{t("generate.subtitle")}</p>
-      </div>
+      <PageHeader
+        icon={Sparkles}
+        title={t("nav.generate")}
+        subtitle={t("generate.subtitle")}
+      />
 
       {telegramId ? (
         <div className="space-y-3 rounded-2xl border border-slate-100 bg-gradient-to-br from-slate-50 to-white p-4 shadow-sm dark:border-slate-800 dark:from-slate-900 dark:to-slate-950">

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useTelegram } from "../hooks/useTelegram";
 import { fetchGenerations, Generation, getVoices, UserTier, Voice } from "../services/api";
 import { AppPage } from "../components/layout/AppPage";
+import { PageHeader } from "../components/layout/PageHeader";
 import { Button } from "../components/ui/Button";
 import { Spinner } from "../components/ui/Spinner";
 import { getRemainingStorageInfo, isExpiringSoon } from "../utils/formatRemainingTime";
@@ -190,10 +191,7 @@ export const LibraryPage = () => {
 
   return (
     <AppPage>
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("library.title")}</h1>
-        <p className="text-sm text-slate-600 dark:text-slate-300">{t("library.subtitle")}</p>
-      </div>
+      <PageHeader icon={History} title={t("nav.library")} subtitle={t("library.subtitle")} />
 
       {error ? (
         <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/30 dark:text-red-300">

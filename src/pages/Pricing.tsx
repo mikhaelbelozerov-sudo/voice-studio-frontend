@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { AppPage } from "../components/layout/AppPage";
+import { PageHeader } from "../components/layout/PageHeader";
 import { Button } from "../components/ui/Button";
 import { PRO_CREATOR_STARS_PRICE } from "../constants/catalog";
 import { usePreserveTelegramMiniAppBootstrap } from "../hooks/usePreserveTelegramMiniAppBootstrap";
@@ -103,16 +104,14 @@ export const PricingPage = () => {
 
   return (
     <AppPage>
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("pricing.title")}</h1>
-        <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300">{t("pricing.subtitle")}</p>
-        <Link
-          to={`/generate${tgBootstrapSuffix}`}
-          className="mt-2 inline-block text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-        >
-          {t("pricing.viewBalance")}
-        </Link>
-      </div>
+      <PageHeader icon={Coins} title={t("nav.pricing")} subtitle={t("pricing.subtitle")} />
+
+      <Link
+        to={`/generate${tgBootstrapSuffix}`}
+        className="-mt-2 inline-block text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+      >
+        {t("pricing.viewBalance")}
+      </Link>
 
       {error ? (
         <div className="rounded-2xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/30 dark:text-red-300">
