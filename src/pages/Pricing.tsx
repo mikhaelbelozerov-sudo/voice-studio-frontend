@@ -156,17 +156,17 @@ export const PricingPage = () => {
         </div>
       </section>
 
-      <section className="space-y-4 rounded-2xl border border-amber-200/80 bg-gradient-to-br from-amber-50/80 via-white to-white p-4 shadow-sm dark:border-amber-800/60 dark:from-amber-950/40 dark:via-slate-900 dark:to-slate-900">
+      <section className="space-y-4 rounded-2xl border border-blue-200/80 bg-gradient-to-br from-blue-50/80 via-white to-white p-4 shadow-sm dark:border-blue-800/60 dark:from-blue-950/40 dark:via-slate-900 dark:to-slate-900">
         <div>
           <div className="flex items-center gap-2">
-            <Crown className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" aria-hidden />
+            <Crown className="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" aria-hidden />
             <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{t("pricing.subscriptionsSecondary")}</h2>
           </div>
           <p className="mt-1 text-xs leading-relaxed text-slate-500 dark:text-slate-400">{t("pricing.proHint")}</p>
         </div>
         <div className="rounded-xl border border-slate-200 bg-white p-3 dark:border-slate-700 dark:bg-slate-950">
           <div className="flex items-start gap-2">
-            <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" aria-hidden />
+            <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" aria-hidden />
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
                 {t(creatorPlan.titleKey, creatorPlan.titleParams)}

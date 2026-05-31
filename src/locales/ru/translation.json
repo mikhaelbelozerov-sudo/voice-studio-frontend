@@ -206,7 +206,7 @@
     "greetingAfternoon": "Добрый день, {{name}}",
     "greetingEvening": "Добрый вечер, {{name}}!",
     "greetingNight": "Доброй ночи, {{name}}",
-    "greetingSubtitle": "Рады видеть вас снова."
+    "greetingSubtitle": "Рад видеть Вас снова."
   },
   "history": {
     "deleted_in": "Будет удалён через {{hours}} ч {{minutes}} мин",
