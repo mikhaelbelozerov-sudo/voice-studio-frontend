@@ -1,4 +1,4 @@
-import { Home, Library, UserCircle, WalletCards } from "lucide-react";
+import { Coins, History, Sparkles, UserRound } from "lucide-react";
 import WebApp from "@twa-dev/sdk";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -34,10 +34,10 @@ function App() {
 
   const navItems = useMemo(
     () => [
-      { to: `/generate${tgBootstrapSuffix}`, label: t("nav.generate"), icon: Home },
-      { to: `/library${tgBootstrapSuffix}`, label: t("nav.library"), icon: Library },
-      { to: `/pricing${tgBootstrapSuffix}`, label: t("nav.pricing"), icon: WalletCards },
-      { to: `/profile${tgBootstrapSuffix}`, label: t("nav.profile"), icon: UserCircle }
+      { to: `/generate${tgBootstrapSuffix}`, label: t("nav.generate"), icon: Sparkles },
+      { to: `/library${tgBootstrapSuffix}`, label: t("nav.library"), icon: History },
+      { to: `/pricing${tgBootstrapSuffix}`, label: t("nav.pricing"), icon: Coins },
+      { to: `/profile${tgBootstrapSuffix}`, label: t("nav.profile"), icon: UserRound }
     ],
     [t, tgBootstrapSuffix]
   );
