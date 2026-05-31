@@ -229,6 +229,10 @@
     "noText": "بدون نص",
     "unknownVoice": "صوت غير معروف",
     "download": "تنزيل",
+    "showFullText": "عرض النص كاملا",
+    "collapseText": "طي",
+    "copyText": "نسخ النص",
+    "textCopied": "تم النسخ",
     "deleted": "تم حذف الملف",
     "loadMore": "تحميل المزيد"
   },

@@ -229,6 +229,10 @@
     "noText": "Sin texto",
     "unknownVoice": "Voz desconocida",
     "download": "Descargar",
+    "showFullText": "Ver texto completo",
+    "collapseText": "Contraer",
+    "copyText": "Copiar texto",
+    "textCopied": "Copiado",
     "deleted": "Archivo eliminado",
     "loadMore": "Cargar mas"
   },

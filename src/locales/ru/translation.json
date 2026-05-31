@@ -229,6 +229,10 @@
     "noText": "Без текста",
     "unknownVoice": "Неизвестный голос",
     "download": "Скачать",
+    "showFullText": "Показать полностью",
+    "collapseText": "Свернуть",
+    "copyText": "Скопировать текст",
+    "textCopied": "Скопировано",
     "deleted": "Файл удалён",
     "loadMore": "Загрузить ещё"
   },

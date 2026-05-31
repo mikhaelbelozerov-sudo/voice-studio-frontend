@@ -229,6 +229,10 @@
     "noText": "कोई टेक्स्ट नहीं",
     "unknownVoice": "अज्ञात वॉइस",
     "download": "डाउनलोड",
+    "showFullText": "पूरा टेक्स्ट देखें",
+    "collapseText": "छोटा करें",
+    "copyText": "टेक्स्ट कॉपी करें",
+    "textCopied": "कॉपी हो गया",
     "deleted": "फाइल हटाई गई",
     "loadMore": "और लोड करें"
   },

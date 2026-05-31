@@ -229,6 +229,10 @@
     "noText": "Tanpa teks",
     "unknownVoice": "Suara tidak dikenal",
     "download": "Unduh",
+    "showFullText": "Tampilkan teks lengkap",
+    "collapseText": "Ciutkan",
+    "copyText": "Salin teks",
+    "textCopied": "Disalin",
     "deleted": "File dihapus",
     "loadMore": "Muat lebih banyak"
   },

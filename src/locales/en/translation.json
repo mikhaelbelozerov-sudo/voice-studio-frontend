@@ -229,6 +229,10 @@
     "noText": "No text",
     "unknownVoice": "Unknown voice",
     "download": "Download",
+    "showFullText": "Show full text",
+    "collapseText": "Collapse",
+    "copyText": "Copy text",
+    "textCopied": "Copied",
     "deleted": "File deleted",
     "loadMore": "Load more"
   },

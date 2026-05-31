@@ -5,6 +5,7 @@ import { useTelegram } from "../hooks/useTelegram";
 import { fetchGenerations, Generation, getVoices, UserTier, Voice } from "../services/api";
 import { AppPage } from "../components/layout/AppPage";
 import { PageHeader } from "../components/layout/PageHeader";
+import { GenerationHistoryText } from "../components/features/Library/GenerationHistoryText";
 import { Button } from "../components/ui/Button";
 import { Spinner } from "../components/ui/Spinner";
 import { getRemainingStorageInfo, isExpiringSoon } from "../utils/formatRemainingTime";
@@ -13,11 +14,6 @@ import { AppLanguage, DATE_LOCALE_BY_LANGUAGE } from "../constants/languages";
 const PAGE_SIZE = 20;
 const FALLBACK_TELEGRAM_ID = 123456789;
 const HOUR_MS = 60 * 60 * 1000;
-
-const truncateText = (value: string | null, emptyText: string, maxLength = 100) => {
-  if (!value) return emptyText;
-  return value.length > maxLength ? `${value.slice(0, maxLength)}...` : value;
-};
 
 const formatDateTime = (dateIso: string, locale: string) =>
   new Date(dateIso).toLocaleString(
@@ -80,6 +76,39 @@ export const LibraryPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [, setTimeTick] = useState(() => Date.now());
   const [isTabVisible, setIsTabVisible] = useState(() => document.visibilityState === "visible");
+  const [expandedTextIds, setExpandedTextIds] = useState<Set<string>>(() => new Set());
+  const [copiedTextId, setCopiedTextId] = useState<string | null>(null);
+
+  const itemKey = (id: Generation["id"]) => String(id);
+
+  const toggleTextExpanded = (id: Generation["id"]) => {
+    const key = itemKey(id);
+    setExpandedTextIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) {
+        next.delete(key);
+      } else {
+        next.add(key);
+      }
+      return next;
+    });
+  };
+
+  const handleCopyText = async (id: Generation["id"], text: string | null) => {
+    if (!text?.trim()) {
+      return;
+    }
+    const key = itemKey(id);
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedTextId(key);
+      window.setTimeout(() => {
+        setCopiedTextId((current) => (current === key ? null : current));
+      }, 2000);
+    } catch {
+      /* */
+    }
+  };
 
   const loadGenerations = useCallback(async (nextOffset = 0, append = false) => {
     if (!telegramId) {
@@ -226,9 +255,13 @@ export const LibraryPage = () => {
               key={item.id}
               className="space-y-3 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900"
             >
-              <p className="text-sm leading-relaxed text-slate-900 dark:text-slate-100">
-                {truncateText(item.text, t("library.noText"))}
-              </p>
+              <GenerationHistoryText
+                text={item.text}
+                expanded={expandedTextIds.has(itemKey(item.id))}
+                copied={copiedTextId === itemKey(item.id)}
+                onToggleExpand={() => toggleTextExpanded(item.id)}
+                onCopy={() => void handleCopyText(item.id, item.text)}
+              />
 
               <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
                 <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 dark:border-slate-700 dark:bg-slate-950">
