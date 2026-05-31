@@ -1,3 +1,4 @@
+import { Coins, Crown, Sparkles } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -101,37 +102,49 @@ export const PricingPage = () => {
   };
 
   return (
-    <AppPage className="space-y-6">
-      <div className="space-y-2">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">{t("pricing.title")}</h1>
+    <AppPage>
+      <div>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("pricing.title")}</h1>
         <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300">{t("pricing.subtitle")}</p>
         <Link
           to={`/generate${tgBootstrapSuffix}`}
-          className="inline-block text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+          className="mt-2 inline-block text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
         >
           {t("pricing.viewBalance")}
         </Link>
       </div>
 
-      {error ? <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div> : null}
+      {error ? (
+        <div className="rounded-2xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/30 dark:text-red-300">
+          {error}
+        </div>
+      ) : null}
       {success ? (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800">{success}</div>
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950/30 dark:text-emerald-200">
+          {success}
+        </div>
       ) : null}
 
-      <section className="space-y-3">
-        <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{t("pricing.topUpsTitle")}</h2>
+      <section className="space-y-4 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <div>
+          <div className="flex items-center gap-2">
+            <Coins className="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" aria-hidden />
+            <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{t("pricing.topUpsTitle")}</h2>
+          </div>
+          <p className="mt-1 text-xs leading-relaxed text-slate-500 dark:text-slate-400">{t("pricing.topUpsHint")}</p>
+        </div>
         <div className="grid gap-3">
           {topUps.map((pack) => (
             <div
               key={pack.id}
-              className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900"
+              className="rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-950"
             >
-              <p className="text-base font-semibold text-slate-900 dark:text-slate-100">
+              <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
                 {t(pack.titleKey, pack.titleParams)}
               </p>
-              <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{t(pack.descriptionKey)}</p>
-              <div className="mt-4 flex items-center justify-between gap-2">
-                <p className="text-sm font-medium text-slate-800 dark:text-slate-200">
+              <p className="mt-1 text-xs leading-relaxed text-slate-600 dark:text-slate-300">{t(pack.descriptionKey)}</p>
+              <div className="mt-3 flex items-center justify-between gap-2">
+                <p className="text-sm font-medium tabular-nums text-slate-800 dark:text-slate-200">
                   {pack.amountStars} <span aria-hidden>⭐️</span>
                 </p>
                 <Button onClick={() => void buy(pack)} loading={isPurchasingId === pack.id}>
@@ -143,22 +156,31 @@ export const PricingPage = () => {
         </div>
       </section>
 
-      <section className="space-y-3">
-        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t("pricing.subscriptionsSecondary")}</h2>
-        <div className="rounded-2xl bg-gradient-to-br from-amber-500/15 via-slate-900/5 to-slate-900/10 p-[1px] dark:from-amber-400/20 dark:via-slate-800 dark:to-slate-900">
-          <div className="rounded-2xl bg-white p-4 dark:bg-slate-950">
-            <p className="text-base font-semibold text-slate-900 dark:text-slate-100">
-              {t(creatorPlan.titleKey, creatorPlan.titleParams)}
-            </p>
-            <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{t(creatorPlan.descriptionKey)}</p>
-            <div className="mt-4 flex items-center justify-between gap-2">
-              <p className="text-sm font-medium text-slate-800 dark:text-slate-200">
-                {creatorPlan.amountStars} <span aria-hidden>⭐️</span> / {t("pricing.perMonth")}
+      <section className="space-y-4 rounded-2xl border border-amber-200/80 bg-gradient-to-br from-amber-50/80 via-white to-white p-4 shadow-sm dark:border-amber-800/60 dark:from-amber-950/40 dark:via-slate-900 dark:to-slate-900">
+        <div>
+          <div className="flex items-center gap-2">
+            <Crown className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" aria-hidden />
+            <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{t("pricing.subscriptionsSecondary")}</h2>
+          </div>
+          <p className="mt-1 text-xs leading-relaxed text-slate-500 dark:text-slate-400">{t("pricing.proHint")}</p>
+        </div>
+        <div className="rounded-xl border border-slate-200 bg-white p-3 dark:border-slate-700 dark:bg-slate-950">
+          <div className="flex items-start gap-2">
+            <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" aria-hidden />
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                {t(creatorPlan.titleKey, creatorPlan.titleParams)}
               </p>
-              <Button onClick={() => void buy(creatorPlan)} loading={isPurchasingId === creatorPlan.id}>
-                {t("pricing.subscribePro")}
-              </Button>
+              <p className="mt-1 text-xs leading-relaxed text-slate-600 dark:text-slate-300">{t(creatorPlan.descriptionKey)}</p>
             </div>
+          </div>
+          <div className="mt-3 flex items-center justify-between gap-2 border-t border-slate-100 pt-3 dark:border-slate-800">
+            <p className="text-sm font-medium tabular-nums text-slate-800 dark:text-slate-200">
+              {creatorPlan.amountStars} <span aria-hidden>⭐️</span> / {t("pricing.perMonth")}
+            </p>
+            <Button onClick={() => void buy(creatorPlan)} loading={isPurchasingId === creatorPlan.id}>
+              {t("pricing.subscribePro")}
+            </Button>
           </div>
         </div>
       </section>

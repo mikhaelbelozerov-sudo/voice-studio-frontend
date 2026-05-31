@@ -108,14 +108,15 @@ export function buildReferralShareUrl(inviterTelegramId: number): string | null 
  * `https://t.me/share/url` внутри WebView часто даёт только «голую» строку без превью.
  *
  * Формат https: VITE_REFERRAL_SHARE_LINK_FORMAT=https (или tme)
- * Подпись после ссылки: VITE_REFERRAL_SHARE_INCLUDE_CAPTION=1
+ * Подпись после ссылки: по умолчанию включается; отключить — VITE_REFERRAL_SHARE_INCLUDE_CAPTION=0
  */
 export function buildTelegramMiniAppShareDialogUrl(miniAppUrl: string, caption?: string): string {
   const urlEnc = encodeURIComponent(miniAppUrl);
   const fmt = (import.meta.env.VITE_REFERRAL_SHARE_LINK_FORMAT ?? "").trim().toLowerCase();
   const useHttps = fmt === "https" || fmt === "tme";
   const cap = caption?.trim();
-  const withCaption = import.meta.env.VITE_REFERRAL_SHARE_INCLUDE_CAPTION?.trim() === "1" && Boolean(cap);
+  const captionDisabled = import.meta.env.VITE_REFERRAL_SHARE_INCLUDE_CAPTION?.trim() === "0";
+  const withCaption = !captionDisabled && Boolean(cap);
 
   if (useHttps) {
     if (withCaption && cap) {
@@ -261,7 +262,7 @@ export function buildReferralPreparedShareMessageText(inviterTelegramId: number,
   }
   const cap = caption?.trim();
   if (cap) {
-    return `${url}\n\n${cap}`;
+    return `${cap}\n\n${url}`;
   }
   return url;
 }

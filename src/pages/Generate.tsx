@@ -654,10 +654,15 @@ export const GeneratePage = () => {
       ) : null}
 
       {audioUrl && inviteUrl ? (
-        <div className="rounded-2xl border border-slate-200 bg-gradient-to-b from-slate-50 to-white p-4 shadow-sm dark:border-slate-700 dark:from-slate-900 dark:to-slate-900">
-          <p className="text-sm font-medium text-slate-900 dark:text-slate-100">{t("referral.ctaTitle")}</p>
-          <p className="mt-1 text-xs leading-relaxed text-slate-600 dark:text-slate-400">{t("referral.ctaBody")}</p>
-          <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+        <div className="space-y-4 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+          <div>
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" aria-hidden />
+              <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{t("referral.ctaTitle")}</h2>
+            </div>
+            <p className="mt-1 text-xs leading-relaxed text-slate-500 dark:text-slate-400">{t("referral.ctaBody")}</p>
+          </div>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <Button variant="secondary" className="w-full" onClick={() => void handlePostGenReferralCopy()}>
               {referralLinkCopied ? t("profile.copied") : t("referral.copyLink")}
             </Button>
@@ -665,7 +670,6 @@ export const GeneratePage = () => {
               {t("referral.shareTelegram")}
             </Button>
           </div>
-          <p className="mt-2 text-[11px] leading-snug text-slate-500 dark:text-slate-400">{t("profile.shareInviteLinkPreviewHint")}</p>
         </div>
       ) : null}
 

@@ -1,4 +1,4 @@
-import { AudioWaveform, CalendarDays, Clock3 } from "lucide-react";
+import { AudioWaveform, CalendarDays, Clock3, History } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useTelegram } from "../hooks/useTelegram";
@@ -24,12 +24,13 @@ const formatDateTime = (dateIso: string, locale: string) =>
       (Object.keys(DATE_LOCALE_BY_LANGUAGE).find((lng) => locale.startsWith(lng)) as AppLanguage | undefined) ?? "en"
     ],
     {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit"
-  });
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
+    }
+  );
 
 const canDownload = (item: Generation) => Boolean(item.audio_url && !item.file_deleted);
 
@@ -188,10 +189,10 @@ export const LibraryPage = () => {
   }, [loadMore]);
 
   return (
-    <AppPage className="space-y-4">
+    <AppPage>
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t("library.title")}</h1>
-        <p className="text-sm text-gray-600 dark:text-gray-400">{t("library.subtitle")}</p>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("library.title")}</h1>
+        <p className="text-sm text-slate-600 dark:text-slate-300">{t("library.subtitle")}</p>
       </div>
 
       {error ? (
@@ -204,56 +205,66 @@ export const LibraryPage = () => {
       ) : null}
 
       {isLoadingInitial ? (
-        <div className="flex items-center justify-center gap-2 rounded-2xl bg-white p-6 text-gray-600 shadow-sm dark:bg-gray-800 dark:text-gray-300 dark:shadow-none dark:ring-1 dark:ring-gray-700">
+        <div className="flex items-center justify-center gap-2 rounded-2xl border border-slate-100 bg-white p-6 text-sm text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
           <Spinner />
           <span>{t("library.loading")}</span>
         </div>
       ) : null}
 
       {!isLoadingInitial && !error && items.length === 0 ? (
-        <div className="rounded-2xl bg-white p-6 text-center text-gray-600 shadow-sm dark:bg-gray-800 dark:text-gray-300 dark:shadow-none dark:ring-1 dark:ring-gray-700">
-          {t("library.empty")}
+        <div className="space-y-4 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+          <div className="flex items-center gap-2">
+            <History className="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" aria-hidden />
+            <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{t("library.emptyTitle")}</h2>
+          </div>
+          <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-400">{t("library.empty")}</p>
         </div>
       ) : null}
 
       {!isLoadingInitial && items.length > 0 ? (
         <div className="space-y-3">
           {items.map((item) => (
-            <article key={item.id} className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:shadow-none">
-              <p className="text-sm text-gray-900 dark:text-gray-100">{truncateText(item.text, t("library.noText"))}</p>
+            <article
+              key={item.id}
+              className="space-y-3 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900"
+            >
+              <p className="text-sm leading-relaxed text-slate-900 dark:text-slate-100">
+                {truncateText(item.text, t("library.noText"))}
+              </p>
 
-              <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-gray-600 dark:text-gray-400">
-                <span className="inline-flex items-center gap-1 text-current">
-                  <CalendarDays size={14} />
+              <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
+                <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 dark:border-slate-700 dark:bg-slate-950">
+                  <CalendarDays size={14} className="shrink-0" />
                   {formatDateTime(item.created_at, i18n.language)}
                 </span>
-                <span className="inline-flex items-center gap-1 rounded-lg bg-gray-100 px-2 py-1 text-gray-700 dark:bg-gray-700 dark:text-gray-200">
-                  <AudioWaveform size={14} />
+                <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-slate-700 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200">
+                  <AudioWaveform size={14} className="shrink-0" />
                   {(item.voice_id && voiceNameById.get(item.voice_id)) || item.voice_id || t("library.unknownVoice")}
                 </span>
               </div>
 
               <div
-                className={`mt-2 inline-flex items-center gap-1 text-xs ${
+                className={`inline-flex items-center gap-1 text-xs ${
                   isExpiringSoon(item.created_at, userTier, Boolean(item.file_deleted))
                     ? "text-amber-600 dark:text-amber-400"
-                    : "text-gray-600 dark:text-gray-400"
+                    : "text-slate-500 dark:text-slate-400"
                 }`}
               >
                 <Clock3 size={14} />
                 <span>{renderStorageLabel(item)}</span>
               </div>
 
-              <div className="mt-3">
+              <div className="border-t border-slate-100 pt-3 dark:border-slate-800">
                 {canDownload(item) ? (
                   <Button
                     variant="secondary"
+                    className="w-full sm:w-auto"
                     onClick={() => window.open(item.audio_url as string, "_blank", "noopener,noreferrer")}
                   >
                     {t("library.download")}
                   </Button>
                 ) : (
-                  <span className="text-sm font-medium text-gray-500 dark:text-gray-400">{t("generation.fileDeleted")}</span>
+                  <span className="text-sm font-medium text-slate-500 dark:text-slate-400">{t("generation.fileDeleted")}</span>
                 )}
               </div>
             </article>
@@ -262,14 +273,9 @@ export const LibraryPage = () => {
       ) : null}
 
       {!isLoadingInitial && hasMore && items.length > 0 ? (
-        <div className="pt-2">
+        <div className="pt-1">
           <div ref={loadMoreRef} className="h-1 w-full" />
-          <Button
-            className="w-full gap-2"
-            variant="secondary"
-            onClick={loadMore}
-            disabled={isLoadingMore}
-          >
+          <Button className="w-full gap-2" variant="secondary" onClick={loadMore} disabled={isLoadingMore}>
             {isLoadingMore ? (
               <>
                 <Spinner />
