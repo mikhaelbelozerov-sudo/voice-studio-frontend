@@ -37,6 +37,7 @@
     "generate": "Generate",
     "generating": "Generating...",
     "resultTitle": "Generation result",
+    "resultHint": "Listen and download your voiceover.",
     "audioNotSupported": "Your browser does not support audio.",
     "downloadMp3": "Download MP3",
     "ctaStudio": "Render voiceover",

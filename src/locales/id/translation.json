@@ -37,6 +37,7 @@
     "generate": "Buat",
     "generating": "Membuat...",
     "resultTitle": "Hasil pembuatan",
+    "resultHint": "Dengarkan dan unduh voiceover Anda.",
     "audioNotSupported": "Browser Anda tidak mendukung audio.",
     "downloadMp3": "Unduh MP3",
     "ctaStudio": "Render suara",

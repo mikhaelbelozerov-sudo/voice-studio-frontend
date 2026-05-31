@@ -37,6 +37,7 @@
     "generate": "Generar",
     "generating": "Generando...",
     "resultTitle": "Resultado",
+    "resultHint": "Escucha y descarga tu locución.",
     "audioNotSupported": "Tu navegador no soporta audio.",
     "downloadMp3": "Descargar MP3",
     "ctaStudio": "Renderizar voz",

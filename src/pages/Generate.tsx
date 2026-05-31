@@ -417,10 +417,15 @@ export const GeneratePage = () => {
   };
 
   const paywallCard = (
-    <div className="rounded-2xl border border-amber-200/80 bg-amber-50/90 p-4 text-sm text-amber-950 shadow-sm dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-100">
-      <p className="font-semibold">{t("paywall.afterGenerationTitle")}</p>
-      <p className="mt-2 text-xs leading-relaxed text-amber-900/90 dark:text-amber-100/85">{t("paywall.afterGenerationBody")}</p>
-      <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+    <div className="space-y-4 rounded-2xl border border-blue-200/80 bg-gradient-to-br from-blue-50/80 via-white to-white p-4 shadow-sm dark:border-blue-800/60 dark:from-blue-950/40 dark:via-slate-900 dark:to-slate-900">
+      <div>
+        <div className="flex items-center gap-2">
+          <Sparkles className="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" aria-hidden />
+          <p className="text-base font-semibold text-slate-900 dark:text-slate-100">{t("paywall.afterGenerationTitle")}</p>
+        </div>
+        <p className="mt-1 text-xs leading-relaxed text-slate-600 dark:text-slate-300">{t("paywall.afterGenerationBody")}</p>
+      </div>
+      <div className="flex flex-col gap-2 sm:flex-row">
         <Button className="w-full sm:flex-1" onClick={() => void handleQuickTopUp()}>
           {t("paywall.topUpStarter")}
         </Button>

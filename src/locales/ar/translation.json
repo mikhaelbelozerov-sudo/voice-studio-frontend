@@ -37,6 +37,7 @@
     "generate": "إنشاء",
     "generating": "جار الإنشاء...",
     "resultTitle": "نتيجة التوليد",
+    "resultHint": "استمع وحمّل التعليق الصوتي الجاهز.",
     "audioNotSupported": "المتصفح لا يدعم الصوت.",
     "downloadMp3": "تنزيل MP3",
     "ctaStudio": "تصدير التعليق الصوتي",
