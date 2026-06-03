@@ -47,12 +47,12 @@ export const PricingPage = () => {
         id: "creator20",
         titleKey: "pricing.packCreatorTitle",
         descriptionKey: "pricing.packCreatorDesc",
-        amountStars: 199,
+        amountStars: 279,
         invoice: {
           telegramId,
           productType: "credits",
           productValue: 20 * 60,
-          amountStars: 199
+          amountStars: 279
         }
       }
     ],
