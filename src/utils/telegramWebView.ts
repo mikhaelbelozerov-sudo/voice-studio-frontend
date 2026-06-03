@@ -20,6 +20,25 @@ export function hideTelegramMainButton(): void {
   }
 }
 
+/** Bot API 7.7+: отключить свайп вниз для сворачивания Mini App (закрытие — только кнопка «Закрыть»). */
+export function disableTelegramVerticalSwipes(): void {
+  try {
+    const sdk = WebApp as { disableVerticalSwipes?: () => void };
+    if (typeof sdk.disableVerticalSwipes === "function") {
+      sdk.disableVerticalSwipes();
+      return;
+    }
+  } catch {
+    /* */
+  }
+  const tg = (window as { Telegram?: { WebApp?: { disableVerticalSwipes?: () => void } } }).Telegram?.WebApp;
+  try {
+    tg?.disableVerticalSwipes?.();
+  } catch {
+    /* старый клиент Telegram */
+  }
+}
+
 export function hideTelegramKeyboard(): void {
   const wtg = (window as { Telegram?: { WebApp?: { hideKeyboard?: () => void } } }).Telegram?.WebApp;
   if (typeof wtg?.hideKeyboard !== "function") {

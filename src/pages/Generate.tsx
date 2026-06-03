@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { Coins, History, Sparkles, UserRound } from "lucide-react";
+import { Crown, Gift, Sparkles, Wallet } from "lucide-react";
 import { AudioPlayer } from "../components/ui/AudioPlayer";
 import { Button } from "../components/ui/Button";
 import { Spinner } from "../components/ui/Spinner";
@@ -458,7 +458,7 @@ export const GeneratePage = () => {
       {telegramId ? (
         <div className="space-y-3 rounded-2xl border border-slate-100 bg-gradient-to-br from-slate-50 to-white p-4 shadow-sm dark:border-slate-800 dark:from-slate-900 dark:to-slate-950">
           <div className="flex items-center gap-2 text-sm font-medium text-slate-800 dark:text-slate-100">
-            <Sparkles className="h-4 w-4 text-amber-500" />
+            <Wallet className="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" aria-hidden />
             {t("usage.studioBalance")}
           </div>
           <div className="flex flex-wrap items-baseline gap-2 text-xs text-slate-600 dark:text-slate-300">
@@ -482,7 +482,8 @@ export const GeneratePage = () => {
                 {profile?.subscription_tier === "pro" ? (
                   <>
                     <span className="text-slate-400">·</span>
-                    <span>
+                    <span className="inline-flex items-center gap-1">
+                      <Crown className="h-3.5 w-3.5 shrink-0 text-amber-600 dark:text-amber-400" aria-hidden />
                       {t("usage.proReserve", {
                         sub: Math.floor((profile.subscription_credit_balance ?? 0) / 60),
                         wallet: Math.floor((profile.credit_balance ?? 0) / 60)
@@ -664,7 +665,7 @@ export const GeneratePage = () => {
         <div className="space-y-4 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <div>
             <div className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" aria-hidden />
+              <Gift className="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" aria-hidden />
               <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{t("referral.ctaTitle")}</h2>
             </div>
             <p className="mt-1 text-xs leading-relaxed text-slate-500 dark:text-slate-400">{t("referral.ctaBody")}</p>

@@ -3,6 +3,7 @@ import WebApp from "@twa-dev/sdk";
 import { APP_SCREEN_BG, type AppTheme } from "../constants/telegramTheme";
 import {
   applyTelegramViewportLayout,
+  disableTelegramVerticalSwipes,
   hideTelegramMainButton,
   isTelegramKeyboardLikelyOpen,
   paintTelegramWebViewBackground,
@@ -180,6 +181,7 @@ export const useTelegram = () => {
   useEffect(() => {
     WebApp.ready();
     hideTelegramMainButton();
+    disableTelegramVerticalSwipes();
     applyTelegramViewportLayout();
     let cancelExpandSchedule = () => {};
     /** Следующий тик: start_param у WebApp на iOS иногда заполняется сразу после ready(). */
