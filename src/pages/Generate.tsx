@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { AudioLines, Crown, Gift, Sparkles, Wallet } from "lucide-react";
@@ -27,6 +27,7 @@ import {
 } from "../services/api";
 import { useVoiceStore } from "../store/voiceStore";
 import { estimateSpeechSeconds, formatNarrationSeconds } from "../utils/credits";
+import { scrollBlockStartIntoReadableArea } from "../utils/telegramWebView";
 import {
   buildReferralMiniAppUrl,
   buildReferralPreparedShareMessageText,
@@ -61,6 +62,7 @@ export const GeneratePage = () => {
   const [studioGate, setStudioGate] = useState<{ shortfallSec: number; code: string } | null>(null);
   const [lastCost, setLastCost] = useState<number | null>(null);
   const [referralLinkCopied, setReferralLinkCopied] = useState(false);
+  const postGenerationRef = useRef<HTMLDivElement>(null);
 
   const {
     selectedVoiceId,
@@ -298,6 +300,28 @@ export const GeneratePage = () => {
     }
     trackAnalytics("paywall_shown", { variant: "free_preview_exhausted" });
   }, [freeLimitBlocksGenerate]);
+
+  const scrollToPostGeneration = useCallback(() => {
+    const anchor = postGenerationRef.current;
+    if (!anchor) {
+      return;
+    }
+    scrollBlockStartIntoReadableArea(anchor, "smooth");
+  }, []);
+
+  useEffect(() => {
+    if (!audioUrl) {
+      return;
+    }
+
+    const run = () => scrollToPostGeneration();
+    requestAnimationFrame(run);
+    const timers = [80, 200, 400, 700].map((ms) => window.setTimeout(run, ms));
+
+    return () => {
+      timers.forEach((id) => window.clearTimeout(id));
+    };
+  }, [audioUrl, successPaywallVisible, scrollToPostGeneration]);
 
   const handleGenerate = async () => {
     if (!selectedVoiceId) {
@@ -646,42 +670,44 @@ export const GeneratePage = () => {
       </Button>
 
       {audioUrl ? (
-        <AudioPlayer
-          audioUrl={audioUrl}
-          onDownloadClick={() => {
-            trackAnalytics("audio_downloaded", { credits: lastCost });
-            trackAnalytics("audio_download", { credits: lastCost });
-            if (telegramId) {
-              void ackReferralDownload(telegramId);
-            }
-            if (successPaywallVisible) {
-              trackAnalytics("paywall_shown", { variant: "after_download" });
-            }
-          }}
-        />
-      ) : null}
+        <div ref={postGenerationRef} className="space-y-5">
+          <AudioPlayer
+            audioUrl={audioUrl}
+            onDownloadClick={() => {
+              trackAnalytics("audio_downloaded", { credits: lastCost });
+              trackAnalytics("audio_download", { credits: lastCost });
+              if (telegramId) {
+                void ackReferralDownload(telegramId);
+              }
+              if (successPaywallVisible) {
+                trackAnalytics("paywall_shown", { variant: "after_download" });
+              }
+            }}
+          />
 
-      {audioUrl && inviteUrl ? (
-        <div className="space-y-4 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <div>
-            <div className="flex items-center gap-2">
-              <Gift className="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" aria-hidden />
-              <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{t("referral.ctaTitle")}</h2>
+          {inviteUrl ? (
+            <div className="space-y-4 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+              <div>
+                <div className="flex items-center gap-2">
+                  <Gift className="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" aria-hidden />
+                  <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{t("referral.ctaTitle")}</h2>
+                </div>
+                <p className="mt-1 text-xs leading-relaxed text-slate-500 dark:text-slate-400">{t("referral.ctaBody")}</p>
+              </div>
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                <Button variant="secondary" className="w-full" onClick={() => void handlePostGenReferralCopy()}>
+                  {referralLinkCopied ? t("profile.copied") : t("referral.copyLink")}
+                </Button>
+                <Button className="w-full" onClick={handlePostGenReferralShare}>
+                  {t("referral.shareTelegram")}
+                </Button>
+              </div>
             </div>
-            <p className="mt-1 text-xs leading-relaxed text-slate-500 dark:text-slate-400">{t("referral.ctaBody")}</p>
-          </div>
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            <Button variant="secondary" className="w-full" onClick={() => void handlePostGenReferralCopy()}>
-              {referralLinkCopied ? t("profile.copied") : t("referral.copyLink")}
-            </Button>
-            <Button className="w-full" onClick={handlePostGenReferralShare}>
-              {t("referral.shareTelegram")}
-            </Button>
-          </div>
+          ) : null}
+
+          {successPaywallVisible ? paywallCard : null}
         </div>
       ) : null}
-
-      {successPaywallVisible ? paywallCard : null}
     </AppPage>
   );
 };

@@ -199,6 +199,39 @@ export function ensureFieldVisibleInViewport(field: HTMLElement): void {
   window.scrollBy({ top: scrollDelta, behavior: "auto" });
 }
 
+/** Прокрутка к началу блока (результат генерации и блоки ниже) в видимую зону над нижним меню. */
+export function scrollBlockStartIntoReadableArea(
+  element: HTMLElement,
+  behavior: ScrollBehavior = "smooth"
+): void {
+  const bounds = getReadableBounds();
+  if (!bounds) {
+    element.scrollIntoView({ block: "start", inline: "nearest", behavior });
+    return;
+  }
+
+  const pad = FIELD_EDGE_PADDING_PX;
+  const innerTop = bounds.top + pad;
+  const innerBottom = bounds.bottom - pad;
+  const rect = element.getBoundingClientRect();
+
+  if (rect.top >= innerTop && rect.bottom <= innerBottom) {
+    return;
+  }
+
+  let scrollDelta = rect.top - innerTop;
+  if (Math.abs(scrollDelta) < 4) {
+    return;
+  }
+
+  scrollDelta = clampScrollDelta(scrollDelta);
+  if (Math.abs(scrollDelta) < 4) {
+    return;
+  }
+
+  window.scrollBy({ top: scrollDelta, behavior });
+}
+
 const repairTimers = new WeakMap<HTMLElement, number[]>();
 
 /** После открытия клавиатуры: layout Telegram + scrollIntoView nearest. */
