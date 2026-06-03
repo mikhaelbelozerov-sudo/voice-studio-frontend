@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { Crown, Gift, Sparkles, Wallet } from "lucide-react";
+import { AudioLines, Crown, Gift, Sparkles, Wallet } from "lucide-react";
 import { AudioPlayer } from "../components/ui/AudioPlayer";
 import { Button } from "../components/ui/Button";
 import { Spinner } from "../components/ui/Spinner";
@@ -421,7 +421,7 @@ export const GeneratePage = () => {
     <div className="space-y-4 rounded-2xl border border-blue-200/80 bg-gradient-to-br from-blue-50/80 via-white to-white p-4 shadow-sm dark:border-blue-800/60 dark:from-blue-950/40 dark:via-slate-900 dark:to-slate-900">
       <div>
         <div className="flex items-center gap-2">
-          <Sparkles className="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" aria-hidden />
+          <AudioLines className="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" aria-hidden />
           <p className="text-base font-semibold text-slate-900 dark:text-slate-100">{t("paywall.afterGenerationTitle")}</p>
         </div>
         <p className="mt-1 text-xs leading-relaxed text-slate-600 dark:text-slate-300">{t("paywall.afterGenerationBody")}</p>

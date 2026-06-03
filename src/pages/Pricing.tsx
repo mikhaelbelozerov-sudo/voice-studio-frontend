@@ -1,4 +1,4 @@
-import { Coins, Crown, Sparkles } from "lucide-react";
+import { Coins, Crown, Star } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -165,7 +165,7 @@ export const PricingPage = () => {
         </div>
         <div className="rounded-xl border border-slate-200 bg-white p-3 dark:border-slate-700 dark:bg-slate-950">
           <div className="flex items-start gap-2">
-            <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" aria-hidden />
+            <Star className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" aria-hidden />
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
                 {t(creatorPlan.titleKey, creatorPlan.titleParams)}
