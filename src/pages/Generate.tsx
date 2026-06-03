@@ -41,7 +41,7 @@ import {
 const TOPUP_STARTER_PACK = {
   productType: "credits" as const,
   productValue: 5 * 60,
-  amountStars: 39
+  amountStars: 99
 };
 
 const PRO_CREATOR_BETA_INVOICE = {

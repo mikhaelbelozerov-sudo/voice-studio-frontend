@@ -35,24 +35,24 @@ export const PricingPage = () => {
         id: "starter5",
         titleKey: "pricing.packStarterTitle",
         descriptionKey: "pricing.packStarterDesc",
-        amountStars: 39,
+        amountStars: 99,
         invoice: {
           telegramId,
           productType: "credits",
           productValue: 5 * 60,
-          amountStars: 39
+          amountStars: 99
         }
       },
       {
         id: "creator20",
         titleKey: "pricing.packCreatorTitle",
         descriptionKey: "pricing.packCreatorDesc",
-        amountStars: 99,
+        amountStars: 199,
         invoice: {
           telegramId,
           productType: "credits",
           productValue: 20 * 60,
-          amountStars: 99
+          amountStars: 199
         }
       }
     ],
