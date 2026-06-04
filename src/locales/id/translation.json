@@ -102,6 +102,9 @@
   "generation": {
     "willBeDeleted": "Akan dihapus dalam {{hours}} j {{minutes}} m",
     "willBeDeletedLessThanHour": "Akan dihapus kurang dari satu jam",
+    "willBeDeletedInMinutes_one": "Akan dihapus dalam {{count}} menit",
+    "willBeDeletedInMinutes_other": "Akan dihapus dalam {{count}} menit",
+    "willBeDeletedVerySoon": "Akan segera dihapus",
     "permanentlyStored": "Disimpan permanen",
     "fileDeleted": "File dihapus"
   },

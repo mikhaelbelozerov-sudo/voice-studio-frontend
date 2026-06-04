@@ -102,6 +102,11 @@
   "generation": {
     "willBeDeleted": "Будет удален через {{hours}} ч. {{minutes}} мин.",
     "willBeDeletedLessThanHour": "Будет удален менее чем через час",
+    "willBeDeletedInMinutes_one": "Будет удалён через {{count}} минуту",
+    "willBeDeletedInMinutes_few": "Будет удалён через {{count}} минуты",
+    "willBeDeletedInMinutes_many": "Будет удалён через {{count}} минут",
+    "willBeDeletedInMinutes_other": "Будет удалён через {{count}} минут",
+    "willBeDeletedVerySoon": "Будет удалён в ближайшее время",
     "permanentlyStored": "Хранится постоянно",
     "fileDeleted": "Файл удалён"
   },

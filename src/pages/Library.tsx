@@ -61,8 +61,11 @@ export const LibraryPage = () => {
     if (remaining.kind === "permanent") {
       return t("generation.permanentlyStored");
     }
-    if (remaining.kind === "less_than_hour") {
-      return t("generation.willBeDeletedLessThanHour");
+    if (remaining.kind === "minutes_left") {
+      if (remaining.minutes <= 0) {
+        return t("generation.willBeDeletedVerySoon");
+      }
+      return t("generation.willBeDeletedInMinutes", { count: remaining.minutes });
     }
     return t("generation.willBeDeleted", { hours: remaining.hours, minutes: remaining.minutes });
   };

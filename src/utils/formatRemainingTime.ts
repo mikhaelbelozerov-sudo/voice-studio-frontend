@@ -6,8 +6,15 @@ const DAY_MS = 24 * HOUR_MS;
 export type RemainingStorageInfo =
   | { kind: "file_deleted" }
   | { kind: "permanent" }
-  | { kind: "less_than_hour" }
+  | { kind: "minutes_left"; minutes: number }
   | { kind: "time_left"; hours: number; minutes: number };
+
+const remainingMinutesUntilDeletion = (remainingMs: number): number => {
+  if (remainingMs <= 0) {
+    return 0;
+  }
+  return Math.max(1, Math.ceil(remainingMs / (60 * 1000)));
+};
 
 export type SubscriptionRemainingInfo =
   | { kind: "inactive" }
@@ -31,12 +38,12 @@ export const getRemainingStorageInfo = (
   const remainingMs = new Date(createdAt).getTime() + ttlMs - Date.now();
 
   if (remainingMs <= 0) {
-    return { kind: "less_than_hour" };
+    return { kind: "minutes_left", minutes: 0 };
   }
 
   const totalMinutes = Math.floor(remainingMs / (60 * 1000));
   if (totalMinutes < 60) {
-    return { kind: "less_than_hour" };
+    return { kind: "minutes_left", minutes: remainingMinutesUntilDeletion(remainingMs) };
   }
 
   const hours = Math.floor(totalMinutes / 60);
@@ -52,7 +59,12 @@ export const formatRemainingTime = (
   const info = getRemainingStorageInfo(createdAt, tier, fileDeleted);
   if (info.kind === "file_deleted") return "Файл удалён";
   if (info.kind === "permanent") return "Хранится постоянно";
-  if (info.kind === "less_than_hour") return "Будет удалён менее чем через час";
+  if (info.kind === "minutes_left") {
+    if (info.minutes <= 0) {
+      return "Будет удалён в ближайшее время";
+    }
+    return `Будет удалён через ${info.minutes} мин.`;
+  }
   return `Будет удалён через ${info.hours} ч ${info.minutes} мин`;
 };
 

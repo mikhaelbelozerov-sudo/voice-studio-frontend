@@ -102,6 +102,9 @@
   "generation": {
     "willBeDeleted": "Will be deleted in {{hours}} h {{minutes}} min",
     "willBeDeletedLessThanHour": "Will be deleted in less than an hour",
+    "willBeDeletedInMinutes_one": "Will be deleted in {{count}} minute",
+    "willBeDeletedInMinutes_other": "Will be deleted in {{count}} minutes",
+    "willBeDeletedVerySoon": "Will be deleted very soon",
     "permanentlyStored": "Permanently stored",
     "fileDeleted": "File deleted"
   },

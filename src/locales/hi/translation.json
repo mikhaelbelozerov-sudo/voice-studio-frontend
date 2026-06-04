@@ -102,6 +102,9 @@
   "generation": {
     "willBeDeleted": "{{hours}} घं {{minutes}} मि में हट जाएगा",
     "willBeDeletedLessThanHour": "एक घंटे से कम में हट जाएगा",
+    "willBeDeletedInMinutes_one": "{{count}} मिनट में हट जाएगा",
+    "willBeDeletedInMinutes_other": "{{count}} मिनट में हट जाएगा",
+    "willBeDeletedVerySoon": "जल्द ही हट जाएगा",
     "permanentlyStored": "स्थायी रूप से सहेजा गया",
     "fileDeleted": "फाइल हटाई गई"
   },

@@ -102,6 +102,10 @@
   "generation": {
     "willBeDeleted": "سيتم الحذف خلال {{hours}} س {{minutes}} د",
     "willBeDeletedLessThanHour": "سيتم الحذف خلال اقل من ساعة",
+    "willBeDeletedInMinutes_one": "سيتم الحذف خلال {{count}} دقيقة",
+    "willBeDeletedInMinutes_few": "سيتم الحذف خلال {{count}} دقائق",
+    "willBeDeletedInMinutes_many": "سيتم الحذف خلال {{count}} دقيقة",
+    "willBeDeletedVerySoon": "سيتم الحذف قريباً",
     "permanentlyStored": "محفوظ بشكل دائم",
     "fileDeleted": "تم حذف الملف"
   },
