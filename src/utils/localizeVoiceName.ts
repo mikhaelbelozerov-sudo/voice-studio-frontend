@@ -24,14 +24,33 @@ export const traitToI18nKey = (trait: string): string => {
     .join("");
 };
 
+/** ElevenLabs API typos / short forms → dictionary key. */
+const TRAIT_KEY_ALIASES: Record<string, string> = {
+  knowledgable: "knowledgeable",
+  enthusiast: "enthusiastic"
+};
+
+const splitTitleCaseChunks = (segment: string): string[] => {
+  const chunks = segment
+    .split(/\s+(?=[A-Z][a-z])/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+  return chunks.length > 1 ? chunks : [segment];
+};
+
 const splitTraits = (traitsRaw: string): string[] =>
   traitsRaw
     .split(/\s*,\s*|\s+and\s+/i)
-    .map((part) => part.trim())
+    .flatMap((part) => splitTitleCaseChunks(part.trim()))
     .filter(Boolean);
 
-const lookupTrait = (key: string, labels: VoiceTraitLabelMap): string | undefined =>
-  key ? labels[key] : undefined;
+const lookupTrait = (key: string, labels: VoiceTraitLabelMap): string | undefined => {
+  if (!key) {
+    return undefined;
+  }
+  const resolved = TRAIT_KEY_ALIASES[key] ?? key;
+  return labels[resolved] ?? labels[key];
+};
 
 const localizeTrait = (trait: string, labels: VoiceTraitLabelMap): string => {
   const trimmed = trait.trim();
