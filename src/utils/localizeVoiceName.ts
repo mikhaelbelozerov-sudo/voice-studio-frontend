@@ -26,9 +26,22 @@ export const traitToI18nKey = (trait: string): string => {
 
 /** ElevenLabs API typos / short forms → dictionary key. */
 const TRAIT_KEY_ALIASES: Record<string, string> = {
-  knowledgable: "knowledgeable",
-  enthusiast: "enthusiastic"
+  knowledgable: "knowledgeable"
 };
+
+/** Keep multi-word traits as one chip (order: longest first). */
+const MULTI_WORD_TRAIT_PHRASES = [
+  "Social Media Creator",
+  "Captivating Storyteller",
+  "Captivating storyteller",
+  "Down-to-Earth",
+  "Well-rounded",
+  "Middle Aged",
+  "Middle-aged"
+] as const;
+
+const phrasePattern = (phrase: string) =>
+  new RegExp(phrase.replace(/[-]/g, "[- ]"), "i");
 
 const splitTitleCaseChunks = (segment: string): string[] => {
   const chunks = segment
@@ -38,10 +51,46 @@ const splitTitleCaseChunks = (segment: string): string[] => {
   return chunks.length > 1 ? chunks : [segment];
 };
 
+const extractPhrasesFromSegment = (segment: string): string[] => {
+  const result: string[] = [];
+  let rest = segment.trim();
+
+  while (rest.length > 0) {
+    let matchedPhrase: string | null = null;
+    let matchIndex = -1;
+
+    for (const phrase of MULTI_WORD_TRAIT_PHRASES) {
+      const match = rest.match(phrasePattern(phrase));
+      if (!match || match.index === undefined) {
+        continue;
+      }
+      if (matchIndex === -1 || match.index < matchIndex) {
+        matchIndex = match.index;
+        matchedPhrase = match[0];
+      }
+    }
+
+    if (matchedPhrase && matchIndex >= 0) {
+      const before = rest.slice(0, matchIndex).trim();
+      if (before) {
+        result.push(...splitTitleCaseChunks(before));
+      }
+      result.push(matchedPhrase);
+      rest = rest.slice(matchIndex + matchedPhrase.length).trim();
+      continue;
+    }
+
+    result.push(...splitTitleCaseChunks(rest));
+    break;
+  }
+
+  return result.filter(Boolean);
+};
+
 const splitTraits = (traitsRaw: string): string[] =>
   traitsRaw
     .split(/\s*,\s*|\s+and\s+/i)
-    .flatMap((part) => splitTitleCaseChunks(part.trim()))
+    .flatMap((part) => extractPhrasesFromSegment(part.trim()))
     .filter(Boolean);
 
 const lookupTrait = (key: string, labels: VoiceTraitLabelMap): string | undefined => {
@@ -65,7 +114,7 @@ const localizeTrait = (trait: string, labels: VoiceTraitLabelMap): string => {
   }
 
   const words = trimmed.split(/[\s-]+/).filter(Boolean);
-  if (words.length > 1) {
+  if (words.length > 1 && traitToI18nKey(trimmed) !== "socialMediaCreator") {
     const translated = words.map((word) => {
       const wordKey = traitToI18nKey(word);
       return lookupTrait(wordKey, labels) ?? word;
@@ -76,6 +125,14 @@ const localizeTrait = (trait: string, labels: VoiceTraitLabelMap): string => {
   }
 
   return trimmed;
+};
+
+const canonicalizeEnglishTrait = (trait: string): string => {
+  const key = traitToI18nKey(trait);
+  if (key === "socialMediaCreator") {
+    return "Social Media Creator";
+  }
+  return trait;
 };
 
 export type VoiceDisplayParts = {
@@ -116,7 +173,7 @@ export const parseVoiceDisplayName = (name: string, _t: TFunction, language: str
   const lang = normalizeAppLanguage(language);
   const traits = splitTraits(traitsRaw);
   if (lang === "en") {
-    return { speaker, traits };
+    return { speaker, traits: traits.map(canonicalizeEnglishTrait) };
   }
 
   const labels = VOICE_TRAIT_LABELS[lang];
