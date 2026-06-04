@@ -2,6 +2,7 @@ import { Mic2, Pause, Play } from "lucide-react";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Voice } from "../../../services/api";
+import { formatLocalizedVoiceName } from "../../../utils/localizeVoiceName";
 import { Spinner } from "../../ui/Spinner";
 
 interface VoiceSelectorProps {
@@ -12,7 +13,7 @@ interface VoiceSelectorProps {
 }
 
 export const VoiceSelector = ({ voices, selectedVoiceId, isLoading = false, onSelect }: VoiceSelectorProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [playingVoiceId, setPlayingVoiceId] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -79,7 +80,9 @@ export const VoiceSelector = ({ voices, selectedVoiceId, isLoading = false, onSe
                 }`}
               >
                 <div className="mb-2 flex items-center justify-between gap-2">
-                  <p className="truncate text-sm font-medium text-slate-900 dark:text-slate-100">{voice.name}</p>
+                  <p className="truncate text-sm font-medium text-slate-900 dark:text-slate-100">
+                    {formatLocalizedVoiceName(voice.name, t, i18n.language)}
+                  </p>
                   {selected ? (
                     <span className="shrink-0 rounded-full bg-blue-600 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-white">
                       {t("voice.selected")}
@@ -125,7 +128,9 @@ export const VoiceSelector = ({ voices, selectedVoiceId, isLoading = false, onSe
           {t("voice.selectedVoiceLabel")}
         </span>
         <span className="font-semibold text-slate-900 dark:text-slate-50">
-          {selectedVoice ? selectedVoice.name : t("voice.selectedVoiceEmpty")}
+          {selectedVoice
+            ? formatLocalizedVoiceName(selectedVoice.name, t, i18n.language)
+            : t("voice.selectedVoiceEmpty")}
         </span>
       </div>
     </div>

@@ -10,6 +10,7 @@ import { Button } from "../components/ui/Button";
 import { Spinner } from "../components/ui/Spinner";
 import { getRemainingStorageInfo, isExpiringSoon } from "../utils/formatRemainingTime";
 import { AppLanguage, DATE_LOCALE_BY_LANGUAGE } from "../constants/languages";
+import { formatLocalizedVoiceName } from "../utils/localizeVoiceName";
 
 const PAGE_SIZE = 20;
 const FALLBACK_TELEGRAM_ID = 123456789;
@@ -188,8 +189,14 @@ export const LibraryPage = () => {
   }, []);
 
   const voiceNameById = useMemo(
-    () => new Map(voices.map((voice) => [voice.voice_id, voice.name])),
-    [voices]
+    () =>
+      new Map(
+        voices.map((voice) => [
+          voice.voice_id,
+          formatLocalizedVoiceName(voice.name, t, i18n.language)
+        ])
+      ),
+    [voices, t, i18n.language]
   );
 
   const loadMore = useCallback(() => {
