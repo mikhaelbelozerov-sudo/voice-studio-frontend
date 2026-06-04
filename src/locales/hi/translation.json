@@ -121,7 +121,7 @@
     "scriptEtaEmpty": "—",
     "clearText": "टेक्स्ट साफ करें",
     "textPlaceholder": "वॉइस जनरेशन के लिए टेक्स्ट दर्ज करें...",
-    "loadFromFile": "फाइल से",
+    "loadFromFile": "फ़ाइल अपलोड करें",
     "loadFromFileAria": "टेक्स्ट फाइल से स्क्रिप्ट लोड करें",
     "loadFromFileHint": ".txt या प्लेन टेक्स्ट — फील्ड भर जाएगी (लंबाई की सीमा लागू)",
     "fileTruncated": "फाइल {{max}} अक्षरों से लंबी थी; केवल पहले {{max}} लोड किए गए।",

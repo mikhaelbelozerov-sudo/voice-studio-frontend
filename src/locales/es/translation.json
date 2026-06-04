@@ -121,7 +121,7 @@
     "scriptEtaEmpty": "—",
     "clearText": "Borrar texto",
     "textPlaceholder": "Introduce texto para generar voz...",
-    "loadFromFile": "Desde archivo",
+    "loadFromFile": "Subir archivo",
     "loadFromFileAria": "Cargar guion desde un archivo de texto",
     "loadFromFileHint": ".txt o texto plano — rellena el campo (aplica el límite de longitud)",
     "fileTruncated": "El archivo superaba {{max}} caracteres; solo se cargaron los primeros {{max}}.",

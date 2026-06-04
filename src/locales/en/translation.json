@@ -121,7 +121,7 @@
     "scriptEtaEmpty": "—",
     "clearText": "Clear text",
     "textPlaceholder": "Enter text for voice generation...",
-    "loadFromFile": "From file",
+    "loadFromFile": "Upload file",
     "loadFromFileAria": "Load script from a text file",
     "loadFromFileHint": ".txt or plain text — content fills the field (max length applies)",
     "fileTruncated": "The file was longer than {{max}} characters; only the first {{max}} were loaded.",

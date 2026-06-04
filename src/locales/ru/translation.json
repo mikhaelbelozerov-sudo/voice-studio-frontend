@@ -121,7 +121,7 @@
     "scriptEtaEmpty": "—",
     "clearText": "Очистить текст",
     "textPlaceholder": "Введите текст для озвучки...",
-    "loadFromFile": "Из файла",
+    "loadFromFile": "Загрузить файл",
     "loadFromFileAria": "Загрузить сценарий из текстового файла",
     "loadFromFileHint": ".txt или обычный текст — поле заполнится (действует лимит длины)",
     "fileTruncated": "В файле больше {{max}} символов — загружены только первые {{max}}.",

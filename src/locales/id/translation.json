@@ -121,7 +121,7 @@
     "scriptEtaEmpty": "—",
     "clearText": "Hapus teks",
     "textPlaceholder": "Masukkan teks untuk pembuatan suara...",
-    "loadFromFile": "Dari file",
+    "loadFromFile": "Unggah file",
     "loadFromFileAria": "Muat skrip dari file teks",
     "loadFromFileHint": ".txt atau teks biasa — mengisi kolom (batas panjang berlaku)",
     "fileTruncated": "File lebih dari {{max}} karakter; hanya {{max}} pertama yang dimuat.",
