@@ -79,32 +79,32 @@ export const VoiceSelector = ({ voices, selectedVoiceId, isLoading = false, onSe
                 type="button"
                 onClick={() => onSelect(voice.voice_id)}
                 aria-label={ariaLabel}
-                className={`rounded-xl border p-3 text-left transition ${
+                className={`rounded-xl border p-3.5 text-left transition ${
                   selected
                     ? "border-blue-600 bg-blue-50/80 dark:border-blue-500 dark:bg-blue-950/30"
                     : "border-slate-200 bg-slate-50 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-950 dark:hover:border-slate-600"
                 }`}
               >
-                <div className="mb-2 min-w-0">
-                  <div className="flex items-start justify-between gap-1.5">
-                    <span className="text-sm font-semibold leading-tight text-slate-900 dark:text-slate-100">
+                <div className="mb-2.5 min-w-0">
+                  <div className="flex items-start justify-between gap-2">
+                    <span className="text-base font-semibold leading-snug text-slate-900 dark:text-slate-100">
                       {display.speaker}
                     </span>
                     {selected ? (
-                      <span className="shrink-0 rounded-full bg-blue-600 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-white">
+                      <span className="shrink-0 rounded-full bg-blue-600 px-2.5 py-1 text-xs font-medium uppercase tracking-wide text-white">
                         {t("voice.selected")}
                       </span>
                     ) : null}
                   </div>
                   {display.traits.length > 0 ? (
                     <ul
-                      className="mt-1.5 flex flex-wrap gap-1"
+                      className="mt-2 flex flex-wrap gap-1.5"
                       aria-label={t("voice.traitsLabel")}
                     >
                       {display.traits.map((trait) => (
                         <li
                           key={trait}
-                          className={`max-w-full rounded-md px-1.5 py-0.5 text-[10px] leading-snug ${
+                          className={`max-w-full rounded-lg px-2 py-1 text-sm leading-snug ${
                             selected
                               ? "bg-blue-100/90 text-blue-900 dark:bg-blue-900/50 dark:text-blue-100"
                               : "bg-white text-slate-600 ring-1 ring-slate-200/90 dark:bg-slate-900 dark:text-slate-300 dark:ring-slate-700"
@@ -131,14 +131,14 @@ export const VoiceSelector = ({ voices, selectedVoiceId, isLoading = false, onSe
                     event.stopPropagation();
                     handlePreview(voice);
                   }}
-                  className={`inline-flex w-full items-center justify-center gap-1.5 rounded-full border px-2.5 py-1.5 text-xs font-medium transition ${
+                  className={`inline-flex w-full items-center justify-center gap-2 rounded-full border px-3 py-2 text-sm font-medium transition ${
                     voice.preview_url
                       ? "border-slate-200 bg-white text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200"
                       : "cursor-not-allowed border-slate-100 text-slate-400 opacity-60 dark:border-slate-800"
                   }`}
                   aria-disabled={!voice.preview_url}
                 >
-                  {isPlaying ? <Pause size={14} /> : <Play size={14} />}
+                  {isPlaying ? <Pause size={16} /> : <Play size={16} />}
                   {voice.preview_url ? (isPlaying ? t("voice.pause") : t("voice.play")) : t("voice.noPreview")}
                 </span>
               </button>
@@ -148,7 +148,7 @@ export const VoiceSelector = ({ voices, selectedVoiceId, isLoading = false, onSe
       )}
 
       <div
-        className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-4 text-xs dark:border-slate-800"
+        className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-4 text-sm dark:border-slate-800"
         role="status"
       >
         <span className="font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
@@ -156,9 +156,9 @@ export const VoiceSelector = ({ voices, selectedVoiceId, isLoading = false, onSe
         </span>
         {selectedDisplay ? (
           <div className="min-w-0 text-right">
-            <span className="font-semibold text-slate-900 dark:text-slate-50">{selectedDisplay.speaker}</span>
+            <span className="text-base font-semibold text-slate-900 dark:text-slate-50">{selectedDisplay.speaker}</span>
             {selectedDisplay.traits.length > 0 ? (
-              <p className="mt-0.5 text-[10px] leading-snug text-slate-500 dark:text-slate-400">
+              <p className="mt-1 text-xs leading-snug text-slate-500 dark:text-slate-400">
                 {selectedDisplay.traits.join(" · ")}
               </p>
             ) : null}
