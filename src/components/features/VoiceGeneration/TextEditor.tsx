@@ -104,39 +104,41 @@ export const TextEditor = ({ value, onChange, maxLength = 1000, etaSeconds }: Te
         onChange={(e) => void handleFileChange(e)}
       />
 
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
+      <div className="space-y-3">
+        <div className="min-w-0">
           <div className="flex items-center gap-2">
             <AlignLeft className="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" aria-hidden />
             <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{t("voice.scriptTitle")}</h2>
           </div>
           <p className="mt-1 text-xs leading-relaxed text-slate-500 dark:text-slate-400">{t("voice.scriptHint")}</p>
         </div>
-        <div className="flex shrink-0 items-center gap-1.5">
+        <div className="flex items-center justify-between gap-2">
           <span className="text-xs tabular-nums text-slate-500 dark:text-slate-400">
             {value.length}/{maxLength}
           </span>
-          <button
-            type="button"
-            onClick={handlePickFile}
-            className="inline-flex h-8 items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 text-xs font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
-            aria-label={t("voice.loadFromFileAria")}
-            title={t("voice.loadFromFileHint")}
-          >
-            <FileUp size={16} className="shrink-0" />
-            <span className="max-w-[5rem] truncate sm:max-w-none">{t("voice.loadFromFile")}</span>
-          </button>
-          {hasText ? (
+          <div className="flex min-w-0 items-center justify-end gap-1.5">
             <button
               type="button"
-              onClick={() => onChange("")}
-              className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-500 transition hover:border-slate-300 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-400"
-              aria-label={t("voice.clearText")}
-              title={t("voice.clearText")}
+              onClick={handlePickFile}
+              className="inline-flex h-9 max-w-full items-center justify-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 text-xs font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 min-[400px]:px-3.5 max-[399px]:aspect-square max-[399px]:w-9 max-[399px]:px-0"
+              aria-label={t("voice.loadFromFileAria")}
+              title={t("voice.loadFromFileHint")}
             >
-              <X size={16} />
+              <FileUp size={16} className="shrink-0" aria-hidden />
+              <span className="hidden truncate min-[400px]:inline">{t("voice.loadFromFile")}</span>
             </button>
-          ) : null}
+            {hasText ? (
+              <button
+                type="button"
+                onClick={() => onChange("")}
+                className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-500 transition hover:border-slate-300 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-400"
+                aria-label={t("voice.clearText")}
+                title={t("voice.clearText")}
+              >
+                <X size={16} />
+              </button>
+            ) : null}
+          </div>
         </div>
       </div>
 
