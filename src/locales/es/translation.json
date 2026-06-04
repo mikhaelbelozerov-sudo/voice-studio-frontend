@@ -111,6 +111,7 @@
     "selectedVoiceEmpty": "ninguno",
     "noVoices": "Las voces no están disponibles temporalmente. Inténtalo más tarde.",
     "selected": "Seleccionado",
+    "traitsLabel": "Rasgos de voz",
     "play": "Reproducir",
     "pause": "Pausar",
     "noPreview": "Sin vista previa",

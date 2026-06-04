@@ -2,7 +2,7 @@ import { Mic2, Pause, Play } from "lucide-react";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Voice } from "../../../services/api";
-import { formatLocalizedVoiceName } from "../../../utils/localizeVoiceName";
+import { formatLocalizedVoiceName, parseVoiceDisplayName } from "../../../utils/localizeVoiceName";
 import { Spinner } from "../../ui/Spinner";
 
 interface VoiceSelectorProps {
@@ -18,6 +18,9 @@ export const VoiceSelector = ({ voices, selectedVoiceId, isLoading = false, onSe
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const selectedVoice = voices.find((voice) => voice.voice_id === selectedVoiceId);
+  const selectedDisplay = selectedVoice
+    ? parseVoiceDisplayName(selectedVoice.name, t, i18n.language)
+    : null;
 
   const handlePreview = (voice: Voice) => {
     if (!voice.preview_url) {
@@ -67,26 +70,50 @@ export const VoiceSelector = ({ voices, selectedVoiceId, isLoading = false, onSe
           {voices.map((voice) => {
             const selected = selectedVoiceId === voice.voice_id;
             const isPlaying = playingVoiceId === voice.voice_id;
+            const display = parseVoiceDisplayName(voice.name, t, i18n.language);
+            const ariaLabel = formatLocalizedVoiceName(voice.name, t, i18n.language);
 
             return (
               <button
                 key={voice.voice_id}
                 type="button"
                 onClick={() => onSelect(voice.voice_id)}
+                aria-label={ariaLabel}
                 className={`rounded-xl border p-3 text-left transition ${
                   selected
                     ? "border-blue-600 bg-blue-50/80 dark:border-blue-500 dark:bg-blue-950/30"
                     : "border-slate-200 bg-slate-50 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-950 dark:hover:border-slate-600"
                 }`}
               >
-                <div className="mb-2 flex items-center justify-between gap-2">
-                  <p className="truncate text-sm font-medium text-slate-900 dark:text-slate-100">
-                    {formatLocalizedVoiceName(voice.name, t, i18n.language)}
-                  </p>
-                  {selected ? (
-                    <span className="shrink-0 rounded-full bg-blue-600 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-white">
-                      {t("voice.selected")}
+                <div className="mb-2 min-w-0">
+                  <div className="flex items-start justify-between gap-1.5">
+                    <span className="text-sm font-semibold leading-tight text-slate-900 dark:text-slate-100">
+                      {display.speaker}
                     </span>
+                    {selected ? (
+                      <span className="shrink-0 rounded-full bg-blue-600 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-white">
+                        {t("voice.selected")}
+                      </span>
+                    ) : null}
+                  </div>
+                  {display.traits.length > 0 ? (
+                    <ul
+                      className="mt-1.5 flex flex-wrap gap-1"
+                      aria-label={t("voice.traitsLabel")}
+                    >
+                      {display.traits.map((trait) => (
+                        <li
+                          key={trait}
+                          className={`max-w-full rounded-md px-1.5 py-0.5 text-[10px] leading-snug ${
+                            selected
+                              ? "bg-blue-100/90 text-blue-900 dark:bg-blue-900/50 dark:text-blue-100"
+                              : "bg-white text-slate-600 ring-1 ring-slate-200/90 dark:bg-slate-900 dark:text-slate-300 dark:ring-slate-700"
+                          }`}
+                        >
+                          {trait}
+                        </li>
+                      ))}
+                    </ul>
                   ) : null}
                 </div>
                 <span
@@ -127,11 +154,18 @@ export const VoiceSelector = ({ voices, selectedVoiceId, isLoading = false, onSe
         <span className="font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
           {t("voice.selectedVoiceLabel")}
         </span>
-        <span className="font-semibold text-slate-900 dark:text-slate-50">
-          {selectedVoice
-            ? formatLocalizedVoiceName(selectedVoice.name, t, i18n.language)
-            : t("voice.selectedVoiceEmpty")}
-        </span>
+        {selectedDisplay ? (
+          <div className="min-w-0 text-right">
+            <span className="font-semibold text-slate-900 dark:text-slate-50">{selectedDisplay.speaker}</span>
+            {selectedDisplay.traits.length > 0 ? (
+              <p className="mt-0.5 text-[10px] leading-snug text-slate-500 dark:text-slate-400">
+                {selectedDisplay.traits.join(" · ")}
+              </p>
+            ) : null}
+          </div>
+        ) : (
+          <span className="font-semibold text-slate-900 dark:text-slate-50">{t("voice.selectedVoiceEmpty")}</span>
+        )}
       </div>
     </div>
   );

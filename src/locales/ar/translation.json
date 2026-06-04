@@ -111,6 +111,7 @@
     "selectedVoiceEmpty": "غير محدد",
     "noVoices": "الأصوات غير متاحة مؤقتاً. حاول لاحقاً.",
     "selected": "تم الاختيار",
+    "traitsLabel": "سمات الصوت",
     "play": "تشغيل",
     "pause": "إيقاف مؤقت",
     "noPreview": "لا توجد معاينة",

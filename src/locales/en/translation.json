@@ -111,6 +111,7 @@
     "selectedVoiceEmpty": "none",
     "noVoices": "Voices are temporarily unavailable. Try again later.",
     "selected": "Selected",
+    "traitsLabel": "Voice traits",
     "play": "Play",
     "pause": "Pause",
     "noPreview": "No preview",

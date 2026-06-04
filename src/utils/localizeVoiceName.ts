@@ -78,35 +78,65 @@ const localizeTrait = (trait: string, labels: VoiceTraitLabelMap): string => {
   return trimmed;
 };
 
+export type VoiceDisplayParts = {
+  speaker: string;
+  traits: string[];
+};
+
+const parseVoiceNameParts = (name: string): { speaker: string; traitsRaw: string } | null => {
+  const sepMatch = name.match(/\s[-–—]\s/);
+  if (!sepMatch || sepMatch.index == null) {
+    return null;
+  }
+  const sep = sepMatch.index;
+  const sepLen = sepMatch[0].length;
+  return {
+    speaker: name.slice(0, sep).trim(),
+    traitsRaw: name.slice(sep + sepLen).trim()
+  };
+};
+
+/** Speaker name + localized trait chips for UI. */
+export const parseVoiceDisplayName = (name: string, _t: TFunction, language: string): VoiceDisplayParts => {
+  const trimmed = name.trim();
+  if (!trimmed) {
+    return { speaker: "", traits: [] };
+  }
+
+  const parsed = parseVoiceNameParts(trimmed);
+  if (!parsed) {
+    return { speaker: trimmed, traits: [] };
+  }
+
+  const { speaker, traitsRaw } = parsed;
+  if (!traitsRaw) {
+    return { speaker, traits: [] };
+  }
+
+  const lang = normalizeAppLanguage(language);
+  const traits = splitTraits(traitsRaw);
+  if (lang === "en") {
+    return { speaker, traits };
+  }
+
+  const labels = VOICE_TRAIT_LABELS[lang];
+  return { speaker, traits: traits.map((trait) => localizeTrait(trait, labels)) };
+};
+
 /**
  * Localizes ElevenLabs voice labels like "Roger - Laid-Back, Casual, Resonant".
  * Keeps the speaker name; translates comma-separated traits when keys exist.
  */
-export const formatLocalizedVoiceName = (name: string, _t: TFunction, language: string): string => {
-  if (!name.trim()) {
-    return name;
+export const formatLocalizedVoiceName = (name: string, t: TFunction, language: string): string => {
+  const { speaker, traits } = parseVoiceDisplayName(name, t, language);
+  if (!traits.length) {
+    return speaker || name;
   }
 
   const lang = normalizeAppLanguage(language);
-  const sepMatch = name.match(/\s[-–—]\s/);
-  if (!sepMatch || sepMatch.index == null) {
-    return name;
-  }
-
-  const sep = sepMatch.index;
-  const sepLen = sepMatch[0].length;
-  const speaker = name.slice(0, sep).trim();
-  const traitsRaw = name.slice(sep + sepLen).trim();
-  if (!traitsRaw) {
-    return speaker;
-  }
-
   if (lang === "en") {
-    return name;
+    return name.trim();
   }
 
-  const labels = VOICE_TRAIT_LABELS[lang];
-  const localizedTraits = splitTraits(traitsRaw).map((trait) => localizeTrait(trait, labels));
-
-  return `${speaker} — ${localizedTraits.join(", ")}`;
+  return `${speaker} — ${traits.join(", ")}`;
 };
