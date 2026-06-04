@@ -60,7 +60,7 @@
     "upgradeGateCta": "Пакеты и подписка"
   },
   "usage": {
-    "studioBalance": "Баланс студии",
+    "studioBalance": "Баланс озвучки",
     "betaPreview": "Бета-превью",
     "freePool": "Бесплатный режим",
     "renders": "рендеров",
@@ -153,7 +153,7 @@
     "studioTimeAvailable": "Доступно для озвучки",
     "approxMinutesHint": "Около {{minutes}} минут озвучки (~1 сек студии ≈ 1 сек звука).",
     "usageBarPreview": "Превью-лимит",
-    "usageBarPaid": "Студийный баланс",
+    "usageBarPaid": "Баланс озвучки",
     "softUpgradeHint": "Студийное качество без лишнего шума — пополняйте, когда захотите продолжить.",
     "packStarterTitle": "5 минут · 99 ⭐",
     "packStarterDesc": "Один ролик или несколько черновиков.",

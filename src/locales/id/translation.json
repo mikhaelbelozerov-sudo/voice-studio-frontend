@@ -60,7 +60,7 @@
     "upgradeGateCta": "Paket & langganan"
   },
   "usage": {
-    "studioBalance": "Saldo studio",
+    "studioBalance": "Saldo narasi",
     "betaPreview": "Pratinjau beta",
     "freePool": "Gratis",
     "renders": "render",
@@ -153,7 +153,7 @@
     "studioTimeAvailable": "Waktu narasi tersedia",
     "approxMinutesHint": "Sekitar {{minutes}} menit voiceover.",
     "usageBarPreview": "Penggunaan pratinjau",
-    "usageBarPaid": "Saldo studio",
+    "usageBarPaid": "Saldo narasi",
     "softUpgradeHint": "Kualitas premium tanpa tekanan — isi saat siap.",
     "packStarterTitle": "5 menit · 99 ⭐",
     "packStarterDesc": "Satu video atau beberapa draf.",

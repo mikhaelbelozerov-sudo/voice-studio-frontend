@@ -60,7 +60,7 @@
     "upgradeGateCta": "الباقات والاشتراك"
   },
   "usage": {
-    "studioBalance": "رصيد الاستوديو",
+    "studioBalance": "رصيد التعليق الصوتي",
     "betaPreview": "معاينة بيتا",
     "freePool": "المستوى المجاني",
     "renders": "عمليات",
@@ -153,7 +153,7 @@
     "studioTimeAvailable": "وقت النطق المتاح",
     "approxMinutesHint": "حوالي {{minutes}} دقيقة تعليق.",
     "usageBarPreview": "استخدام المعاينة",
-    "usageBarPaid": "رصيد الاستوديو",
+    "usageBarPaid": "رصيد التعليق الصوتي",
     "softUpgradeHint": "جودة مميزة بلا ضغط — اشحن عند الحاجة.",
     "packStarterTitle": "5 دقائق · 99 ⭐",
     "packStarterDesc": "فيديو واحد او عدة مسودات.",

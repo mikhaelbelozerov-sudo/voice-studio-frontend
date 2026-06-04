@@ -60,7 +60,7 @@
     "upgradeGateCta": "Paquetes y suscripcion"
   },
   "usage": {
-    "studioBalance": "Saldo del estudio",
+    "studioBalance": "Saldo de narración",
     "betaPreview": "Vista previa beta",
     "freePool": "Modo gratuito",
     "renders": "renders",
@@ -153,7 +153,7 @@
     "studioTimeAvailable": "Tiempo de narracion disponible",
     "approxMinutesHint": "Unos {{minutes}} minutos de locucion (~1s ≈ 1s).",
     "usageBarPreview": "Uso de vista previa",
-    "usageBarPaid": "Saldo de estudio",
+    "usageBarPaid": "Saldo de narración",
     "softUpgradeHint": "Narracion premium sin presion — recarga cuando quieras.",
     "packStarterTitle": "5 minutos · 99 ⭐",
     "packStarterDesc": "Un video o varios borradores.",

@@ -60,7 +60,7 @@
     "upgradeGateCta": "पैक और सब्सक्रिप्शन"
   },
   "usage": {
-    "studioBalance": "स्टूडियो बैलेंस",
+    "studioBalance": "नैरेशन बैलेंस",
     "betaPreview": "बीटा प्रीव्यू",
     "freePool": "फ्री टियर",
     "renders": "रेंडर",
@@ -153,7 +153,7 @@
     "studioTimeAvailable": "उपलब्ध नैरेशन समय",
     "approxMinutesHint": "लगभग {{minutes}} मिनट वॉइसओवर।",
     "usageBarPreview": "प्रीव्यू उपयोग",
-    "usageBarPaid": "स्टूडियो बैलेंस",
+    "usageBarPaid": "नैरेशन बैलेंस",
     "softUpgradeHint": "प्रीमियम फील — जब चाहें टॉप-अप।",
     "packStarterTitle": "5 मिनट · 99 ⭐",
     "packStarterDesc": "एक वीडियो या कुछ ड्राफ्ट।",
