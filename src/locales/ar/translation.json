@@ -62,6 +62,7 @@
   "usage": {
     "studioBalance": "رصيد التعليق الصوتي",
     "betaPreview": "معاينة بيتا",
+    "previewSecondsMeter": "{{used}} / {{cap}} ث",
     "freePool": "المستوى المجاني",
     "renders": "عمليات",
     "paidCredits": "وقت تعليق يمكن انفاقه",

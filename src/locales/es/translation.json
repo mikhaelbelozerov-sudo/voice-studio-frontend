@@ -62,6 +62,7 @@
   "usage": {
     "studioBalance": "Saldo de narración",
     "betaPreview": "Vista previa beta",
+    "previewSecondsMeter": "{{used}} / {{cap}} s",
     "freePool": "Modo gratuito",
     "renders": "renders",
     "paidCredits": "Tiempo de narracion disponible",

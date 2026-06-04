@@ -490,7 +490,10 @@ export const GeneratePage = () => {
               <>
                 <span>{t("usage.betaPreview")}</span>
                 <span className="font-semibold tabular-nums text-slate-900 dark:text-slate-50">
-                  {profile?.free_seconds_used ?? 0}s / {profile?.free_seconds_cap ?? 60}s
+                  {t("usage.previewSecondsMeter", {
+                    used: profile?.free_seconds_used ?? 0,
+                    cap: profile?.free_seconds_cap ?? 60
+                  })}
                 </span>
                 <span className="text-slate-400">·</span>
                 <span>

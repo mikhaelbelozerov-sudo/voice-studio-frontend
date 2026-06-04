@@ -62,6 +62,7 @@
   "usage": {
     "studioBalance": "Narration balance",
     "betaPreview": "Beta preview",
+    "previewSecondsMeter": "{{used}} / {{cap}} s",
     "freePool": "Free tier",
     "renders": "renders",
     "paidCredits": "Spendable narration time",

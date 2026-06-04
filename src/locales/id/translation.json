@@ -62,6 +62,7 @@
   "usage": {
     "studioBalance": "Saldo narasi",
     "betaPreview": "Pratinjau beta",
+    "previewSecondsMeter": "{{used}} / {{cap}} dtk",
     "freePool": "Gratis",
     "renders": "render",
     "paidCredits": "Waktu narasi yang bisa dipakai",

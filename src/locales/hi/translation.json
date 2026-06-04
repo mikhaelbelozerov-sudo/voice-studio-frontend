@@ -62,6 +62,7 @@
   "usage": {
     "studioBalance": "नैरेशन बैलेंस",
     "betaPreview": "बीटा प्रीव्यू",
+    "previewSecondsMeter": "{{used}} / {{cap}} सेक",
     "freePool": "फ्री टियर",
     "renders": "रेंडर",
     "paidCredits": "उपलब्ध नैरेशन समय",
