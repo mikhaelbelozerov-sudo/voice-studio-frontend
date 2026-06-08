@@ -2,7 +2,7 @@ import { Coins, History, Sparkles, UserRound } from "lucide-react";
 import WebApp from "@twa-dev/sdk";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { NavLink, Route, Routes } from "react-router-dom";
 import { Layout } from "./components/layout/Layout";
 import { DropdownMenu } from "./components/ui/DropdownMenu";
 import { usePreserveTelegramMiniAppBootstrap } from "./hooks/usePreserveTelegramMiniAppBootstrap";
@@ -17,12 +17,6 @@ import { ProfilePage } from "./pages/Profile";
 import { updateUserLanguage } from "./services/api";
 import { LANGUAGE_STORAGE_KEY } from "./i18n";
 import { AppLanguage } from "./constants/languages";
-
-/** Telegram appends tgWebApp* query (e.g. tgWebAppStartParam for referrals). Stripping them on <Navigate> makes iOS reload the WebView in a loop. */
-function RedirectToGenerate() {
-  const { search, hash } = useLocation();
-  return <Navigate to={`/generate${search}${hash}`} replace />;
-}
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -109,7 +103,7 @@ function App() {
     <Layout>
       <div className="app-main mx-auto w-full max-w-3xl bg-slate-100 px-4 pt-2 dark:bg-slate-950">
         <Routes>
-          <Route path="/" element={<RedirectToGenerate />} />
+          <Route path="/" element={<GeneratePage />} />
           <Route path="/generate" element={<GeneratePage />} />
           <Route path="/library" element={<LibraryPage />} />
           <Route path="/pricing" element={<PricingPage />} />

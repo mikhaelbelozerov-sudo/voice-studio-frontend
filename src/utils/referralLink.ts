@@ -219,12 +219,42 @@ export function readTelegramStartParamRaw(): string | undefined {
   return undefined;
 }
 
+const REFERRAL_LAUNCH_SESSION_KEY = "vs_referral_launch_session";
+
+/**
+ * Detect referral startapp and persist for the session.
+ * Named direct links (`t.me/bot/app?startapp=ref_…`) sometimes fill start_param after first paint;
+ * without a sticky flag, expand/navigation guards miss the referral launch and iOS reloads in a loop.
+ */
+export function markReferralLaunchIfDetected(): boolean {
+  if (typeof window === "undefined") {
+    return false;
+  }
+  try {
+    if (sessionStorage.getItem(REFERRAL_LAUNCH_SESSION_KEY)) {
+      return true;
+    }
+  } catch {
+    /* */
+  }
+  const id = parseReferrerFromStartParam(readTelegramStartParamRaw());
+  if (id == null) {
+    return false;
+  }
+  try {
+    sessionStorage.setItem(REFERRAL_LAUNCH_SESSION_KEY, "1");
+  } catch {
+    /* */
+  }
+  return true;
+}
+
 /**
  * Mini App opened via referral direct link (?startapp=ref_<telegramId>).
  * On Telegram iOS, expand/requestFullscreen during this launch can reload the WebView in a loop — skip that path in useTelegram.
  */
 export function isReferralMiniAppLaunch(): boolean {
-  return parseReferrerFromStartParam(readTelegramStartParamRaw()) != null;
+  return markReferralLaunchIfDetected();
 }
 
 export function parseReferrerFromStartParam(raw: string | undefined | null): number | null {

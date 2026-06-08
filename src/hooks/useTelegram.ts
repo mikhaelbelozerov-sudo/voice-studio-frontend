@@ -9,7 +9,8 @@ import {
   paintTelegramWebViewBackground,
   syncTelegramWebViewAfterViewport
 } from "../utils/telegramWebView";
-import { isReferralMiniAppLaunch } from "../utils/referralLink";
+import { isReferralMiniAppLaunch, markReferralLaunchIfDetected } from "../utils/referralLink";
+import { captureTelegramBootstrapSuffix } from "../utils/telegramBootstrap";
 
 export type { AppTheme } from "../constants/telegramTheme";
 export { APP_SCREEN_BG } from "../constants/telegramTheme";
@@ -184,10 +185,30 @@ export const useTelegram = () => {
     disableTelegramVerticalSwipes();
     applyTelegramViewportLayout();
     let cancelExpandSchedule = () => {};
-    /** Следующий тик: start_param у WebApp на iOS иногда заполняется сразу после ready(). */
-    const scheduleId = window.setTimeout(() => {
-      cancelExpandSchedule = scheduleTelegramExpandRetries();
-    }, 0);
+    /**
+     * Named direct link (`t.me/bot/app?startapp=ref_…`): start_param / tgWebAppStartParam may appear
+     * after ready(). Poll before scheduling expand so referral launches never hit expand/requestFullscreen.
+     */
+    const pollDelaysMs = [0, 100, 300, 800, 2000, 4000];
+    let pollIndex = 0;
+    let pollTimerId = 0;
+    const finishExpandPoll = () => {
+      if (allowProgrammaticTelegramExpand()) {
+        cancelExpandSchedule = scheduleTelegramExpandRetries();
+      }
+    };
+    const pollReferralLaunchBeforeExpand = () => {
+      markReferralLaunchIfDetected();
+      captureTelegramBootstrapSuffix();
+      if (!allowProgrammaticTelegramExpand() || pollIndex >= pollDelaysMs.length - 1) {
+        finishExpandPoll();
+        return;
+      }
+      const waitMs = pollDelaysMs[pollIndex + 1] - pollDelaysMs[pollIndex];
+      pollIndex += 1;
+      pollTimerId = window.setTimeout(pollReferralLaunchBeforeExpand, waitMs);
+    };
+    const scheduleId = window.setTimeout(pollReferralLaunchBeforeExpand, 0);
     queueMicrotask(() => {
       syncTelegramContentSafeAreaVars();
     });
@@ -196,6 +217,9 @@ export const useTelegram = () => {
     }, 200);
     return () => {
       window.clearTimeout(scheduleId);
+      if (pollTimerId) {
+        window.clearTimeout(pollTimerId);
+      }
       cancelExpandSchedule();
       window.clearTimeout(insetRetry);
     };
