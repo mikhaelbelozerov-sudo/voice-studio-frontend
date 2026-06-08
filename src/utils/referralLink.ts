@@ -37,6 +37,15 @@ function getReferralLinkMode(): ReferralLinkMode {
   return "named";
 }
 
+/** Дополняет t.me-ссылку параметром mode= (compact | fullscreen), см. доку Telegram Web Apps. */
+function appendTmeLaunchModeQuery(tmeUrl: string): string {
+  const launchMode = (import.meta.env.VITE_REFERRAL_TME_LAUNCH_MODE ?? "fullscreen").trim().toLowerCase();
+  if (!launchMode || launchMode === "0" || launchMode === "default") {
+    return tmeUrl;
+  }
+  return `${tmeUrl}&mode=${encodeURIComponent(launchMode)}`;
+}
+
 /**
  * Mini App deep link: friend opens app with startapp payload ref_<telegramId>
  *
@@ -71,10 +80,10 @@ export function buildReferralMiniAppUrl(inviterTelegramId: number): string | nul
   }
 
   if (mode === "main") {
-    return `https://t.me/${bot}?startapp=${enc}`;
+    return appendTmeLaunchModeQuery(`https://t.me/${bot}?startapp=${enc}`);
   }
 
-  return `https://t.me/${bot}/${slug}?startapp=${enc}`;
+  return appendTmeLaunchModeQuery(`https://t.me/${bot}/${slug}?startapp=${enc}`);
 }
 
 /** Direct link `t.me/bot/slug?startapp=…` — в чатах Telegram даёт превью Mini App с кнопкой «Открыть». */
@@ -85,7 +94,9 @@ export function buildReferralNamedMiniAppUrl(inviterTelegramId: number): string 
   }
   const slug = normalizeMiniAppSlug(import.meta.env.VITE_TELEGRAM_MINI_APP_SLUG);
   const payload = `ref_${inviterTelegramId}`;
-  return `https://t.me/${bot}/${slug}?startapp=${encodeURIComponent(payload)}`;
+  return appendTmeLaunchModeQuery(
+    `https://t.me/${bot}/${slug}?startapp=${encodeURIComponent(payload)}`
+  );
 }
 
 /**
