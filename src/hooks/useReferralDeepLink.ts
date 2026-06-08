@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useRef } from "react";
 import { trackAnalytics } from "../lib/analytics";
 import { claimReferral } from "../services/api";
@@ -60,9 +61,25 @@ export const useReferralDeepLink = (inviteeTelegramId: number | null) => {
           referrerId,
           alreadyClaimed: res.alreadyClaimed === true
         });
-      } catch {
+      } catch (err) {
         attemptStarted.current = false;
-        trackAnalytics("referral_deep_link_error", { referrerId });
+        const axiosErr = axios.isAxiosError(err) ? err : null;
+        const code =
+          typeof axiosErr?.response?.data === "object" && axiosErr.response.data !== null
+            ? String((axiosErr.response.data as { code?: string }).code ?? "")
+            : "";
+        const message =
+          typeof axiosErr?.response?.data === "object" && axiosErr.response.data !== null
+            ? String((axiosErr.response.data as { error?: string }).error ?? "")
+            : err instanceof Error
+              ? err.message
+              : "unknown";
+        trackAnalytics("referral_deep_link_error", {
+          referrerId,
+          code: code || undefined,
+          message: message || undefined,
+          status: axiosErr?.response?.status
+        });
       }
     })();
   }, [inviteeTelegramId]);

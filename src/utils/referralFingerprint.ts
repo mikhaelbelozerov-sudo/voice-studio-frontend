@@ -1,7 +1,28 @@
-/** Stable-enough client key for referral anti-abuse (Telegram WebView + screen + UA). */
+const CLIENT_ID_KEY = "vs_referral_client_id";
+
+/** Per–Mini App install id (localStorage), avoids false device_reuse on identical iPhone models. */
+function getStableClientId(): string {
+  try {
+    const existing = window.localStorage.getItem(CLIENT_ID_KEY);
+    if (existing && existing.length >= 8) {
+      return existing;
+    }
+    const id =
+      typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+        ? crypto.randomUUID()
+        : `rnd_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    window.localStorage.setItem(CLIENT_ID_KEY, id);
+    return id;
+  } catch {
+    return `ephemeral_${Date.now()}`;
+  }
+}
+
+/** Stable client key for referral anti-abuse (install id + Telegram WebView + screen + UA). */
 export function buildReferralClientFingerprint(): string {
   const twa = (window as unknown as { Telegram?: { WebApp?: { platform?: string; version?: string } } }).Telegram?.WebApp;
   const parts = [
+    getStableClientId(),
     typeof navigator !== "undefined" ? navigator.userAgent : "",
     typeof screen !== "undefined" ? `${screen.width}x${screen.height}` : "",
     twa?.platform ?? "",
