@@ -8,8 +8,52 @@ function readBootstrapFromUrl(): string {
     return "";
   }
   const search = /tgWebApp/i.test(window.location.search) ? window.location.search : "";
-  const hash = /tgWebApp/i.test(window.location.hash) ? window.location.hash : "";
-  return `${search}${hash}`;
+  return search;
+}
+
+/**
+ * Telegram sometimes puts tgWebApp* in location.hash. HashRouter treats hash as the route
+ * (`#/generate`) — param-only hash breaks routing and shows a black screen with only the nav bar.
+ * Move those params into the query string and reset hash to a valid route.
+ */
+export function normalizeTelegramLaunchHashForRouter(): void {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const rawHash = window.location.hash;
+  if (!rawHash || rawHash.length <= 1) {
+    return;
+  }
+
+  const body = rawHash.startsWith("#") ? rawHash.slice(1) : rawHash;
+  if (body.startsWith("/")) {
+    return;
+  }
+
+  if (!/tgWebApp/i.test(body)) {
+    return;
+  }
+
+  let url: URL;
+  try {
+    url = new URL(window.location.href);
+  } catch {
+    return;
+  }
+
+  try {
+    const hashParams = new URLSearchParams(body);
+    hashParams.forEach((value, key) => {
+      if (/tgWebApp/i.test(key) && !url.searchParams.has(key)) {
+        url.searchParams.set(key, value);
+      }
+    });
+    url.hash = "";
+    window.history.replaceState(window.history.state, "", url.toString());
+  } catch {
+    /* */
+  }
 }
 
 function persistBootstrapSuffix(suffix: string): void {

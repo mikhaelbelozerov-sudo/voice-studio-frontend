@@ -2,9 +2,10 @@ import { Coins, History, Sparkles, UserRound } from "lucide-react";
 import WebApp from "@twa-dev/sdk";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { NavLink, Route, Routes } from "react-router-dom";
+import { NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Layout } from "./components/layout/Layout";
 import { DropdownMenu } from "./components/ui/DropdownMenu";
+import { usePreserveTelegramMiniAppBootstrap } from "./hooks/usePreserveTelegramMiniAppBootstrap";
 import { useReferralDeepLink } from "./hooks/useReferralDeepLink";
 import { useTelegram } from "./hooks/useTelegram";
 import { useVirtualKeyboard } from "./hooks/useVirtualKeyboard";
@@ -17,21 +18,27 @@ import { updateUserLanguage } from "./services/api";
 import { LANGUAGE_STORAGE_KEY } from "./i18n";
 import { AppLanguage } from "./constants/languages";
 
+function RedirectToGenerate() {
+  const { search, hash } = useLocation();
+  return <Navigate to={`/generate${search}${hash}`} replace />;
+}
+
 function App() {
   const { t, i18n } = useTranslation();
   const { telegramId, theme } = useTelegram();
+  const { suffix: tgBootstrapSuffix } = usePreserveTelegramMiniAppBootstrap();
   useReferralDeepLink(telegramId);
   const { isKeyboardOpen, dismissKeyboard } = useVirtualKeyboard();
   const [showLanguageModal, setShowLanguageModal] = useState(() => !window.localStorage.getItem(LANGUAGE_STORAGE_KEY));
 
   const navItems = useMemo(
     () => [
-      { to: "/generate", label: t("nav.generate"), icon: Sparkles },
-      { to: "/library", label: t("nav.library"), icon: History },
-      { to: "/pricing", label: t("nav.pricing"), icon: Coins },
-      { to: "/profile", label: t("nav.profile"), icon: UserRound }
+      { to: `/generate${tgBootstrapSuffix}`, label: t("nav.generate"), icon: Sparkles },
+      { to: `/library${tgBootstrapSuffix}`, label: t("nav.library"), icon: History },
+      { to: `/pricing${tgBootstrapSuffix}`, label: t("nav.pricing"), icon: Coins },
+      { to: `/profile${tgBootstrapSuffix}`, label: t("nav.profile"), icon: UserRound }
     ],
-    [t]
+    [t, tgBootstrapSuffix]
   );
 
   const languageOptions = useMemo(
@@ -101,7 +108,7 @@ function App() {
     <Layout>
       <div className="app-main mx-auto w-full max-w-3xl bg-slate-100 px-4 pt-2 dark:bg-slate-950">
         <Routes>
-          <Route path="/" element={<GeneratePage />} />
+          <Route path="/" element={<RedirectToGenerate />} />
           <Route path="/generate" element={<GeneratePage />} />
           <Route path="/library" element={<LibraryPage />} />
           <Route path="/pricing" element={<PricingPage />} />

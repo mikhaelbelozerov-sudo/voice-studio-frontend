@@ -1,24 +1,25 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { HashRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import { markReferralLaunchIfDetected } from "./utils/referralLink";
 import { markTelegramDeepLinkLaunchIfDetected } from "./utils/telegramLaunchMode";
-import { captureTelegramBootstrapSuffix } from "./utils/telegramBootstrap";
+import {
+  captureTelegramBootstrapSuffix,
+  normalizeTelegramLaunchHashForRouter
+} from "./utils/telegramBootstrap";
 import "./i18n";
 import "./index.css";
 import "./styles/globals.css";
 
-/**
- * Before React Router: patch launch URL with tgWebApp* (iOS named direct links from chat)
- * and persist bootstrap for the session.
- */
+/** Before React Router: fix launch URL and persist tgWebApp* for in-app navigation. */
+normalizeTelegramLaunchHashForRouter();
 markTelegramDeepLinkLaunchIfDetected();
 markReferralLaunchIfDetected();
 captureTelegramBootstrapSuffix();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <HashRouter>
+  <BrowserRouter>
     <App />
-  </HashRouter>
+  </BrowserRouter>
 );

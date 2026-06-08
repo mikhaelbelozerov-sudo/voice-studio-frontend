@@ -6,6 +6,7 @@ import { AppPage } from "../components/layout/AppPage";
 import { PageHeader } from "../components/layout/PageHeader";
 import { Button } from "../components/ui/Button";
 import { PRO_CREATOR_STARS_PRICE } from "../constants/catalog";
+import { usePreserveTelegramMiniAppBootstrap } from "../hooks/usePreserveTelegramMiniAppBootstrap";
 import { useTelegram } from "../hooks/useTelegram";
 import { useTelegramStarsPurchase } from "../hooks/useTelegramStarsPurchase";
 import { CreateInvoiceRequest } from "../services/api";
@@ -23,6 +24,7 @@ type Pack = {
 
 export const PricingPage = () => {
   const { t } = useTranslation();
+  const { suffix: tgBootstrapSuffix } = usePreserveTelegramMiniAppBootstrap();
   const { telegramId: telegramUserId } = useTelegram();
   const telegramId = telegramUserId ?? FALLBACK_TELEGRAM_ID;
   const proStars = PRO_CREATOR_STARS_PRICE;
@@ -105,7 +107,7 @@ export const PricingPage = () => {
       <PageHeader icon={Coins} title={t("nav.pricing")} subtitle={t("pricing.subtitle")} />
 
       <Link
-        to="/generate"
+        to={`/generate${tgBootstrapSuffix}`}
         className="-mt-2 inline-block text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
       >
         {t("pricing.viewBalance")}

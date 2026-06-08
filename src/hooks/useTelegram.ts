@@ -15,7 +15,7 @@ import {
   ensureTelegramLaunchUrl
 } from "../utils/telegramBootstrap";
 import {
-  isFragileIosTelegramLaunch,
+  isTelegramDeepLinkLaunch,
   markTelegramDeepLinkLaunchIfDetected
 } from "../utils/telegramLaunchMode";
 
@@ -39,27 +39,17 @@ function isTelegramIos(): boolean {
   return String(getTelegramWebApp()?.platform ?? "").toLowerCase() === "ios";
 }
 
-/** iOS: programmatic expand reliably retriggers WebView reload; referral: same on some builds. */
-function allowProgrammaticTelegramExpand(): boolean {
-  return !isTelegramIos() && !isReferralMiniAppLaunch();
-}
-
 type ExpandMode = "expandOnly" | "expandAndFullscreen";
 
 /**
- * Telegram часто открывает Mini App из Reply Keyboard в «половинном» режиме.
- * Один вызов expand() ненадёжен — повторяем на старте.
+ * Telegram часто открывает Mini App в «половинном» режиме — expand() разворачивает на всю высоту.
  *
- * Важно: не вызывать requestFullscreen() на каждом viewportChanged — на части клиентов
- * (в т.ч. при открытии по startapp / реферальной ссылке) это приводит к зацикливанию
- * перезапуска WebView. Полноэкран — только в начальных ретраях и по первому жесту.
+ * iOS: только expand(), без requestFullscreen (fullscreen из JS провоцировал цикл WebView).
+ * Deep link / реферал: expand откладываем на 2+ с после ready(), чтобы не перезапускать WebView.
  *
- * iOS: не вызываем WebApp.expand/requestFullscreen из JS — клиент уходит в цикл перезапуска WebView.
+ * Android: expand + requestFullscreen на старте (кроме моментального fullscreen при viewportChanged).
  */
 function tryExpandTelegramWebApp(mode: ExpandMode = "expandAndFullscreen"): void {
-  if (!allowProgrammaticTelegramExpand()) {
-    return;
-  }
   const tg = getTelegramWebApp() as TelegramWebAppWithFullscreen | undefined;
   if (!tg) {
     return;
@@ -69,7 +59,7 @@ function tryExpandTelegramWebApp(mode: ExpandMode = "expandAndFullscreen"): void
   } catch {
     /* */
   }
-  if (mode === "expandOnly") {
+  if (mode === "expandOnly" || isTelegramIos()) {
     return;
   }
   try {
@@ -79,12 +69,15 @@ function tryExpandTelegramWebApp(mode: ExpandMode = "expandAndFullscreen"): void
   }
 }
 
-function scheduleTelegramExpandRetries(): () => void {
-  if (!allowProgrammaticTelegramExpand()) {
-    return () => {};
+function scheduleTelegramExpandRetries(mode: ExpandMode = "expandAndFullscreen"): () => void {
+  const delaysMs = mode === "expandOnly" ? [0, 400, 1200] : [0, 80, 200, 450, 900, 1600, 2800];
+  const ids = delaysMs.map((ms) => window.setTimeout(() => tryExpandTelegramWebApp(mode), ms));
+
+  if (isTelegramIos()) {
+    return () => {
+      ids.forEach((id) => window.clearTimeout(id));
+    };
   }
-  const delaysMs = [0, 80, 200, 450, 900, 1600, 2800];
-  const ids = delaysMs.map((ms) => window.setTimeout(() => tryExpandTelegramWebApp("expandAndFullscreen"), ms));
 
   const onPageShow = () => tryExpandTelegramWebApp("expandAndFullscreen");
   window.addEventListener("pageshow", onPageShow);
@@ -93,6 +86,31 @@ function scheduleTelegramExpandRetries(): () => void {
     ids.forEach((id) => window.clearTimeout(id));
     window.removeEventListener("pageshow", onPageShow);
   };
+}
+
+/** iOS deep link: один безопасный expand после стабилизации WebView (полная высота без цикла). */
+function scheduleIosDeepLinkExpand(): () => void {
+  const delaysMs = [1800, 2800, 4200];
+  const ids = delaysMs.map((ms) => window.setTimeout(() => tryExpandTelegramWebApp("expandOnly"), ms));
+  return () => {
+    ids.forEach((id) => window.clearTimeout(id));
+  };
+}
+
+function scheduleStartupExpand(): () => void {
+  if (isTelegramIos()) {
+    if (isTelegramDeepLinkLaunch() || isReferralMiniAppLaunch()) {
+      return scheduleIosDeepLinkExpand();
+    }
+    return scheduleTelegramExpandRetries("expandOnly");
+  }
+
+  if (isReferralMiniAppLaunch() || isTelegramDeepLinkLaunch()) {
+    const id = window.setTimeout(() => scheduleTelegramExpandRetries("expandAndFullscreen"), 1200);
+    return () => window.clearTimeout(id);
+  }
+
+  return scheduleTelegramExpandRetries("expandAndFullscreen");
 }
 
 function applyTelegramChrome(isDark: boolean) {
@@ -194,46 +212,38 @@ export const useTelegram = () => {
     captureTelegramBootstrapSuffix();
     hideTelegramMainButton();
     disableTelegramVerticalSwipes();
-    const fragileLaunch = isFragileIosTelegramLaunch();
-    if (!fragileLaunch) {
-      applyTelegramViewportLayout();
-    }
-    let cancelExpandSchedule = () => {};
-    /**
-     * Named direct link (`t.me/bot/app?startapp=ref_…`): start_param / tgWebAppStartParam may appear
-     * after ready(). Poll before scheduling expand so referral launches never hit expand/requestFullscreen.
-     */
-    const pollDelaysMs = [0, 100, 300, 800, 2000, 4000];
+    applyTelegramViewportLayout();
+    paintTelegramWebViewBackground(theme === "dark" ? "dark" : "light");
+
+    const pollDelaysMs = [0, 100, 300, 800];
     let pollIndex = 0;
     let pollTimerId = 0;
-    const finishExpandPoll = () => {
-      if (allowProgrammaticTelegramExpand()) {
-        cancelExpandSchedule = scheduleTelegramExpandRetries();
-      }
+    let cancelExpandSchedule = () => {};
+    const finishBootstrapPoll = () => {
+      cancelExpandSchedule = scheduleStartupExpand();
     };
-    const pollReferralLaunchBeforeExpand = () => {
+    const pollLaunchBootstrap = () => {
       markTelegramDeepLinkLaunchIfDetected();
       markReferralLaunchIfDetected();
       ensureTelegramLaunchUrl();
       captureTelegramBootstrapSuffix();
-      if (!allowProgrammaticTelegramExpand() || pollIndex >= pollDelaysMs.length - 1) {
-        finishExpandPoll();
+      if (pollIndex >= pollDelaysMs.length - 1) {
+        finishBootstrapPoll();
         return;
       }
       const waitMs = pollDelaysMs[pollIndex + 1] - pollDelaysMs[pollIndex];
       pollIndex += 1;
-      pollTimerId = window.setTimeout(pollReferralLaunchBeforeExpand, waitMs);
+      pollTimerId = window.setTimeout(pollLaunchBootstrap, waitMs);
     };
-    const scheduleId = window.setTimeout(pollReferralLaunchBeforeExpand, 0);
+    const scheduleId = window.setTimeout(pollLaunchBootstrap, 0);
+
     queueMicrotask(() => {
       syncTelegramContentSafeAreaVars();
     });
     const insetRetry = window.setTimeout(() => {
       syncTelegramContentSafeAreaVars();
-      if (fragileLaunch) {
-        applyTelegramViewportLayout();
-      }
-    }, fragileLaunch ? 800 : 200);
+      applyTelegramViewportLayout();
+    }, 200);
     return () => {
       window.clearTimeout(scheduleId);
       if (pollTimerId) {
@@ -244,13 +254,10 @@ export const useTelegram = () => {
     };
   }, []);
 
-  /** После первого жеста — повторный expand (только Android / не реферальный старт). */
+  /** После первого жеста — повторный expand (Android: + fullscreen; iOS: только expand). */
   useEffect(() => {
-    if (!allowProgrammaticTelegramExpand()) {
-      return;
-    }
     const onFirstPointer = () => {
-      tryExpandTelegramWebApp("expandAndFullscreen");
+      tryExpandTelegramWebApp(isTelegramIos() ? "expandOnly" : "expandAndFullscreen");
       document.removeEventListener("touchstart", onFirstPointer);
       document.removeEventListener("click", onFirstPointer);
     };
@@ -298,26 +305,21 @@ export const useTelegram = () => {
       return;
     }
 
-    const fragileLaunch = isFragileIosTelegramLaunch();
-    const fragileUntilMs = fragileLaunch ? Date.now() + 8000 : 0;
-
     const onLayout = () => {
-      if (fragileUntilMs && Date.now() < fragileUntilMs) {
-        return;
-      }
       syncTelegramContentSafeAreaVars();
       syncTelegramWebViewAfterViewport(theme);
     };
 
     const onViewportChanged = (payload?: { isStateStable?: boolean }) => {
-      if (fragileUntilMs && Date.now() < fragileUntilMs) {
-        return;
-      }
       syncTelegramContentSafeAreaVars();
       syncTelegramWebViewAfterViewport(theme);
+      if (isTelegramIos()) {
+        return;
+      }
       if (
         payload?.isStateStable !== false &&
-        allowProgrammaticTelegramExpand() &&
+        !isReferralMiniAppLaunch() &&
+        !isTelegramDeepLinkLaunch() &&
         !isTelegramKeyboardLikelyOpen()
       ) {
         tryExpandTelegramWebApp("expandOnly");
