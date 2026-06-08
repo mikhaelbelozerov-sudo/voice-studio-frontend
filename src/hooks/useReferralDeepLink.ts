@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import WebApp from "@twa-dev/sdk";
 import { trackAnalytics } from "../lib/analytics";
 import { claimReferral } from "../services/api";
 import { buildReferralClientFingerprint } from "../utils/referralFingerprint";
@@ -16,14 +15,6 @@ const resolveReferrerId = async (): Promise<number | null> => {
   for (const delay of delaysMs) {
     if (delay > 0) {
       await sleep(delay);
-    }
-
-    const fromSdk = WebApp.initDataUnsafe?.start_param;
-    if (typeof fromSdk === "string" && fromSdk.length > 0) {
-      const id = parseReferrerFromStartParam(fromSdk);
-      if (id) {
-        return id;
-      }
     }
 
     const id = parseReferrerFromStartParam(readTelegramStartParamRaw());
@@ -53,12 +44,6 @@ export const useReferralDeepLink = (inviteeTelegramId: number | null) => {
     attemptStarted.current = true;
 
     void (async () => {
-      try {
-        WebApp.ready();
-      } catch {
-        /* */
-      }
-
       const referrerId = await resolveReferrerId();
       if (!referrerId || referrerId === inviteeTelegramId) {
         return;

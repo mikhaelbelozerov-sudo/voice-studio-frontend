@@ -10,7 +10,14 @@ import {
   syncTelegramWebViewAfterViewport
 } from "../utils/telegramWebView";
 import { isReferralMiniAppLaunch, markReferralLaunchIfDetected } from "../utils/referralLink";
-import { captureTelegramBootstrapSuffix } from "../utils/telegramBootstrap";
+import {
+  captureTelegramBootstrapSuffix,
+  ensureTelegramLaunchUrl
+} from "../utils/telegramBootstrap";
+import {
+  isFragileIosTelegramLaunch,
+  markTelegramDeepLinkLaunchIfDetected
+} from "../utils/telegramLaunchMode";
 
 export type { AppTheme } from "../constants/telegramTheme";
 export { APP_SCREEN_BG } from "../constants/telegramTheme";
@@ -181,9 +188,16 @@ export const useTelegram = () => {
 
   useEffect(() => {
     WebApp.ready();
+    markTelegramDeepLinkLaunchIfDetected();
+    markReferralLaunchIfDetected();
+    ensureTelegramLaunchUrl();
+    captureTelegramBootstrapSuffix();
     hideTelegramMainButton();
     disableTelegramVerticalSwipes();
-    applyTelegramViewportLayout();
+    const fragileLaunch = isFragileIosTelegramLaunch();
+    if (!fragileLaunch) {
+      applyTelegramViewportLayout();
+    }
     let cancelExpandSchedule = () => {};
     /**
      * Named direct link (`t.me/bot/app?startapp=ref_…`): start_param / tgWebAppStartParam may appear
@@ -198,7 +212,9 @@ export const useTelegram = () => {
       }
     };
     const pollReferralLaunchBeforeExpand = () => {
+      markTelegramDeepLinkLaunchIfDetected();
       markReferralLaunchIfDetected();
+      ensureTelegramLaunchUrl();
       captureTelegramBootstrapSuffix();
       if (!allowProgrammaticTelegramExpand() || pollIndex >= pollDelaysMs.length - 1) {
         finishExpandPoll();
@@ -214,7 +230,10 @@ export const useTelegram = () => {
     });
     const insetRetry = window.setTimeout(() => {
       syncTelegramContentSafeAreaVars();
-    }, 200);
+      if (fragileLaunch) {
+        applyTelegramViewportLayout();
+      }
+    }, fragileLaunch ? 800 : 200);
     return () => {
       window.clearTimeout(scheduleId);
       if (pollTimerId) {
@@ -279,12 +298,21 @@ export const useTelegram = () => {
       return;
     }
 
+    const fragileLaunch = isFragileIosTelegramLaunch();
+    const fragileUntilMs = fragileLaunch ? Date.now() + 8000 : 0;
+
     const onLayout = () => {
+      if (fragileUntilMs && Date.now() < fragileUntilMs) {
+        return;
+      }
       syncTelegramContentSafeAreaVars();
       syncTelegramWebViewAfterViewport(theme);
     };
 
     const onViewportChanged = (payload?: { isStateStable?: boolean }) => {
+      if (fragileUntilMs && Date.now() < fragileUntilMs) {
+        return;
+      }
       syncTelegramContentSafeAreaVars();
       syncTelegramWebViewAfterViewport(theme);
       if (

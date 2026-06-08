@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import { NavLink, Route, Routes } from "react-router-dom";
 import { Layout } from "./components/layout/Layout";
 import { DropdownMenu } from "./components/ui/DropdownMenu";
-import { usePreserveTelegramMiniAppBootstrap } from "./hooks/usePreserveTelegramMiniAppBootstrap";
 import { useReferralDeepLink } from "./hooks/useReferralDeepLink";
 import { useTelegram } from "./hooks/useTelegram";
 import { useVirtualKeyboard } from "./hooks/useVirtualKeyboard";
@@ -21,19 +20,18 @@ import { AppLanguage } from "./constants/languages";
 function App() {
   const { t, i18n } = useTranslation();
   const { telegramId, theme } = useTelegram();
-  const { suffix: tgBootstrapSuffix } = usePreserveTelegramMiniAppBootstrap();
   useReferralDeepLink(telegramId);
   const { isKeyboardOpen, dismissKeyboard } = useVirtualKeyboard();
   const [showLanguageModal, setShowLanguageModal] = useState(() => !window.localStorage.getItem(LANGUAGE_STORAGE_KEY));
 
   const navItems = useMemo(
     () => [
-      { to: `/generate${tgBootstrapSuffix}`, label: t("nav.generate"), icon: Sparkles },
-      { to: `/library${tgBootstrapSuffix}`, label: t("nav.library"), icon: History },
-      { to: `/pricing${tgBootstrapSuffix}`, label: t("nav.pricing"), icon: Coins },
-      { to: `/profile${tgBootstrapSuffix}`, label: t("nav.profile"), icon: UserRound }
+      { to: "/generate", label: t("nav.generate"), icon: Sparkles },
+      { to: "/library", label: t("nav.library"), icon: History },
+      { to: "/pricing", label: t("nav.pricing"), icon: Coins },
+      { to: "/profile", label: t("nav.profile"), icon: UserRound }
     ],
-    [t, tgBootstrapSuffix]
+    [t]
   );
 
   const languageOptions = useMemo(
