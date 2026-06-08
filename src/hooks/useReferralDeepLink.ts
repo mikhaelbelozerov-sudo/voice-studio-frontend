@@ -1,48 +1,83 @@
 import { useEffect, useRef } from "react";
+import WebApp from "@twa-dev/sdk";
 import { trackAnalytics } from "../lib/analytics";
 import { claimReferral } from "../services/api";
 import { buildReferralClientFingerprint } from "../utils/referralFingerprint";
 import { parseReferrerFromStartParam, readTelegramStartParamRaw } from "../utils/referralLink";
 
-const SESSION_KEY = "vs_referral_claim_attempted";
+const CLAIM_SUCCESS_KEY = "vs_referral_claim_success";
+
+const sleep = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
+
+/** start_param on iOS often appears only after WebApp.ready() and a short delay. */
+const resolveReferrerId = async (): Promise<number | null> => {
+  const delaysMs = [0, 100, 300, 800, 2000, 4000];
+
+  for (const delay of delaysMs) {
+    if (delay > 0) {
+      await sleep(delay);
+    }
+
+    const fromSdk = WebApp.initDataUnsafe?.start_param;
+    if (typeof fromSdk === "string" && fromSdk.length > 0) {
+      const id = parseReferrerFromStartParam(fromSdk);
+      if (id) {
+        return id;
+      }
+    }
+
+    const id = parseReferrerFromStartParam(readTelegramStartParamRaw());
+    if (id) {
+      return id;
+    }
+  }
+
+  return null;
+};
 
 /**
- * On first launch with ?startapp=ref_<id>, credits inviter via backend (idempotent).
+ * On first launch with ?startapp=ref_<id>, registers invite via backend (idempotent).
+ * Retries reading start_param; does not permanently block claim on transient failures.
  */
 export const useReferralDeepLink = (inviteeTelegramId: number | null) => {
-  const ran = useRef(false);
+  const attemptStarted = useRef(false);
 
   useEffect(() => {
-    if (!inviteeTelegramId || ran.current) {
+    if (!inviteeTelegramId || attemptStarted.current) {
       return;
     }
-    if (sessionStorage.getItem(SESSION_KEY)) {
-      return;
-    }
-
-    const referrerId = parseReferrerFromStartParam(readTelegramStartParamRaw());
-    if (!referrerId || referrerId === inviteeTelegramId) {
-      sessionStorage.setItem(SESSION_KEY, "1");
+    if (sessionStorage.getItem(CLAIM_SUCCESS_KEY)) {
       return;
     }
 
-    ran.current = true;
+    attemptStarted.current = true;
 
     void (async () => {
+      try {
+        WebApp.ready();
+      } catch {
+        /* */
+      }
+
+      const referrerId = await resolveReferrerId();
+      if (!referrerId || referrerId === inviteeTelegramId) {
+        return;
+      }
+
       try {
         const res = await claimReferral({
           inviteeTelegramId,
           referrerTelegramId: referrerId,
           clientFingerprint: buildReferralClientFingerprint()
         });
+        sessionStorage.setItem(CLAIM_SUCCESS_KEY, "1");
         trackAnalytics("referral_deep_link_claim", {
           referrerId,
           alreadyClaimed: res.alreadyClaimed === true
         });
       } catch {
+        attemptStarted.current = false;
         trackAnalytics("referral_deep_link_error", { referrerId });
-      } finally {
-        sessionStorage.setItem(SESSION_KEY, "1");
       }
     })();
   }, [inviteeTelegramId]);
