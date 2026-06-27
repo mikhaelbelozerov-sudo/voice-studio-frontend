@@ -111,6 +111,8 @@
   "voice": {
     "selectVoice": "Voz",
     "selectVoiceHint": "Elige una voz y escucha la vista previa antes de generar.",
+    "previewLimitedHint": "La vista previa no está en todas las voces — la locución sigue disponible.",
+    "presetCompatibilityHint": "No todos los presets combinan con cada voz. Si falla, elige «Propio».",
     "selectedVoiceLabel": "Seleccionado",
     "selectedVoiceEmpty": "ninguno",
     "noVoices": "Las voces no están disponibles temporalmente. Inténtalo más tarde.",

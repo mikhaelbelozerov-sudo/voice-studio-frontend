@@ -111,6 +111,8 @@
   "voice": {
     "selectVoice": "Suara",
     "selectVoiceHint": "Pilih suara dan dengarkan pratinjau sebelum membuat.",
+    "previewLimitedHint": "Pratinjau tidak ada di semua suara — generasi tetap bisa.",
+    "presetCompatibilityHint": "Preset tidak cocok dengan setiap suara. Jika gagal, pilih «Kustom».",
     "selectedVoiceLabel": "Dipilih",
     "selectedVoiceEmpty": "belum dipilih",
     "noVoices": "Suara sementara tidak tersedia. Coba lagi nanti.",

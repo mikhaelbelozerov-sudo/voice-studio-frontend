@@ -112,6 +112,8 @@
   "voice": {
     "selectVoice": "الصوت",
     "selectVoiceHint": "اختر صوتاً واستمع إلى المعاينة قبل التوليد.",
+    "previewLimitedHint": "المعاينة غير متاحة لكل الأصوات — التوليد ما زال ممكناً.",
+    "presetCompatibilityHint": "ليست كل الإعدادات المسبقة متوافقة مع كل صوت. إن فشل، جرّب «مخصص».",
     "selectedVoiceLabel": "المحدد",
     "selectedVoiceEmpty": "غير محدد",
     "noVoices": "الأصوات غير متاحة مؤقتاً. حاول لاحقاً.",

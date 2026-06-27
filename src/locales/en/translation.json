@@ -111,6 +111,8 @@
   "voice": {
     "selectVoice": "Voice",
     "selectVoiceHint": "Pick a voice and play the preview before generating.",
+    "previewLimitedHint": "Preview isn't available for every voice — you can still generate.",
+    "presetCompatibilityHint": "Presets don't work with every voice. If it fails, try Custom.",
     "selectedVoiceLabel": "Selected",
     "selectedVoiceEmpty": "none",
     "noVoices": "Voices are temporarily unavailable. Try again later.",

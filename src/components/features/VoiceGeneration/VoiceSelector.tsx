@@ -54,6 +54,7 @@ export const VoiceSelector = ({ voices, selectedVoiceId, isLoading = false, onSe
           <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{t("voice.selectVoice")}</h2>
         </div>
         <p className="mt-1 text-xs leading-relaxed text-slate-500 dark:text-slate-400">{t("voice.selectVoiceHint")}</p>
+        <p className="mt-1.5 text-[11px] leading-snug text-slate-400 dark:text-slate-500">{t("voice.previewLimitedHint")}</p>
       </div>
 
       {isLoading ? (

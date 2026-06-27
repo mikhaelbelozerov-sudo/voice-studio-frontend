@@ -142,6 +142,7 @@ export const VoiceStylePanel = ({
             );
           })}
         </div>
+        <p className="text-[11px] leading-snug text-slate-400 dark:text-slate-500">{t("voice.presetCompatibilityHint")}</p>
         {!isCustom ? (
           <p className="text-xs text-blue-700 dark:text-blue-300">{t("presets.overrideNotice")}</p>
         ) : null}

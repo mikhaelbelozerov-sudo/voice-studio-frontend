@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoiceStudio Pro — макеты скриншотов</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --vs-viewport-height: 844px;
+    }
+    body {
+      margin: 0;
+      background: #0f172a;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    .phone {
+      width: 390px;
+      height: 844px;
+      background: #f1f5f9;
+      border-radius: 2rem;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+      position: relative;
+      flex-shrink: 0;
+    }
+    .phone-inner {
+      height: 100%;
+      overflow-y: auto;
+      padding: 12px 16px 88px;
+      box-sizing: border-box;
+    }
+    .phone-inner::-webkit-scrollbar { display: none; }
+    .vs-range {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 2.25rem;
+      background: transparent;
+      width: 100%;
+    }
+    .vs-range::-webkit-slider-runnable-track {
+      height: 0.375rem;
+      border-radius: 9999px;
+      background: #cbd5e1;
+    }
+    .vs-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 1.5rem;
+      height: 1.5rem;
+      margin-top: -0.5625rem;
+      border-radius: 9999px;
+      border: 2px solid #2563eb;
+      background: #fff;
+    }
+    .bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #f1f5f9;
+      border-top: 1px solid #e2e8f0;
+      padding: 8px;
+    }
+    .screen-label {
+      color: #94a3b8;
+      font-size: 13px;
+      margin-bottom: 8px;
+      max-width: 390px;
+    }
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px;
+      padding: 32px;
+      justify-content: center;
+    }
+    .card {
+      border-radius: 1rem;
+      border: 1px solid #f1f5f9;
+      background: #fff;
+      padding: 1rem;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+    }
+    .chip-active {
+      border: 1px solid #2563eb;
+      background: #2563eb;
+      color: #fff;
+    }
+    .chip {
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      color: #334155;
+    }
+    .voice-selected {
+      border: 1px solid #2563eb;
+      background: rgba(239, 246, 255, 0.8);
+    }
+    .page-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 1rem;
+      background: linear-gradient(135deg, #2563eb, #6366f1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.25);
+    }
+    .btn-primary {
+      background: #2563eb;
+      color: #fff;
+      border-radius: 0.75rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      width: 100%;
+      border: none;
+    }
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #0f172a;
+      border-radius: 0.75rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border: none;
+    }
+    .nav-active { color: #2563eb; }
+    .nav-item { color: #64748b; font-size: 11px; }
+    audio { width: 100%; }
+  </style>
+</head>
+<body>
+  <div class="gallery">
+
+    <!-- ═══════════════════════════════════════════════════════════
+         1. ГЛАВНЫЙ ЭКРАН
+         Store: selectedVoiceId=Roger, text, speed=1.0, pitch=0, languageCode=ru
+         ═══════════════════════════════════════════════════════════ -->
+    <div>
+      <p class="screen-label"><strong>1. Главный экран</strong> — генерация озвучки</p>
+      <div class="phone" id="screen-main">
+        <div class="phone-inner bg-slate-100">
+          <header class="flex items-start gap-3.5 mb-4">
+            <div class="page-icon">
+              <svg width="20" height="20" fill="none" stroke="white" stroke-width="2.25" viewBox="0 0 24 24"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .962 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.962 0z"/></svg>
+            </div>
+            <div>
+              <p class="text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-600">Voice Studio Pro</p>
+              <h1 class="mt-1 text-[1.35rem] font-semibold text-slate-900">Генерация</h1>
+              <p class="mt-1 text-[13px] text-slate-500">Текст в студийную озвучку — за пару секунд.</p>
+            </div>
+          </header>
+
+          <div class="card mb-3 space-y-2">
+            <div class="flex items-center gap-2 text-sm font-medium text-slate-800">
+              <svg width="16" height="16" class="text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
+              Баланс озвучки
+            </div>
+            <p class="text-xs text-slate-600">Бета-превью · <strong>12 / 60 сек</strong> · 1/3 рендеров</p>
+            <div class="h-2 rounded-full bg-slate-200"><div class="h-2 rounded-full bg-amber-500" style="width:20%"></div></div>
+          </div>
+
+          <div class="card mb-3">
+            <div class="flex items-center gap-2 mb-1">
+              <svg width="16" height="16" class="text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+              <h2 class="text-base font-semibold text-slate-900">Голос</h2>
+            </div>
+            <p class="text-xs text-slate-500 mb-3">Выберите голос и послушайте превью перед генерацией.</p>
+            <div class="voice-selected rounded-xl border p-3.5">
+              <div class="flex justify-between items-start mb-2">
+                <span class="text-base font-semibold text-slate-900">Roger</span>
+                <span class="rounded-full bg-blue-600 px-2.5 py-1 text-xs font-medium uppercase text-white">Выбран</span>
+              </div>
+              <div class="flex flex-wrap gap-1.5 mb-2">
+                <span class="rounded-lg bg-blue-100 px-2 py-1 text-sm text-blue-900">расслабленный</span>
+                <span class="rounded-lg bg-blue-100 px-2 py-1 text-sm text-blue-900">непринуждённый</span>
+                <span class="rounded-lg bg-blue-100 px-2 py-1 text-sm text-blue-900">объёмный</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mb-3">
+            <div class="flex items-center gap-2 mb-1">
+              <svg width="16" height="16" class="text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h12"/></svg>
+              <h2 class="text-base font-semibold text-slate-900">Сценарий</h2>
+            </div>
+            <p class="text-xs text-slate-500 mb-2">Введите текст или загрузите .txt — ниже оценка длины озвучки.</p>
+            <textarea class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-900 resize-none" rows="3">Привет, это тестовая озвучка</textarea>
+            <p class="mt-2 text-xs text-slate-500">Этот текст · ~4 сек студийного звука (оценка)</p>
+          </div>
+
+          <button class="btn-primary py-3 font-semibold">Сгенерировать</button>
+        </div>
+        <nav class="bottom-nav">
+          <div class="grid grid-cols-4 gap-1 text-center">
+            <div class="nav-active nav-item flex flex-col items-center py-1"><span>✨</span>Генерация</div>
+            <div class="nav-item flex flex-col items-center py-1"><span>🕐</span>История</div>
+            <div class="nav-item flex flex-col items-center py-1"><span>💰</span>Оплата</div>
+            <div class="nav-item flex flex-col items-center py-1"><span>👤</span>Профиль</div>
+          </div>
+        </nav>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         2. РЕЗУЛЬТАТ
+         ═══════════════════════════════════════════════════════════ -->
+    <div>
+      <p class="screen-label"><strong>2. Результат</strong> — готовая озвучка</p>
+      <div class="phone" id="screen-result">
+        <div class="phone-inner bg-slate-100">
+          <header class="flex items-start gap-3.5 mb-4">
+            <div class="page-icon">
+              <svg width="20" height="20" fill="none" stroke="white" stroke-width="2.25" viewBox="0 0 24 24"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .962 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.962 0z"/></svg>
+            </div>
+            <div>
+              <p class="text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-600">Voice Studio Pro</p>
+              <h1 class="mt-1 text-[1.35rem] font-semibold text-slate-900">Генерация</h1>
+            </div>
+          </header>
+
+          <div class="card">
+            <div class="flex items-center gap-2 mb-1">
+              <svg width="16" height="16" class="text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 14h3v7H3z"/><path d="M10 10h3v11h-3z"/><path d="M17 6h3v15h-3z"/></svg>
+              <h2 class="text-base font-semibold text-slate-900">Готово! Ваша озвучка создана</h2>
+            </div>
+            <p class="text-xs text-slate-500 mb-4">Прослушайте и скачайте готовую озвучку.</p>
+            <div class="rounded-xl border border-slate-200 bg-slate-50 p-2 mb-4">
+              <audio controls src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA="></audio>
+            </div>
+            <p class="text-sm text-slate-700 mb-3 italic">«Привет, это тестовая озвучка»</p>
+            <div class="border-t border-slate-100 pt-4">
+              <button class="btn-secondary w-full flex items-center justify-center gap-2 py-2.5">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                Скачать MP3
+              </button>
+            </div>
+          </div>
+        </div>
+        <nav class="bottom-nav">
+          <div class="grid grid-cols-4 gap-1 text-center">
+            <div class="nav-active nav-item flex flex-col items-center py-1"><span>✨</span>Генерация</div>
+            <div class="nav-item flex flex-col items-center py-1"><span>🕐</span>История</div>
+            <div class="nav-item flex flex-col items-center py-1"><span>💰</span>Оплата</div>
+            <div class="nav-item flex flex-col items-center py-1"><span>👤</span>Профиль</div>
+          </div>
+        </nav>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         3. ИСТОРИЯ
+         ═══════════════════════════════════════════════════════════ -->
+    <div>
+      <p class="screen-label"><strong>3. История</strong> — архив озвучек</p>
+      <div class="phone" id="screen-history">
+        <div class="phone-inner bg-slate-100">
+          <header class="flex items-start gap-3.5 mb-4">
+            <div class="page-icon">
+              <svg width="20" height="20" fill="none" stroke="white" stroke-width="2.25" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div>
+              <p class="text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-600">Voice Studio Pro</p>
+              <h1 class="mt-1 text-[1.35rem] font-semibold text-slate-900">История</h1>
+              <p class="mt-1 text-[13px] text-slate-500">Ваши готовые озвучки — слушайте и скачивайте.</p>
+            </div>
+          </header>
+
+          <!-- Item 1 -->
+          <article class="card mb-3 space-y-2">
+            <p class="text-sm text-slate-800 leading-relaxed">Привет, это тестовая озвучка</p>
+            <div class="flex flex-wrap gap-2 text-xs text-slate-600">
+              <span class="chip rounded-full px-2.5 py-1">23 июня 2026, 14:32</span>
+              <span class="chip rounded-full px-2.5 py-1">Roger</span>
+            </div>
+            <p class="text-xs text-slate-500">Будет удалён через 18 ч. 45 мин.</p>
+            <button class="btn-secondary w-full py-2">Скачать</button>
+          </article>
+
+          <!-- Item 2 -->
+          <article class="card mb-3 space-y-2">
+            <p class="text-sm text-slate-800 leading-relaxed">Добро пожаловать в VoiceStudio Pro</p>
+            <div class="flex flex-wrap gap-2 text-xs text-slate-600">
+              <span class="chip rounded-full px-2.5 py-1">22 июня 2026, 09:15</span>
+              <span class="chip rounded-full px-2.5 py-1">Sarah</span>
+            </div>
+            <p class="text-xs text-slate-500">Будет удалён через 6 ч. 12 мин.</p>
+            <button class="btn-secondary w-full py-2">Скачать</button>
+          </article>
+
+          <!-- Item 3 -->
+          <article class="card mb-3 space-y-2">
+            <p class="text-sm text-slate-800 leading-relaxed">Сегодня мы поговорим о создании контента для TikTok</p>
+            <div class="flex flex-wrap gap-2 text-xs text-slate-600">
+              <span class="chip rounded-full px-2.5 py-1">20 июня 2026, 18:47</span>
+              <span class="chip rounded-full px-2.5 py-1">Roger</span>
+            </div>
+            <p class="text-xs text-amber-600">Будет удалён менее чем через час</p>
+            <button class="btn-secondary w-full py-2">Скачать</button>
+          </article>
+
+          <!-- Item 4 -->
+          <article class="card mb-3 space-y-2">
+            <p class="text-sm text-slate-800 leading-relaxed">Закажите доставку за 30 минут — быстро и удобно</p>
+            <div class="flex flex-wrap gap-2 text-xs text-slate-600">
+              <span class="chip rounded-full px-2.5 py-1">18 июня 2026, 11:03</span>
+              <span class="chip rounded-full px-2.5 py-1">George</span>
+            </div>
+            <p class="text-xs text-slate-400">Файл удалён</p>
+          </article>
+        </div>
+        <nav class="bottom-nav">
+          <div class="grid grid-cols-4 gap-1 text-center">
+            <div class="nav-item flex flex-col items-center py-1"><span>✨</span>Генерация</div>
+            <div class="nav-active nav-item flex flex-col items-center py-1"><span>🕐</span>История</div>
+            <div class="nav-item flex flex-col items-center py-1"><span>💰</span>Оплата</div>
+            <div class="nav-item flex flex-col items-center py-1"><span>👤</span>Профиль</div>
+          </div>
+        </nav>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         4. ТАРИФЫ (Free / Pro / Premium — из backend subscription_tier)
+         ═══════════════════════════════════════════════════════════ -->
+    <div>
+      <p class="screen-label"><strong>4. Тарифы</strong> — сравнение планов</p>
+      <div class="phone" id="screen-pricing">
+        <div class="phone-inner bg-slate-100">
+          <header class="flex items-start gap-3.5 mb-4">
+            <div class="page-icon">
+              <svg width="20" height="20" fill="none" stroke="white" stroke-width="2.25" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg>
+            </div>
+            <div>
+              <p class="text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-600">Voice Studio Pro</p>
+              <h1 class="mt-1 text-[1.35rem] font-semibold text-slate-900">Оплата</h1>
+              <p class="mt-1 text-[13px] text-slate-500">Минуты за Stars — сразу на баланс.</p>
+            </div>
+          </header>
+
+          <!-- Free -->
+          <div class="card mb-3">
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="text-base font-semibold text-slate-900">Free</h3>
+              <span class="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded-full">Текущий</span>
+            </div>
+            <p class="text-2xl font-bold text-slate-900 mb-2">0 ⭐</p>
+            <ul class="text-xs text-slate-600 space-y-1.5 mb-3">
+              <li>✓ 60 сек озвучки (бета-превью)</li>
+              <li>✓ До 3 озвучек за всё время</li>
+              <li>✓ История 24 часа</li>
+              <li>✓ Все голоса и пресеты</li>
+            </ul>
+            <button class="btn-secondary w-full py-2 opacity-60" disabled>Активен</button>
+          </div>
+
+          <!-- Pro -->
+          <div class="card mb-3 border-blue-200 bg-gradient-to-br from-blue-50 to-white">
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="text-base font-semibold text-slate-900">Pro</h3>
+              <span class="text-xs font-medium text-blue-700 bg-blue-100 px-2 py-1 rounded-full">Популярный</span>
+            </div>
+            <p class="text-2xl font-bold text-slate-900 mb-1">650 ⭐ <span class="text-sm font-normal text-slate-500">/ мес</span></p>
+            <ul class="text-xs text-slate-600 space-y-1.5 mb-3">
+              <li>✓ 100 минут озвучки в месяц</li>
+              <li>✓ Приоритет в очереди</li>
+              <li>✓ Длинные сценарии</li>
+              <li>✓ История 30 дней</li>
+            </ul>
+            <button class="btn-primary py-2.5">Оформить PRO</button>
+          </div>
+
+          <!-- Premium -->
+          <div class="card mb-3 border-amber-200">
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="text-base font-semibold text-slate-900">Premium</h3>
+              <span class="text-xs font-medium text-amber-700 bg-amber-100 px-2 py-1 rounded-full">Максимум</span>
+            </div>
+            <p class="text-2xl font-bold text-slate-900 mb-1">По запросу</p>
+            <ul class="text-xs text-slate-600 space-y-1.5 mb-3">
+              <li>✓ Всё из Pro</li>
+              <li>✓ Постоянное хранение истории</li>
+              <li>✓ Без лимита на удаление файлов</li>
+              <li>✓ Приоритетная поддержка</li>
+            </ul>
+            <button class="btn-secondary w-full py-2.5">Связаться с нами</button>
+          </div>
+        </div>
+        <nav class="bottom-nav">
+          <div class="grid grid-cols-4 gap-1 text-center">
+            <div class="nav-item flex flex-col items-center py-1"><span>✨</span>Генерация</div>
+            <div class="nav-item flex flex-col items-center py-1"><span>🕐</span>История</div>
+            <div class="nav-active nav-item flex flex-col items-center py-1"><span>💰</span>Оплата</div>
+            <div class="nav-item flex flex-col items-center py-1"><span>👤</span>Профиль</div>
+          </div>
+        </nav>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         5. НАСТРОЙКИ ГОЛОСА (VoiceStylePanel + voiceStore)
+         ═══════════════════════════════════════════════════════════ -->
+    <div>
+      <p class="screen-label"><strong>5. Настройки голоса</strong> — стиль и язык</p>
+      <div class="phone" id="screen-voice-settings">
+        <div class="phone-inner bg-slate-100">
+          <header class="flex items-start gap-3.5 mb-4">
+            <div class="page-icon">
+              <svg width="20" height="20" fill="none" stroke="white" stroke-width="2.25" viewBox="0 0 24 24"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .962 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.962 0z"/></svg>
+            </div>
+            <div>
+              <p class="text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-600">Voice Studio Pro</p>
+              <h1 class="mt-1 text-[1.35rem] font-semibold text-slate-900">Генерация</h1>
+            </div>
+          </header>
+
+          <div class="card space-y-4">
+            <div>
+              <div class="flex items-center gap-2">
+                <svg width="16" height="16" class="text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="4" x2="4" y1="21" y2="14"/><line x1="4" x2="4" y1="10" y2="3"/><line x1="12" x2="12" y1="21" y2="12"/><line x1="12" x2="12" y1="8" y2="3"/><line x1="20" x2="20" y1="21" y2="16"/><line x1="20" x2="20" y1="12" y2="3"/></svg>
+                <h2 class="text-base font-semibold text-slate-900">Стиль озвучки</h2>
+              </div>
+              <p class="mt-1 text-xs text-slate-500">Пресет для TikTok, Reels и др. — или свои ползунки ниже.</p>
+            </div>
+
+            <div>
+              <span class="text-xs font-medium uppercase tracking-wide text-slate-500">Пресет</span>
+              <div class="flex gap-2 mt-2 overflow-x-auto pb-1">
+                <span class="chip-active rounded-full px-3 py-1.5 text-xs font-medium shrink-0">Свой</span>
+                <span class="chip rounded-full px-3 py-1.5 text-xs font-medium shrink-0">История TikTok</span>
+                <span class="chip rounded-full px-3 py-1.5 text-xs font-medium shrink-0">Подкаст</span>
+              </div>
+            </div>
+
+            <div class="border-t border-slate-100 pt-4">
+              <span class="text-xs font-medium uppercase tracking-wide text-slate-500">Язык озвучки</span>
+              <div class="flex gap-2 mt-2 overflow-x-auto pb-1">
+                <span class="chip rounded-full px-3 py-1.5 text-xs font-medium shrink-0">English 🇬🇧</span>
+                <span class="chip-active rounded-full px-3 py-1.5 text-xs font-medium shrink-0">Русский 🇷🇺</span>
+                <span class="chip rounded-full px-3 py-1.5 text-xs font-medium shrink-0">Español 🇪🇸</span>
+                <span class="chip rounded-full px-3 py-1.5 text-xs font-medium shrink-0">Deutsch 🇩🇪</span>
+              </div>
+            </div>
+
+            <div class="border-t border-slate-100 pt-4 space-y-4">
+              <span class="text-xs font-medium uppercase tracking-wide text-slate-500">Настройка</span>
+
+              <label class="block space-y-2">
+                <div class="flex justify-between text-sm text-slate-700">
+                  <span>Скорость</span>
+                  <span class="tabular-nums">1.00x</span>
+                </div>
+                <input type="range" class="vs-range" min="-10" max="10" value="0" />
+              </label>
+
+              <label class="block space-y-2">
+                <div class="flex justify-between text-sm text-slate-700">
+                  <span>Высота тона</span>
+                  <span class="tabular-nums">0.0</span>
+                </div>
+                <input type="range" class="vs-range" min="-1" max="1" step="0.1" value="0" />
+              </label>
+            </div>
+          </div>
+
+          <p class="mt-3 text-center text-xs text-slate-400">voiceStore: speed=1.0 · pitch=0 · languageCode=ru · presetId=null</p>
+        </div>
+        <nav class="bottom-nav">
+          <div class="grid grid-cols-4 gap-1 text-center">
+            <div class="nav-active nav-item flex flex-col items-center py-1"><span>✨</span>Генерация</div>
+            <div class="nav-item flex flex-col items-center py-1"><span>🕐</span>История</div>
+            <div class="nav-item flex flex-col items-center py-1"><span>💰</span>Оплата</div>
+            <div class="nav-item flex flex-col items-center py-1"><span>👤</span>Профиль</div>
+          </div>
+        </nav>
+      </div>
+    </div>
+
+  </div>
+
+  <p style="color:#64748b;text-align:center;padding:0 24px 32px;font-size:13px;max-width:800px;margin:0 auto;">
+    Откройте этот файл в браузере. Для скриншота: увеличьте масштаб (Ctrl+0 → 100%), сделайте снимок каждого блока <code>.phone</code> (Win+Shift+S / DevTools → Capture node screenshot).
+  </p>
+</body>
+</html>
